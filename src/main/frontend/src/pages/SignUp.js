@@ -67,13 +67,12 @@ const SignUp = () => {
     };
 
     try {
-      const response = await fetch('/api/auth/user-signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(dataToSend),
-      });
+        const response = await fetch('/api/auth/user-signup', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include', // 세션 쿠키 포함
+          body: JSON.stringify(dataToSend),
+        });
 
       if (response.ok) {
         alert('회원가입이 완료되었습니다.');
