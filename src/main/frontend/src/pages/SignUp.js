@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './SignUp.css';
+import { useNavigate } from 'react-router-dom';
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
@@ -18,6 +19,14 @@ const SignUp = () => {
   const [isEmailVerified, setIsEmailVerified] = useState(false); // 이메일 인증 여부
   const [emailSent, setEmailSent] = useState(false); // 이메일 전송 여부
 
+  // useNavigate 훅 사용
+  const navigate = useNavigate();
+
+  // 로고 클릭 시 홈으로 이동하는 함수
+  const handleLogoClick = () => {
+    navigate('/');
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -33,7 +42,7 @@ const SignUp = () => {
     // 생년월일 형식을 "YYYY-MM-DD"로 변환
     const birthday = `${formData.birthYear}-${formData.birthMonth.padStart(2, '0')}-${formData.birthDay.padStart(2, '0')}`;
 
-    // 성별을 서버에서 요구하는 형식으로 변환 (예: 'male' -> 'MALE')
+    // 성별을 서버에서 요구하는 형식으로 변환
     const gender = formData.gender === 'male' ? 'MALE' : 'FEMALE';
 
     // 비밀번호 확인 일치 여부 확인
@@ -52,22 +61,22 @@ const SignUp = () => {
       userId: formData.userId,
       password: formData.password,
       nickname: formData.nickname,
-      birthday: birthday, // "YYYY-MM-DD" 형식으로 변환
-      gender: gender,      // 'MALE' 또는 'FEMALE'
+      birthday: birthday,
+      gender: gender,
       email: formData.email,
     };
 
     try {
-      const response = await fetch('/api/auth/user-signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(dataToSend),
-      });
+        const response = await fetch('/api/auth/user-signup', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include', // 세션 쿠키 포함
+          body: JSON.stringify(dataToSend),
+        });
 
       if (response.ok) {
         alert('회원가입이 완료되었습니다.');
+        navigate('/');
       } else {
         const errorData = await response.json();
         alert(`회원가입 실패: ${errorData.message || '서버 오류'}`);
@@ -96,7 +105,7 @@ const SignUp = () => {
 
       if (response.ok) {
         alert('인증 코드가 발송되었습니다.');
-        setEmailSent(true); // 이메일 발송 완료
+        setEmailSent(true);
       } else {
         alert('인증 코드 발송에 실패했습니다.');
       }
@@ -127,7 +136,7 @@ const SignUp = () => {
 
       if (response.ok) {
         alert('이메일 인증이 완료되었습니다.');
-        setIsEmailVerified(true); // 이메일 인증 완료 처리
+        setIsEmailVerified(true);
       } else {
         alert('인증 코드가 올바르지 않습니다.');
       }
@@ -139,39 +148,52 @@ const SignUp = () => {
 
   return (
     <div className="signup-container">
-      <div className="logo">
-        <img src="/img/loginLogo.png" alt="Signal Logo" />
+      {/* 로고 클릭 시 홈으로 이동 */}
+      <div className="logo" onClick={handleLogoClick}>
+        <img src="/img/loginLogo.png" alt="Signal Logo" style={{ cursor: 'pointer' }} />
       </div>
       <form className="signup-form" onSubmit={handleSubmit}>
+        <label htmlFor="userId">아이디</label>
         <input
           type="text"
           name="userId"
+          id="userId"
           placeholder="아이디를 입력해주세요."
           value={formData.userId}
           onChange={handleChange}
         />
+
+        <label htmlFor="password">비밀번호</label>
         <input
           type="password"
           name="password"
+          id="password"
           placeholder="비밀번호를 입력해주세요."
           value={formData.password}
           onChange={handleChange}
         />
+
+        <label htmlFor="confirmPassword">비밀번호 재확인</label>
         <input
           type="password"
           name="confirmPassword"
+          id="confirmPassword"
           placeholder="비밀번호를 다시 한 번 입력해주세요."
           value={formData.confirmPassword}
           onChange={handleChange}
         />
+
+        <label htmlFor="nickname">닉네임</label>
         <input
           type="text"
           name="nickname"
+          id="nickname"
           placeholder="닉네임을 입력해주세요."
           value={formData.nickname}
           onChange={handleChange}
         />
 
+        <label>생년월일</label>
         <div className="birthdate-section">
           <select
             name="birthYear"
@@ -214,6 +236,7 @@ const SignUp = () => {
           </select>
         </div>
 
+        <label>성별</label>
         <div className="gender-section">
           <select name="gender" value={formData.gender} onChange={handleChange}>
             <option value="">성별</option>
@@ -222,38 +245,44 @@ const SignUp = () => {
           </select>
         </div>
 
-        <input
-          type="email"
-          name="email"
-          placeholder="본인 확인을 위한 이메일을 입력해주세요."
-          value={formData.email}
-          onChange={handleChange}
-        />
-        <button
-          type="button"
-          className="email-verify-button"
-          onClick={handleEmailVerification}
-          disabled={emailSent} // 이메일 발송 후 버튼 비활성화
-        >
-          {emailSent ? '인증 코드 발송 완료' : '인증'}
-        </button>
+        <label>본인 확인 이메일</label>
+        <div className="email-verify-wrapper">
+          <input
+            type="email"
+            name="email"
+            placeholder="이메일을 입력해주세요."
+            value={formData.email}
+            onChange={handleChange}
+          />
+          <button
+            type="button"
+            className="email-verify-button"
+            onClick={handleEmailVerification}
+            disabled={emailSent}
+          >
+            {emailSent ? '발송 완료' : '인증'}
+          </button>
+        </div>
 
-        <input
-          type="text"
-          name="emailCode"
-          placeholder="이메일 인증 번호를 입력해주세요."
-          value={formData.emailCode}
-          onChange={handleChange}
-          disabled={!emailSent} // 이메일이 발송되지 않으면 인증 번호 입력 불가
-        />
-        <button
-          type="button"
-          className="email-code-verify-button"
-          onClick={handleEmailCodeVerification}
-          disabled={isEmailVerified} // 이메일 인증 완료 시 버튼 비활성화
-        >
-          {isEmailVerified ? '인증 완료' : '인증 코드 확인'}
-        </button>
+        <label>이메일 인증 번호</label>
+        <div className="email-code-wrapper">
+          <input
+            type="text"
+            name="emailCode"
+            placeholder="인증 번호를 입력해주세요."
+            value={formData.emailCode}
+            onChange={handleChange}
+            disabled={!emailSent}
+          />
+          <button
+            type="button"
+            className="email-code-verify-button"
+            onClick={handleEmailCodeVerification}
+            disabled={isEmailVerified}
+          >
+            {isEmailVerified ? '인증 완료' : '인증 확인'}
+          </button>
+        </div>
 
         <button type="submit" className="signup-button">회원가입</button>
       </form>

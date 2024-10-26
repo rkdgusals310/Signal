@@ -4,26 +4,27 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 1920px; /* 가로 크기 */
-  height: 1080px; /* 세로 크기 */
-  background-color: #f5f5f5;
-  
+  width: 1920px;
+  height: 1080px;
+  background-color: white;
+  margin: 0;
 }
 
+
 .logo img {
-  width: 580px; /* 로고 가로 크기 */
-  height: 300px; /* 로고 세로 크기 */
+  width: 700px; /* 로고 가로 크기 */
+  height: auto; /* 비율을 유지하면서 세로 크기 자동 조정 */
   margin-bottom: 20px;
 }
 
 .login-form {
   display: flex;
   flex-direction: column;
-  width: 300px;
+  width: 500px;
 }
 
 .login-form input {
-  margin-bottom: 20px;
+  margin-bottom: 40px;
   padding: 10px;
   font-size: 1rem;
   border: none; /* 기존 테두리 제거 */
@@ -37,12 +38,13 @@
 
 .login-button {
   padding: 10px;
-  font-size: 1rem;
+  font-size: 24px;
   background-color: black;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  margin-bottom: 25px;
 }
 
 .login-links {

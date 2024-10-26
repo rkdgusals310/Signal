@@ -27,7 +27,7 @@ const HotPosts = () => {
   return (
     <div className="hot-posts-header">
       <div className='hot-post-header'>
-        <h2 class="hot-post-title">Hot 게시글</h2>
+        <h2 className="hot-post-title">Hot 게시글</h2>
       </div>
       {posts.map((post) => (
         <div

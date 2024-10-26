@@ -19,7 +19,7 @@ const GominDetailPage = () => {
   };
 
   const handleWritePost = () => {
-    navigate('/commmunity/write');
+    navigate('/community/write');
   };
 
   const mapCategoryToBackendFormat = (category) => {
@@ -55,7 +55,7 @@ const GominDetailPage = () => {
     try {
       const formattedCategory = mapCategoryToBackendFormat(category);
       const response = await fetch(
-        `/api/commmon/post?category=${formattedCategory}&page=${page}&size=${pageSize}`,
+        `/api/common/post?category=${formattedCategory}&page=${page}&size=${pageSize}`,
         {
           method: 'GET',
           headers: {

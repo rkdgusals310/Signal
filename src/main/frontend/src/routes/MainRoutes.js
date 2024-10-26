@@ -5,6 +5,7 @@ import ArticlePage from '../pages/ArticlePage';
 import MyPage from '../pages/MyPage';
 import ConsultingPage from '../pages/ConsultingPage';
 import Login from "../pages/Login";
+import CommunityRoutes from './CommunityRoutes'; // CommunityRoutes 임포트
 
 const MainRoutes = () => {
   return (
@@ -13,7 +14,11 @@ const MainRoutes = () => {
       <Route path="/article" element={<ArticlePage />} />
       <Route path="/mypage" element={<MyPage />} />
       <Route path="/consulting" element={<ConsultingPage />} />
-      <Route path="/Login" element={<Login />} /> {/* 로그인 페이지 경로 추가 */}
+
+      <Route path="/login" element={<Login />} />
+
+      <Route path="/community/*" element={<CommunityRoutes />} /> 
+
     </Routes>
   );
 };

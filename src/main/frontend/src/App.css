@@ -1,19 +1,25 @@
+#root {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 /* App 전체 레이아웃 스타일 */
 .app-container {
-  display: flex;
+  width: 1920px;
   flex-direction: column;
-  min-height: 1080px;
   justify-content: space-between;
-  background-color: #f5f5f5; /* 배경색 변경 */
+  background-color: white;
 }
 
 /* 메인 콘텐츠 영역 */
 .content {
-  flex-grow: 1; /* 메인 콘텐츠가 화면을 채우도록 */
-  display: flex;
+  width: 1920px;
   justify-content: center;
   align-items: center;
-  padding: 20px;
 }
 
 /* Footer 관련 스타일 */
