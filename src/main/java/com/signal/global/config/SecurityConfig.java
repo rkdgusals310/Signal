@@ -49,8 +49,8 @@ public class SecurityConfig {
     				.requestMatchers(swagger).permitAll()
     				.requestMatchers("/api/auth/consultant/**","/api/consultant/**").hasRole("CONSULTANT")
     				.requestMatchers("/api/auth/user/**","/api/user/**","/api/member/**").hasRole("USER")
-    				.requestMatchers("/api/common/**","/api/auth/edit/**").hasAnyRole("USER","CONSULTANT")
-    				.requestMatchers("/api/auth/**").permitAll()
+    				.requestMatchers("/api/auth/edit/**").hasAnyRole("USER","CONSULTANT")
+    				.requestMatchers("/api/common/**","/api/auth/**").permitAll()
     				.anyRequest().authenticated());
 
     	http
