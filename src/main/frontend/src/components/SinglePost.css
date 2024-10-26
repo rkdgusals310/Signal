@@ -1,0 +1,56 @@
+.single-post-container {
+    background-color: #f9f9f9;
+    width: 1260px;
+    height: 650px;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+  }
+  
+  .post-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  
+  .post-header button {
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+  }
+  
+  .like-button {
+    margin-left: 10px;
+    cursor: pointer;
+  }
+  
+  .post-actions {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .divider {
+    border: 0;
+    border-top: 1px solid #ddd;
+    margin: 20px 0;
+  }
+  
+  .post-meta {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    font-size: 20px;
+    color: #888;
+  }
+  
+  .post-content {
+    background-color: #fff;
+    width: 95%;
+    min-height: 300px;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 8px;
+  }
+  

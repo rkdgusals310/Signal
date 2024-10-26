@@ -1,26 +1,16 @@
-/* src/pages/PostDetailPage.css */
-.post-detail-page {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-  
-  .back-button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 18px;
-    margin-bottom: 20px;
-  }
-  
-  .post-meta {
-    font-size: 14px;
-    color: #888;
-    margin-bottom: 10px;
-  }
-  
-  .post-content {
-    font-size: 18px;
-    line-height: 1.6;
-  }
-  
+.post-detail-container {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.navigation {
+  width: 20%; /* 네비게이션을 좌측 20% */
+  border-right: 1px solid #ccc;
+  padding: 20px;
+}
+
+.post-comment-container {
+  width: 80%; /* 나머지 80%에 게시글과 댓글 */
+  padding: 20px;
+}

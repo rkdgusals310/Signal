@@ -13,7 +13,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 80%;
+    width: 100%;
     max-width: 2580;
     margin: 0 auto;
   }
@@ -81,7 +81,7 @@
     bottom: 50px; /* 하단 선을 로고와 더 가깝게 조정 */
     left: 50%; /* 화면의 50%에서 시작 */
     transform: translateX(-50%); /* 선을 정확히 중앙으로 맞춤 */
-    width: 80%; /* 선의 너비를 전체 너비의 80%로 설정 */
+    width: 100%; /* 선의 너비를 전체 너비의 80%로 설정 */
     max-width: 3000px;
     height: 5px;
     background-color: #FFA49C; /* 선의 색상 */
