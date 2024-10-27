@@ -5,12 +5,12 @@
 }
 
 .navigation {
-  width: 20%; /* 네비게이션을 좌측 20% */
+  width: 20%;
   border-right: 1px solid #ccc;
   padding: 20px;
 }
 
 .post-comment-container {
-  width: 80%; /* 나머지 80%에 게시글과 댓글 */
+  width: 80%;
   padding: 20px;
 }

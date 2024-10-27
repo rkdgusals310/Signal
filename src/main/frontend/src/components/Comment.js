@@ -39,7 +39,7 @@ const Comment = ({ postId }) => {
         },
         body: JSON.stringify({
           postId,
-          userId: 1, // 임시로 1을 사용; 실제로는 사용자 정보를 활용해야 함
+          userId: 1, // 임시로 1
           contents: newComment,
         }),
       });
