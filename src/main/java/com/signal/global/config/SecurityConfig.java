@@ -56,7 +56,7 @@ public class SecurityConfig {
     	http
     	.formLogin((auth)->auth
 				.loginPage("/api/auth/login")
-    			.loginProcessingUrl("/login") // 프론트 폼 액션값이랑 일치해야함
+    			.loginProcessingUrl("/loginProc") // 프론트 폼 액션값이랑 일치해야함
 				.usernameParameter("userId")
 				.successHandler(new CustomAuthenticationSuccessHandler())
 				.failureHandler(new CustomAuthenticationFailureHandler())
@@ -73,7 +73,7 @@ public class SecurityConfig {
             config.setAllowedOrigins(Arrays.asList("http://localhost:8080","http://localhost:3000"));  // CORS 허용 도메인 설정
             config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));      // 허용할 HTTP 메서드 설정
             config.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));     // 허용할 요청 헤더 설정
-            return config;
+			return config;
         }));
 
 

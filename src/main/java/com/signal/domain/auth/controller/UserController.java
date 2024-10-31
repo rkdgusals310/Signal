@@ -99,7 +99,7 @@ public class UserController {
     @Operation(summary = "로그인")
     @GetMapping("/login")
     public String login() {
-        return "로그인 성공";
+        return "http://localhost:3000/login";
     }
 
     @Operation(summary = "로그아웃")
