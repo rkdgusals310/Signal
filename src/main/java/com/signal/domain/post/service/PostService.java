@@ -8,6 +8,7 @@ import com.signal.domain.auth.repository.AuthRepository;
 import com.signal.domain.post.dto.request.CompletionRequestDto;
 import com.signal.domain.post.dto.request.PostRequest;
 import com.signal.domain.post.dto.response.FilterResponse;
+import com.signal.domain.post.dto.response.MyPostResponse;
 import com.signal.domain.post.dto.response.PostDetailResponse;
 import com.signal.domain.post.dto.response.PostResponse;
 import com.signal.domain.post.dto.response.SearchResponse;
@@ -165,5 +166,28 @@ public class PostService {
         }
 
         return FilterResponse.toDto(false, invalidSentences);
+    }
+
+    @Transactional
+    public PagedDto<MyPostResponse> getMyPosts(
+        Long userId, int size, int page
+    ) {
+        authRepository.existsById(userId);
+
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Direction.DESC, "createdAt"));
+
+        Page<Post> posts = postRepository.findByUserId(userId, pageRequest);
+
+        List<PostResponse> postsResponse = posts.stream()
+            .map(
+                PostResponse::toDto
+            ).collect(Collectors.toList());
+
+        int totalCount = (int) posts.getTotalElements();
+        int totalPages = (totalCount + size - 1) / size;
+
+        MyPostResponse myPostResponse = MyPostResponse.toDto(totalCount, postsResponse);
+
+        return PagedDto.toDTO(page, size, totalPages, List.of(myPostResponse));
     }
 }

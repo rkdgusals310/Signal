@@ -2,6 +2,7 @@ package com.signal.domain.post.controller;
 
 import com.signal.domain.post.dto.request.PostRequest;
 import com.signal.domain.post.dto.response.FilterResponse;
+import com.signal.domain.post.dto.response.MyPostResponse;
 import com.signal.domain.post.dto.response.PostDetailResponse;
 import com.signal.domain.post.dto.response.SearchResponse;
 import com.signal.domain.post.model.enums.Category;
@@ -80,5 +81,18 @@ public class PostController {
     ) {
         Long userId = customUserDetails.getUserId();
         postService.deletePost(postId, userId);
+    }
+
+    @Operation(summary = "내가 쓴 게시글 조회")
+    @GetMapping("/user/my-post")
+    public ResponseEntity<PagedDto<MyPostResponse>> getMyPosts(
+        @RequestParam(required = false, value = "size", defaultValue = "10") int size,
+        @RequestParam(required = false, value = "page", defaultValue = "0") int page,
+        @AuthenticationPrincipal CustomUserDetails customUserDetails
+    ) {
+        Long userId = customUserDetails.getUserId();
+        PagedDto<MyPostResponse> posts = postService.getMyPosts(userId, size, page);
+
+        return ResponseEntity.ok(posts);
     }
 }

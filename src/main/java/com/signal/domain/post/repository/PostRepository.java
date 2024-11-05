@@ -55,4 +55,10 @@ public interface PostRepository extends JpaRepository<Post, Long> {
    @Modifying
    @Query("UPDATE Post p SET p.viewCount = p.viewCount + 1 WHERE p.id = :postId")
    void incrementViewCountById(Long postId);
+
+   @Query("SELECT p FROM Post p WHERE p.deletedAt IS NULL AND p.user.id = :userId")
+   Page<Post> findByUserId(
+       @Param("userId") Long userId,
+       Pageable pageable
+   );
 }
