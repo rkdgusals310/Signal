@@ -25,7 +25,7 @@ public class LikesController {
 
     private final LikesService likesService;
 
-    @Operation(summary = "좋아요 추가/삭제")
+    @Operation(summary = "게시글 좋아요 추가/삭제")
     @PostMapping
     public ResponseEntity<String> likesPost(
         @PathVariable Long postId,
@@ -33,6 +33,16 @@ public class LikesController {
     ) {
         Long userId = customUserDetails.getUserId();
         return ResponseEntity.ok(likesService.likesPost(postId, userId));
+    }
+
+    @Operation(summary = "아티클 좋아요 추가/삭제")
+    @PostMapping
+    public ResponseEntity<String> likesArticle(
+        @PathVariable Long articleId,
+        @AuthenticationPrincipal CustomUserDetails customUserDetails
+    ) {
+        Long userId = customUserDetails.getUserId();
+        return ResponseEntity.ok(likesService.likesArticle(articleId, userId));
     }
 
     @Operation(summary = "내가 좋아요한 글 조회")

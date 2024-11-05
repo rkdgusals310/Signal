@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.signal.domain.auth.model.User;
+import com.signal.domain.auth.model.enums.Role;
 import com.signal.domain.auth.repository.AuthRepository;
 import com.signal.domain.post.dto.request.CompletionRequestDto;
 import com.signal.domain.post.dto.request.PostRequest;
@@ -77,9 +78,11 @@ public class PostService {
     @Transactional
     public FilterResponse createPost(PostRequest postRequest, Long userId){
 
-        // userId  검증필요, 임시 User 생성
         // consultant가 아닌지도 확인 필요 추후 수정해야 함.
         User user = authRepository.findUserById(userId);
+        if (user.getRole().equals(Role.CONSULTANT)) {
+            throw new InvalidValueException(ErrorCode.WRONG_ROLE_POST);
+        }
 
         FilterResponse filterResponse = filterChatGPT(postRequest.getTitle() + " " + postRequest.getContents());
 

@@ -1,5 +1,6 @@
 package com.signal.domain.article.model;
 
+import com.signal.domain.article.dto.request.ArticleRequest;
 import com.signal.domain.auth.model.User;
 import com.signal.global.entity.BaseEntity;
 import jakarta.persistence.Column;
@@ -53,4 +54,22 @@ public class Article extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
+    public static Article toEntity(ArticleRequest articleRequest, User user) {
+        return Article.builder()
+            .title(articleRequest.getTitle())
+            .contents(articleRequest.getContent())
+            .viewCount(0L)
+            .likesCount(0l)
+            .commentCount(0L)
+            .thumbnail(articleRequest.getThumbnail())
+            .user(user)
+            .build()
+            ;
+    }
+
+    public void update(ArticleRequest articleRequest) {
+        this.title = articleRequest.getTitle();
+        this.contents = articleRequest.getContent();
+        this.thumbnail = articleRequest.getThumbnail();
+    }
 }

@@ -29,10 +29,10 @@ public interface PostRepository extends JpaRepository<Post, Long> {
    );
 
    @Query("SELECT p.id FROM Post p WHERE p.id = :postId AND p.user.id = :userId")
-   Long findPostIdByIdAndUserId(Long postId, Long userId);
+   Long findByPostIdAndUserId(Long postId, Long userId);
 
    default boolean existsByIdAndUserId(Long postId, Long userId) {
-      if (findPostIdByIdAndUserId(postId, userId) == null) throw new EntityNotFoundException(
+      if (findByPostIdAndUserId(postId, userId) == null) throw new EntityNotFoundException(
           ErrorCode.NOT_FOUND);
       return true;
    }
@@ -61,4 +61,5 @@ public interface PostRepository extends JpaRepository<Post, Long> {
        @Param("userId") Long userId,
        Pageable pageable
    );
+
 }

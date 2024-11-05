@@ -48,6 +48,23 @@ public class LikesService {
         }
     }
 
+    public String likesArticle(Long articleId, Long userId) {
+        User user = authRepository.findUserById(userId);
+        Article article = articleRepository.findArticleById(articleId);
+
+        if (likesRepository.existsLikesById(articleId, userId)) {
+            Likes likes = likesRepository.findLikesByPostIdAndUserId(articleId, userId);
+            likesRepository.delete(likes);
+            articleRepository.decrementLikesCountById(articleId);
+            return "Unlike Success";
+        } else {
+            Likes likes = Likes.createArticleLike(article, user);
+            likesRepository.save(likes);
+            articleRepository.incrementLikesCountById(articleId);
+            return "Like Success";
+        }
+    }
+
     public PagedDto<MyLikesResponse> getMyLikes (
         Long userId, int size, int page
     ) {
