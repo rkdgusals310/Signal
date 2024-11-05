@@ -1,8 +1,19 @@
 package com.signal.domain.comment.service;
 
 
+import com.signal.domain.article.model.Article;
+import com.signal.domain.article.repository.ArticleRepository;
+import com.signal.domain.comment.dto.response.CommentSumResponse;
+import com.signal.domain.comment.dto.response.MyCommentResponse;
+import com.signal.domain.post.model.Post;
+import com.signal.global.dto.PagedDto;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +34,7 @@ public class CommentService {
 	private final PostRepository postRepository;
 	private final CommentRepository commentRepository;
 	private final AuthRepository authRepository;
+	private final ArticleRepository articleRepository;
 
 	@Transactional
 	public void createComment(CommentCreateRequest request) {
@@ -61,9 +73,6 @@ public class CommentService {
 		log.info("댓글 삭제 완료: 댓글 ID{}",commentId);
 	}
 	
-	
-	
-	
 	public Page<Comment> getCommentByPostID(Long postId,Pageable pageable){
 		postRepository.findById(postId)
 			.orElseThrow(()-> new IllegalArgumentException("해당 게시물은 존재하지 않습니다"));
@@ -73,5 +82,35 @@ public class CommentService {
 		return comments;
 		
 	}
-	
+
+	@Transactional
+	public PagedDto<MyCommentResponse> getMyComments(Long userId, int size, int page) {
+		authRepository.findById(userId);
+
+		PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Direction.DESC, "createdAt"));
+
+		Page<Comment> comments = commentRepository.findCommentsByUserId(userId, pageRequest);
+
+		List<CommentSumResponse> commentResponses = comments.stream()
+			.map(
+				comment -> {
+					if (comment.getArticle() != null) {
+						Long articleId = comment.getArticle().getId();
+						Article article = articleRepository.findArticleById(articleId);
+						return CommentSumResponse.toDto(article, comment);
+					} else {
+						Long postId = comment.getPost().getId();
+						Post post = postRepository.findPostById(postId);
+						return CommentSumResponse.toDto(post, comment);
+					}
+				}
+			).collect(Collectors.toList());
+
+		int totalCount = (int) comments.getTotalElements();
+		int totalPages = (totalCount + size - 1) / size;
+
+		MyCommentResponse myCommentResponse = MyCommentResponse.toDto(totalCount, commentResponses);
+
+		return PagedDto.toDTO(page, size, totalPages, List.of(myCommentResponse));
+	}
 }

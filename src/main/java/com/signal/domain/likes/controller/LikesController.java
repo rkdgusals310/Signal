@@ -55,4 +55,5 @@ public class LikesController {
         Long userId = customUserDetails.getUserId();
         return ResponseEntity.ok(likesService.getMyLikes(userId, size, page));
     }
+
 }
