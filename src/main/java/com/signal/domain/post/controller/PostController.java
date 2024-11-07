@@ -95,4 +95,14 @@ public class PostController {
 
         return ResponseEntity.ok(posts);
     }
+
+    @Operation(summary = "게시글 검색어로 조회")
+    @GetMapping("/common/post")
+    public ResponseEntity<PagedDto<SearchResponse>> getPosts (
+        @RequestParam(value = "search") String search,
+        @RequestParam(required = false, value = "size", defaultValue = "10") int size,
+        @RequestParam(required = false, value = "page", defaultValue = "0") int page
+    ) {
+        PagedDto<SearchResponse>
+    }
 }
