@@ -70,6 +70,7 @@ public class SecurityConfig {
     	http
         .cors(cors -> cors.configurationSource(request -> {
             CorsConfiguration config = new CorsConfiguration();
+			config.setAllowCredentials(true);
             config.setAllowedOrigins(Arrays.asList("http://localhost:8080","http://localhost:3000"));  // CORS 허용 도메인 설정
             config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));      // 허용할 HTTP 메서드 설정
             config.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));     // 허용할 요청 헤더 설정
