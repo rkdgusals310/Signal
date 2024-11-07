@@ -1,0 +1,89 @@
+.article-create-page {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #F8EDEB;
+    border-radius: 8px;
+    min-height: 1000px;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 50px;
+    position: relative; /* 상대 위치 설정 */
+}
+
+.back-button {
+    position: absolute; /* 절대 위치로 왼쪽 상단 배치 */
+    top: 20px;
+    left: 20px;
+    background: none;
+    border: none;
+    color: black;
+    font-size: 32px;
+    cursor: pointer;
+}
+
+.create-article-form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    margin-top: 60px; /* Back button 위치 고려 */
+}
+
+.create-article-form input[type="text"] {
+    width: 1000px;
+    height: 75px;
+    padding: 10px;
+    border: 1px solid white;
+    border-radius: 20px;
+    box-sizing: border-box;
+    margin-left: 100px;
+    margin-top: 50px;
+    font-size: 20px;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+}
+
+.create-article-form input[type="file"] {
+    margin-bottom: 50px;
+    margin-top: 50px;
+    margin-left: 100px;
+}
+
+.create-article-form textarea {
+    width: 1400px;
+    height: 600px;
+    padding: 10px;
+    border: 1px solid white;
+    border-radius: 20px;
+    box-sizing: border-box;
+    resize: vertical;
+    margin: 0 auto;
+    font-size: 20px;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+}
+
+.thumbnail-preview {
+    width: 700px;
+    height: auto;
+    margin-top: 10px;
+    border: 1px solid white;
+    border-radius: 5px;
+    margin-left: 100px;
+    margin-bottom: 50px;
+}
+
+.submit-button {
+    background-color: #ff6b6b;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 20px;
+    align-self: flex-end; /* 왼쪽 정렬 */
+}
+
+.submit-button:hover {
+    background-color: #e65a5a;
+}

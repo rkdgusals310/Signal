@@ -15,6 +15,10 @@ import UserTypeSelection from './pages/UserTypeSelection'; // 사용자 유형 �
 import ConsultantSignupPage from './pages/ConsultantSignupPage';
 import EditPostPage from './pages/EditPostPage';
 import './App.css';
+import ArticlePage from './pages/ArticlePage';
+import SingleArticlePage from './pages/SingleArticlePage';
+import ArticleCreatePage from './pages/ArticleCreatePage';
+import UserMyPage from './pages/UserMyPage';
 
 // 별도의 컴포넌트로 useLocation을 포함한 내부 로직 처리
 function Layout() {
@@ -46,6 +50,13 @@ function Layout() {
           {/* 게시글 상세 페이지 */}
           <Route path="/post/:postId" element={<PostDetailPage />} />
 
+          {/* 아티클 페이지 */}
+          <Route path="/article" element={<ArticlePage />} />
+          <Route path="/article/create" element={<ArticleCreatePage />} />
+
+          {/* 단일아티클 페이지 */}
+          <Route path="/article/:articleId" element={<SingleArticlePage />} />
+
           {/* 로그인 페이지 경로 */}
           <Route path="/login" element={<Login />} />
 
@@ -58,6 +69,9 @@ function Layout() {
           <Route path="/select-user-type" element={<UserTypeSelection />} /> {/* 일반 사용자 / 전문가 선택 경로 */}
 
           <Route path="/consultant-signup" element={<ConsultantSignupPage />} />
+
+          {/* 마이페이지관련 */}
+          <Route path="/mypage" element={<UserMyPage />} /> 
 
           {/* 404 페이지 */}
           <Route path="*" element={<div>페이지를 찾을 수 없습니다.</div>} />
