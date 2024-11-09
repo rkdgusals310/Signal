@@ -1,5 +1,6 @@
 package com.signal.domain.article.model;
 
+import com.signal.domain.article.dto.request.ArticleRequest;
 import com.signal.domain.auth.model.User;
 import com.signal.global.entity.BaseEntity;
 import jakarta.persistence.Column;
@@ -52,5 +53,11 @@ public class Article extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+    
+    public void update(ArticleRequest articleRequest) {
+        this.title = articleRequest.getTitle();
+        this.contents = articleRequest.getContents();
+        this.thumbnail = articleRequest.getThumbnail();
+    }
 
 }

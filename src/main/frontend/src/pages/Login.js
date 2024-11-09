@@ -18,7 +18,7 @@ const Login = () => {
       <div className="logo" onClick={handleLogoClick} style={{ cursor: 'pointer' }}>
         <img src="/img/loginLogo.png" alt="Signal Logo" /> {/* 로고 이미지 추가 */}
       </div>
-      <form className="login-form" action="/login" method="POST">
+      <form className="login-form" action="/loginProc" method="POST">
         <input
           id="userId"
           type="text"

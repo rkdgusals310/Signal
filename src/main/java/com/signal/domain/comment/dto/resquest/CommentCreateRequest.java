@@ -13,8 +13,8 @@ public class CommentCreateRequest {
 	@NotNull(message="게시물 ID는 필수입니다.")
 	private Long postId;
 	
-	@NotNull(message="사용자 ID는 필수입니다.")
-	private Long userId;
+//	@NotNull(message="사용자 ID는 필수입니다.")
+//	private Long userId;
 	
 	@NotBlank(message = "댓글 내용은 비어 있을 수 없습니다.")
 	private String contents;

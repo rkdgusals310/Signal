@@ -56,7 +56,7 @@ public class SecurityConfig {
     	http
     	.formLogin((auth)->auth
 				.loginPage("/api/auth/login")
-    			.loginProcessingUrl("/login") // 프론트 폼 액션값이랑 일치해야함
+    			.loginProcessingUrl("/loginProc") // 프론트 폼 액션값이랑 일치해야함
 				.usernameParameter("userId")
 				.successHandler(new CustomAuthenticationSuccessHandler())
 				.failureHandler(new CustomAuthenticationFailureHandler())

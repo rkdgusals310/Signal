@@ -29,8 +29,12 @@ public class ArticleDetailResponse {
 				.thumbnail(article.getThumbnail())
 				.id(article.getId())
 				.title(article.getTitle())
+				.consultantName(article.getUser().getNickname())
+				.createAt(article.getCreatedAt())
+		        .modifiedAt(article.getModifiedAt())
 				.commentsCount(article.getCommentCount())
 				.contents(article.getContents())
 				.build();
 	}
+	
 }

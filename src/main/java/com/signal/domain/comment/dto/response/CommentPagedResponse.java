@@ -19,6 +19,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class CommentPagedResponse {
 	private PagedDto<CommentResponse> conmments;
+	private int repliesCount;      
 	
 	public static CommentPagedResponse toDto(Page<Comment> commentPage) {
 	    // 바로 Page<CommentResponse>로 변환
@@ -26,5 +27,10 @@ public class CommentPagedResponse {
 	        .conmments(PagedDto.toDTO(commentPage.map(CommentResponse::toDto)))  
 	        .build();
 	}
+	
+	public CommentPagedResponse withRepliesCount(int repliesCount) {
+        this.repliesCount = repliesCount;
+        return this;
+    }
 
 }

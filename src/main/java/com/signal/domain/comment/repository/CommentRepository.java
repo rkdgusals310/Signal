@@ -18,6 +18,8 @@ public interface CommentRepository extends JpaRepository<Comment,Long> {
 	//특정 게시물에 댓글 작성
 	//특정 게시물 댓글 수정
 	//특정 게시물 댓글 삭제
+	
+	 int countByPostId(Long postId);
 }
 
 

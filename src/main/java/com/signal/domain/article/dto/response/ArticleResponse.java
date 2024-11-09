@@ -22,14 +22,14 @@ public class ArticleResponse {
 	private Long commentCount;
 	private Long likesCount;
 	
-	public static ArticleResponse toDto(Article article,User user) {
-	    if (article == null || user == null) {
+	public static ArticleResponse toDto(Article article) {
+	    if (article == null || article.getUser() == null) {
 	        throw new IllegalArgumentException("Article or User cannot be null");
 	    }
 		return ArticleResponse.builder()
 				.id(article.getId())
 				.title(article.getTitle())
-				.consultantName(user.getNickname())
+				.consultantName(article.getUser().getNickname())
 				.createAt(article.getCreatedAt())
 				.commentCount(article.getCommentCount())
 				.likesCount(article.getLikesCount())
