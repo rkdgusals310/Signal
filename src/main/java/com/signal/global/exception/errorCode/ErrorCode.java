@@ -23,13 +23,16 @@ public enum ErrorCode {
 
     //AUTH
     NOT_LOGGED_IN(HttpStatus.UNAUTHORIZED.value(), "A001", "로그인이 필요합니다."),
-
+    INSUFFICIENT_ROLE(HttpStatus.FORBIDDEN.value(), "A002", "전문가 권한이 있는 사용자만 글을 작성할 수 있습니다."),
     //POST
     CONTENT_TOO_SHORT(HttpStatus.BAD_REQUEST.value(), "P001", "내용은 최소 10자 이상이어야 합니다."),
     TITLE_TOO_SHORT_OR_LONG(HttpStatus.BAD_REQUEST.value(), "P002", "제목의 길이는 5자이상 20자 이하여야합니다."),
-    POST_NOT_FOUND(HttpStatus.BAD_REQUEST.value(), "P003", "올바르지 않는 게시글 아이디 입니다.")
+    POST_NOT_FOUND(HttpStatus.BAD_REQUEST.value(), "P003", "올바르지 않는 게시글 아이디 입니다."),
 
-    ;
+    //COMMENT
+    COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "C001", "해당 댓글이 존재하지 않습니다.");
+    
+    
     private final Integer status;
     private final String code;
     private final String message;
