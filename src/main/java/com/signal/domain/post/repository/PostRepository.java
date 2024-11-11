@@ -62,4 +62,12 @@ public interface PostRepository extends JpaRepository<Post, Long> {
        Pageable pageable
    );
 
+   @Query("SELECT p FROM Post p "
+       + "WHERE p.deletedAt is NULL "
+       + "AND (LOWER(p.title) LIKE LOWER(CONCAT('%', :search, '%')) "
+       + "OR LOWER(p.contents) LIKE LOWER(CONCAT('%', :search, '%')))")
+   Page<Post> findBySearch(
+       @Param("search") String search,
+       Pageable pageable
+   );
 }

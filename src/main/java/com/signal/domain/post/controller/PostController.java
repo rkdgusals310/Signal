@@ -1,6 +1,7 @@
 package com.signal.domain.post.controller;
 
 import com.signal.domain.post.dto.request.PostRequest;
+import com.signal.domain.post.dto.response.CategoryResponse;
 import com.signal.domain.post.dto.response.FilterResponse;
 import com.signal.domain.post.dto.response.MyPostResponse;
 import com.signal.domain.post.dto.response.PostDetailResponse;
@@ -35,12 +36,12 @@ public class PostController {
 
     @Operation(summary = "게시판 전체 조회")
     @GetMapping("/common/post")
-    public ResponseEntity<PagedDto<SearchResponse>> getPosts (
+    public ResponseEntity<PagedDto<CategoryResponse>> getPosts (
         @RequestParam Category category,
         @RequestParam(required = false, value = "size", defaultValue = "10") int size,
         @RequestParam(required = false, value = "page", defaultValue = "0") int page
     ) {
-        PagedDto<SearchResponse> posts = postService.getPosts(category, size, page);
+        PagedDto<CategoryResponse> posts = postService.getPosts(category, size, page);
 
         return ResponseEntity.ok(posts);
     }
@@ -98,11 +99,12 @@ public class PostController {
 
     @Operation(summary = "게시글 검색어로 조회")
     @GetMapping("/common/post")
-    public ResponseEntity<PagedDto<SearchResponse>> getPosts (
+    public ResponseEntity<PagedDto<SearchResponse>> getSearchPosts (
         @RequestParam(value = "search") String search,
         @RequestParam(required = false, value = "size", defaultValue = "10") int size,
         @RequestParam(required = false, value = "page", defaultValue = "0") int page
     ) {
-        PagedDto<SearchResponse>
+        PagedDto<SearchResponse> searchResponse = postService.getSearchPosts(search, size, page);
+        return ResponseEntity.ok(searchResponse);
     }
 }

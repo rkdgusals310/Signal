@@ -8,6 +8,7 @@ import com.signal.domain.auth.model.enums.Role;
 import com.signal.domain.auth.repository.AuthRepository;
 import com.signal.domain.post.dto.request.CompletionRequestDto;
 import com.signal.domain.post.dto.request.PostRequest;
+import com.signal.domain.post.dto.response.CategoryResponse;
 import com.signal.domain.post.dto.response.FilterResponse;
 import com.signal.domain.post.dto.response.MyPostResponse;
 import com.signal.domain.post.dto.response.PostDetailResponse;
@@ -42,7 +43,7 @@ public class PostService {
     private final ChatGPTServiceImpl chatGPTService;
 
     @Transactional
-    public PagedDto<SearchResponse> getPosts(
+    public PagedDto<CategoryResponse> getPosts(
         Category category, int size, int page
     ) {
         Post hotpost = postRepository.findTopByCategoryOrderByViewCountDesc(category);
@@ -60,7 +61,7 @@ public class PostService {
         int totalCount = (int) posts.getTotalElements();
         int totalPages = (totalCount + size - 1) / size;
 
-        SearchResponse searchResponse = SearchResponse.toDto(totalCount, hotpostResponse, postsResponse);
+        CategoryResponse searchResponse = CategoryResponse.toDto(totalCount, hotpostResponse, postsResponse);
 
         return PagedDto.toDTO(page, size, totalPages, List.of(searchResponse));
     }
@@ -192,5 +193,23 @@ public class PostService {
         MyPostResponse myPostResponse = MyPostResponse.toDto(totalCount, postsResponse);
 
         return PagedDto.toDTO(page, size, totalPages, List.of(myPostResponse));
+    }
+
+    public PagedDto<SearchResponse> getSearchPosts(String search, int size, int page) {
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Direction.DESC, "createdAt"));
+
+        Page<Post> posts = postRepository.findBySearch(search, pageRequest);
+
+        List<PostResponse> postsResponse = posts.stream()
+            .map(
+                PostResponse::toDto
+            ).collect(Collectors.toList());
+
+        int totalCount = (int) posts.getTotalElements();
+        int totalPages = (totalCount + size - 1) / size;
+
+        SearchResponse searchResponse = SearchResponse.toDto(totalCount, postsResponse);
+
+        return PagedDto.toDTO(page, size, totalPages, List.of(searchResponse));
     }
 }

@@ -10,17 +10,20 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SearchResponse {
+public class CategoryResponse {
 
     private int totalCount;
+    private PostResponse hotPost;
     private List<PostResponse> posts;
 
-    public static SearchResponse toDto (
+    public static CategoryResponse toDto (
         int totalCount,
+        PostResponse hotPost,
         List<PostResponse> posts
     ) {
-        return SearchResponse.builder()
+        return CategoryResponse.builder()
             .totalCount(totalCount)
+            .hotPost(hotPost)
             .posts(posts)
             .build()
             ;
