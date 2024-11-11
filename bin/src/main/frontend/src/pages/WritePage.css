@@ -1,0 +1,19 @@
+.write-page {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    padding: 20px;
+    background-color: white;
+    min-height: 80vh;
+    width: 1700px;
+    margin: 0 auto;
+  }
+  
+  .write-form-container {
+    flex-grow: 1;
+    background-color: white;
+    border-radius: 20px;
+    padding: 20px;
+    margin-left: 20px;
+  }
+  

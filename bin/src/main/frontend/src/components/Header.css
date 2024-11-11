@@ -1,0 +1,89 @@
+/* Header 전체 레이아웃 설정 */
+.header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    padding: 0;
+    position: relative;
+    width: 100%;
+  }
+  
+  .header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 2580;
+    margin: 0 auto;
+  }
+
+  .logo a img {
+    width: 350px;
+    height: 170px;
+    margin-right: 0vw;
+  }
+  
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+  }
+  
+  .nav-links a {
+    font-size: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100px;
+    height: 50px;
+    color: black;
+    font-weight: bold;
+    text-decoration: none;
+    position: relative;
+  }
+  
+  .nav-links a:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: -12px;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 20px;
+    width: 1px;
+    background-color: #FFA49C;
+  }
+  
+  .nav-links button {
+    font-size: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100px;
+    height: 50px;
+    background: none;
+    border: none;
+    font-weight: bold;
+    color: black;
+    cursor: pointer;
+    margin-left: 30px;
+  }
+  
+  .nav-links a:hover, .nav-links button:hover {
+    text-decoration: underline;
+  }
+  
+  /* 헤더 하단의 선 추가 */
+  /* 헤더 하단의 선을 중앙에 배치 */
+.header::after {
+    content: '';
+    position: absolute;
+    bottom: 50px; /* 하단 선을 로고와 더 가깝게 조정 */
+    left: 50%; /* 화면의 50%에서 시작 */
+    transform: translateX(-50%); /* 선을 정확히 중앙으로 맞춤 */
+    width: 100%; /* 선의 너비를 전체 너비의 80%로 설정 */
+    max-width: 3000px;
+    height: 5px;
+    background-color: #FFA49C; /* 선의 색상 */
+}
+  

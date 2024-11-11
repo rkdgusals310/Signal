@@ -60,6 +60,24 @@ public class SecurityConfig {
                 .logoutSuccessUrl("/") // 로그아웃 후 리다이렉트 경로
             );
 
+    	
+        http
+
+            .cors(cors -> cors.configurationSource(corsConfigurationSource())) ;// CORS 설정
+    
+        
+     // 세션 관련
+    	http
+    		.sessionManagement((auth)->auth
+    				.maximumSessions(3)
+    				.maxSessionsPreventsLogin(true));
+    	http
+    		.sessionManagement((auth)->auth
+    				.sessionFixation().changeSessionId());
+
+        return http.build();
+        
+
     	//cors
 //    	http
 //        .cors(cors -> cors.configurationSource(request -> {
@@ -69,20 +87,8 @@ public class SecurityConfig {
 //            config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));      // 허용할 HTTP 메서드 설정
 //            config.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));     // 허용할 요청 헤더 설정
 //			return config;
-//        }));
-    	
-        http
-
-            .cors(cors -> cors.configurationSource(corsConfigurationSource())) ;// CORS 설정
-            http
-            .sessionManagement((auth) -> auth
-                .maximumSessions(3)
-                .maxSessionsPreventsLogin(true)
-                .and()
-                .sessionFixation().changeSessionId()
-            );
-
-        return http.build();
+//        })); 
+        
     }
 
 //    // 글로벌 CORS 설정
