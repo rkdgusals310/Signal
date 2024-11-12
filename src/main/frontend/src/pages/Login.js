@@ -5,19 +5,46 @@ import { useNavigate } from 'react-router-dom';
 const Login = () => {
   const [userId, setUserId] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  // 로고 클릭 시 홈으로 이동하는 함수
   const handleLogoClick = () => {
     navigate('/');
   };
 
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setError(null);
+
+    try {
+      const response = await fetch('/loginProc', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({ userId, password }),
+        credentials: 'include',
+      });
+
+      if (response.ok) {
+        sessionStorage.setItem('isLoggedIn', 'true');
+        navigate('/');
+      } else {
+        setError('로그인에 실패했습니다. 아이디와 비밀번호를 확인해주세요.');
+      }
+    } catch (error) {
+      console.error('로그인 요청 오류:', error);
+      setError('서버 오류가 발생했습니다. 다시 시도해주세요.');
+    }
+  };
+
   return (
     <div className="login-container">
+      <form className="login-form" onSubmit={handleLogin}>
+
       <div className="logo" onClick={handleLogoClick} style={{ cursor: 'pointer' }}>
         <img src="/img/loginLogo.png" alt="Signal Logo" />
       </div>
-      <form className="login-form" action="/loginProc" method="POST">
         <input
           id="userId"
           type="text"
@@ -25,6 +52,7 @@ const Login = () => {
           placeholder="아이디를 입력해주세요."
           value={userId}
           onChange={(e) => setUserId(e.target.value)}
+          required
         />
         <input
           id="password"
@@ -33,9 +61,12 @@ const Login = () => {
           placeholder="비밀번호를 입력해주세요."
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          required
         />
         <button type="submit" className="login-button">로그인</button>
       </form>
+      {error && <p className="error-message">{error}</p>}
+
       <div className="login-links">
         <a href="/select-user-type">회원가입</a>
         <a href="/find-id">아이디 찾기</a>
@@ -46,3 +77,11 @@ const Login = () => {
 };
 
 export default Login;
+
+
+
+
+
+
+
+

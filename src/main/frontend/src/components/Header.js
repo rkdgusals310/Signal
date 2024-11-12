@@ -1,17 +1,26 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom'; // useNavigate 훅 추가
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import './Header.css';
 
 const Header = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 상태 관리
-  const navigate = useNavigate(); // 페이지 이동을 위한 useNavigate 훅 사용
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+
+    const loggedIn = sessionStorage.getItem('isLoggedIn') === 'true';
+    setIsLoggedIn(loggedIn);
+  }, []);
 
   const handleLoginLogout = () => {
     if (isLoggedIn) {
-      // 로그아웃 처리
-      setIsLoggedIn(false);
+      const confirmLogout = window.confirm("정말 로그아웃하시겠습니까?");
+      if (confirmLogout) {
+        sessionStorage.removeItem('isLoggedIn');
+        setIsLoggedIn(false);
+        navigate('/');
+      }
     } else {
-      // 로그인 상태가 아니면 로그인 페이지로 이동
       navigate('/login');
     }
   };

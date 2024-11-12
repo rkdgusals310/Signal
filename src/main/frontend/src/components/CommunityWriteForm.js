@@ -29,6 +29,7 @@ const CommunityWriteForm = () => {
           'accept': '*/*',
         },
         body: JSON.stringify(requestBody),
+        credentials: 'include',
       });
 
       console.log("Response status:", response.status);

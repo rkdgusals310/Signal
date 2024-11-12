@@ -1,4 +1,3 @@
-// ArticlePage.js
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './ArticlePage.css';
@@ -7,6 +6,7 @@ const ArticlePage = () => {
   const [articles, setArticles] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
+  const [loading, setLoading] = useState(false); // 로딩 상태 추가
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -14,6 +14,7 @@ const ArticlePage = () => {
   }, [currentPage]);
 
   const fetchArticles = async (page) => {
+    setLoading(true);
     try {
       const response = await fetch(`/api/common/article?page=${page}&size=10`, {
         method: 'GET',
@@ -23,13 +24,22 @@ const ArticlePage = () => {
       });
       if (response.ok) {
         const data = await response.json();
-        setArticles(data.content);
+        if (Array.isArray(data.content)) {
+          setArticles(data.content);
+        } else {
+          console.error("Expected 'content' to be an array, but got", data.content);
+          setArticles([]);
+        }
         setTotalPages(data.totalPages);
       } else {
         console.error("Error fetching articles");
+        setArticles([]);
       }
     } catch (error) {
       console.error("Error fetching articles:", error);
+      setArticles([]);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -42,25 +52,33 @@ const ArticlePage = () => {
   };
 
   const handleCreateArticle = () => {
-    navigate('/article/create'); // 작성 페이지로 이동
+    navigate('/article/create');
   };
 
   return (
     <div className="article-page">
-      <div className="article-list">
-        {articles.map((article) => (
-          <div key={article.id} className="article-card" onClick={() => handleArticleClick(article.id)}>
-            <img src={article.thumbnail || '/default-thumbnail.jpg'} alt={article.title} className="article-image" />
-            <div className="article-content">
-              <h2>{article.title}</h2>
-              <p>
-                <span>{article.createAt} • {article.commentCount} Comments • {article.consultantName}</span>
-              </p>
-              <p>{article.contents}</p>
-            </div>
-          </div>
-        ))}
-      </div>
+      {loading ? (
+        <div>Loading...</div>
+      ) : (
+        <div className="article-list">
+          {articles.length > 0 ? (
+            articles.map((article) => (
+              <div key={article.id} className="article-card" onClick={() => handleArticleClick(article.id)}>
+                <img src={article.thumbnail || '/default-thumbnail.jpg'} alt={article.title} className="article-image" />
+                <div className="article-content">
+                  <h2>{article.title}</h2>
+                  <p>
+                    <span>{article.createAt} • {article.commentCount} Comments • {article.consultantName}</span>
+                  </p>
+                  <p>{article.contents}</p>
+                </div>
+              </div>
+            ))
+          ) : (
+            <p>No articles available</p>
+          )}
+        </div>
+      )}
       <div className="pagination">
         <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 0}>
           &lt; 이전
