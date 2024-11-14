@@ -26,59 +26,20 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SwaggerConfig {
 
-    private static final String SECURITY_SCHEME_NAME = "JWT";
-
     @Bean
     public ModelResolver modelResolver(ObjectMapper objectMapper) {
         return new ModelResolver(objectMapper);
     }
 
+    // TODO: 나중에 시큐리티 정리되면 적용 가능하도록 다시 수정해야 함.
     @Bean
     public OpenAPI openAPI() {
         return new OpenAPI()
-            .addSecurityItem(createSecurityRequirement())
-            .components(createSecurityComponents())
-            .components(new Components());
-    }
-
-    private SecurityRequirement createSecurityRequirement() {
-        return new SecurityRequirement().addList(SECURITY_SCHEME_NAME);
-    }
-
-    private Components createSecurityComponents() {
-        return new Components()
-            .addSecuritySchemes(SECURITY_SCHEME_NAME, new SecurityScheme()
-                .name(SECURITY_SCHEME_NAME)
-                .type(SecurityScheme.Type.HTTP)
-                .scheme("Bearer")
-                .bearerFormat(SECURITY_SCHEME_NAME));
-    }
-
-    private RequestBody createLoginRequestBody() {
-        return new RequestBody()
-            .content(
-                new Content()
-                    .addMediaType(
-                        "application/json",
-                        new MediaType()
-                            .schema(
-                                new Schema<>()
-                                    .type("object")
-                                    .properties(
-                                        Map.of(
-                                            "email",
-                                            new Schema<>()
-                                                .type(
-                                                    "string"),
-                                            "password",
-                                            new Schema<>()
-                                                .type(
-                                                    "string"))))));
-    }
-
-    private ApiResponses createLoginResponses() {
-        return new ApiResponses()
-            .addApiResponse("200", new ApiResponse().description("Successful login"))
-            .addApiResponse("400", new ApiResponse().description("Bad request"));
+            .addSecurityItem(new SecurityRequirement().addList("JESSIONID"))
+            .components(new Components()
+                .addSecuritySchemes("JESSIONID", new SecurityScheme()
+                    .name("JESSIONID")
+                    .type(SecurityScheme.Type.APIKEY)
+                    .in(SecurityScheme.In.COOKIE)));
     }
 }

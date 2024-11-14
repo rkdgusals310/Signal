@@ -28,6 +28,11 @@ public enum ErrorCode {
     CONTENT_TOO_SHORT(HttpStatus.BAD_REQUEST.value(), "P001", "내용은 최소 10자 이상이어야 합니다."),
     TITLE_TOO_SHORT_OR_LONG(HttpStatus.BAD_REQUEST.value(), "P002", "제목의 길이는 5자이상 20자 이하여야합니다."),
     POST_NOT_FOUND(HttpStatus.BAD_REQUEST.value(), "P003", "올바르지 않는 게시글 아이디 입니다."),
+    WRONG_ROLE_POST(HttpStatus.UNAUTHORIZED.value(), "P004", "상담사는 게시글을 작성할 수 없습니다."),
+
+    //ARTICLE
+    ARTICLE_NOT_FOUND(HttpStatus.BAD_REQUEST.value(), "R001", "올바르지 않는 아티클 아이디 입니다."),
+    WRONG_ROLE_ARTICLE(HttpStatus.UNAUTHORIZED.value(), "R002", "일반 사용자는 아티클을 작성할 수 없습니다."),
 
     //COMMENT
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "C001", "해당 댓글이 존재하지 않습니다.");

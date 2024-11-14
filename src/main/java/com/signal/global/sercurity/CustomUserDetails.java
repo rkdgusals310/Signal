@@ -13,9 +13,12 @@ import com.signal.domain.auth.model.User;
 public class CustomUserDetails implements UserDetails {
 	
 	private User user;
-	
+
 	public CustomUserDetails(User user) {
-		this.user=user;
+		if (user == null) {
+			throw new IllegalArgumentException("User 값이 null이 될 수 없습니다.");
+		}
+		this.user = user;
 	}
 
 	public Long getUserId() {
@@ -33,7 +36,7 @@ public class CustomUserDetails implements UserDetails {
 			
 			@Override
 			public String getAuthority() {
-				return user.getRole().name();
+				return "ROLE_" +user.getRole().name();
 			}
 		});
 		return collection;

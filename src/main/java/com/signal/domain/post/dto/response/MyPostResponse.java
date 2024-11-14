@@ -6,22 +6,22 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
 @Builder
-public class SearchResponse {
+public class MyPostResponse {
 
     private int totalCount;
-    private List<PostResponse> posts;
+    private List<PostResponse> myPost;
 
-    public static SearchResponse toDto (
+    public static MyPostResponse toDto(
         int totalCount,
-        List<PostResponse> posts
+        List<PostResponse> myPost
     ) {
-        return SearchResponse.builder()
+        return MyPostResponse.builder()
             .totalCount(totalCount)
-            .posts(posts)
+            .myPost(myPost)
             .build()
             ;
     }
