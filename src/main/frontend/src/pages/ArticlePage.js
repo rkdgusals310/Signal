@@ -27,16 +27,16 @@ const ArticlePage = () => {
         if (Array.isArray(data.content)) {
           setArticles(data.content);
         } else {
-          console.error("Expected 'content' to be an array, but got", data.content);
+          console.error("content가 배열이 아닙니다. 받은 데이터:", data.content);
           setArticles([]);
         }
         setTotalPages(data.totalPages);
       } else {
-        console.error("Error fetching articles");
+        console.error("게시글을 불러오는 중 오류가 발생했습니다.");
         setArticles([]);
       }
     } catch (error) {
-      console.error("Error fetching articles:", error);
+      console.error("게시글을 불러오는 중 오류 발생:", error);
       setArticles([]);
     } finally {
       setLoading(false);

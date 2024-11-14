@@ -5,7 +5,6 @@ import Footer from './components/Footer';
 import FooterLogin from './components/FooterLogin';
 import CommunityPage from './pages/CommunityPage';
 import GominDetailPage from './pages/GominDetailPage';
-import InfoDetailPage from './pages/InfoDetailPage';
 import WritePage from './pages/WritePage';
 import PostDetailPage from './pages/PostDetailPage';
 import HomePage from './pages/HomePage';
@@ -44,7 +43,6 @@ function Layout() {
           {/* 커뮤니티 관련 경로 */}
           <Route path="/community" element={<CommunityPage />} />
           <Route path="/community/gomin/:category" element={<GominDetailPage />} />
-          <Route path="/community/info/:category" element={<InfoDetailPage />} />
           <Route path="/community/write" element={<WritePage />} />
 
           {/* 게시글 상세 페이지 */}

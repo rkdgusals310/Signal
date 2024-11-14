@@ -8,23 +8,24 @@ const Comment = ({ postId }) => {
   const [cursorId, setCursorId] = useState(null);
   const [hasNext, setHasNext] = useState(true);
   const [totalComments, setTotalComments] = useState(0);
+  const [showAllComments, setShowAllComments] = useState(false); // 전체 댓글 표시 여부
 
-  const fetchComments = async () => {
-    if (!hasNext) return;
+  const fetchComments = async (reset = false) => {
+    if (!hasNext && !reset) return;
 
     try {
       const url = cursorId
-        ? `/api/common/post/${postId}/comment?cursorId=${cursorId}&size=10`
-        : `/api/common/post/${postId}/comment?size=10`;
+        ? `/api/common/post/${postId}/comment?cursorId=${cursorId}&size=50`
+        : `/api/common/post/${postId}/comment?size=50`;
 
       const response = await fetch(url, {
         method: 'GET',
-        headers: { 'accept': '*/*' },
+        headers: { accept: '*/*' },
       });
 
       if (response.ok) {
         const data = await response.json();
-        setComments((prevComments) => [...prevComments, ...data.comments]);
+        setComments((prevComments) => (reset ? data.comments : [...prevComments, ...data.comments]));
         setCursorId(data.nextCursorId);
         setHasNext(data.hasNext);
         setTotalComments(data.repliesCount);
@@ -47,17 +48,16 @@ const Comment = ({ postId }) => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           postId,
-          userId: 1,
           contents: newComment,
         }),
       });
 
       if (response.ok) {
         setNewComment('');
-        setComments([]);
-        setCursorId(null);
+        setCursorId(null); // 새로고침을 위해 cursorId 초기화
         setHasNext(true);
-        fetchComments();
+        setShowAllComments(false); // 처음 두 개만 표시
+        fetchComments(true); // 댓글 목록 새로고침
       } else {
         throw new Error('Error submitting comment');
       }
@@ -68,7 +68,7 @@ const Comment = ({ postId }) => {
   };
 
   const handleEditComment = async (id, currentContent) => {
-    const newContent = prompt("댓글을 수정하세요:", currentContent);
+    const newContent = prompt('댓글을 수정하세요:', currentContent);
     if (newContent && newContent !== currentContent) {
       try {
         const response = await fetch(`/api/common/post/${postId}/comment/${id}`, {
@@ -78,7 +78,7 @@ const Comment = ({ postId }) => {
         });
 
         if (response.ok) {
-          fetchComments();
+          fetchComments(true);
         } else {
           throw new Error('Error updating comment');
         }
@@ -90,7 +90,7 @@ const Comment = ({ postId }) => {
   };
 
   const handleDeleteComment = async (id) => {
-    const confirmDelete = window.confirm("댓글을 삭제하시겠습니까?");
+    const confirmDelete = window.confirm('댓글을 삭제하시겠습니까?');
     if (confirmDelete) {
       try {
         const response = await fetch(`/api/common/post/${postId}/comment/${id}`, {
@@ -99,12 +99,11 @@ const Comment = ({ postId }) => {
         });
 
         if (response.ok) {
-          // 댓글 목록을 다시 불러와서 갱신
           setComments([]);
           setCursorId(null);
           setHasNext(true);
-          fetchComments();
-          setTotalComments((prevCount) => prevCount - 1); // 총 댓글 수 업데이트
+          fetchComments(true);
+          setTotalComments((prevCount) => prevCount - 1);
         } else {
           throw new Error('Error deleting comment');
         }
@@ -116,7 +115,7 @@ const Comment = ({ postId }) => {
   };
 
   useEffect(() => {
-    fetchComments();
+    fetchComments(true);
   }, [postId]);
 
   return (
@@ -126,7 +125,7 @@ const Comment = ({ postId }) => {
         <span className="comment-count">{totalComments}개</span>
       </div>
       <div className="comment-list" style={{ maxHeight: '400px', overflowY: 'auto' }}>
-        {comments.map((comment) => (
+        {comments.slice(0, showAllComments ? comments.length : 2).map((comment) => (
           <div key={comment.id} className="comment-item">
             <p>{comment.contents}</p>
             <span>{new Date(comment.createdAt).toLocaleString()}</span>
@@ -136,12 +135,12 @@ const Comment = ({ postId }) => {
             </div>
           </div>
         ))}
+        {!showAllComments && comments.length > 2 && (
+          <button onClick={() => setShowAllComments(true)} className="load-more">
+            ---더보기---
+          </button>
+        )}
       </div>
-      {hasNext && (
-        <button onClick={fetchComments} className="load-more">
-          더 불러오기
-        </button>
-      )}
       <form className="comment-form" onSubmit={handleCommentSubmit}>
         <input
           type="text"

@@ -41,7 +41,6 @@ const UserProfileSection = () => {
         <p>ID: {profile.userId}</p>
         <p>Email: {profile.email}</p>
         <p>Nickname: {profile.nickname}</p>
-        <p>Gender: {profile.sex === 'male' ? '남자' : '여자'}</p>
         <button className="edit-info-button">정보 수정하기</button>
       </div>
     </div>

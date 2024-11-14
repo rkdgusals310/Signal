@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom';
 import './CommunityNavigation.css';
 
 const CommunityNavigation = () => {
-  const [isGominOpen, setIsGominOpen] = useState(false);
-  const [isInfoOpen, setIsInfoOpen] = useState(false);
+  const [isGominOpen, setIsGominOpen] = useState(true);
+  const [isInfoOpen, setIsInfoOpen] = useState(true);
   const [activeCategory, setActiveCategory] = useState(null); // 클릭된 세부 카테고리 상태 관리
 
   //열리고 닫히는 부분 약간 오류 수정해야할 듯
@@ -111,7 +111,7 @@ const CommunityNavigation = () => {
           <ul className="category-list">
             <li>
               <Link 
-                to="/community/info/date-places" 
+                to="/community/gomin/date-places" 
                 className={activeCategory === 'info-date' ? 'active' : ''} 
                 onClick={() => handleCategoryClick('info-date')}
               >
@@ -120,7 +120,7 @@ const CommunityNavigation = () => {
             </li>
             <li>
               <Link 
-                to="/community/info/gifts" 
+                to="/community/gomin/gifts" 
                 className={activeCategory === 'info-gifts' ? 'active' : ''} 
                 onClick={() => handleCategoryClick('info-gifts')}
               >
@@ -129,7 +129,7 @@ const CommunityNavigation = () => {
             </li>
             <li>
               <Link 
-                to="/community/info/travel" 
+                to="/community/gomin/travel" 
                 className={activeCategory === 'info-travel' ? 'active' : ''} 
                 onClick={() => handleCategoryClick('info-travel')}
               >

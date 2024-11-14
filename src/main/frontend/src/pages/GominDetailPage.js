@@ -4,11 +4,11 @@ import CommunityNavigation from '../components/CommunityNavigation';
 import './GominDetailPage.css';
 
 const GominDetailPage = () => {
-  const { category } = useParams(); // URL에서 카테고리 파라미터 가져오기
+  const { category } = useParams();
   const [posts, setPosts] = useState([]);
   const [hotPost, setHotPost] = useState(null);
   const [pagination, setPagination] = useState({ totalPages: 1, currentPage: 0 });
-  const [pageSize] = useState(10); // 한 페이지당 표시할 게시글 수
+  const [pageSize] = useState(10);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -70,8 +70,8 @@ const GominDetailPage = () => {
       console.log('전체 응답 데이터:', data);
 
       if (data && data.contents && data.contents.length > 0) {
-        setPosts(data.contents[0].posts || []);  // 서버 응답의 구조에 맞게 posts 설정
-        setHotPost(data.contents[0].hotPost || null);  // 서버 응답의 구조에 맞게 hotPost 설정
+        setPosts(data.contents[0].posts || []);
+        setHotPost(data.contents[0].hotPost || null);
         setPagination({
           totalPages: data.totalPages || 1,
           currentPage: data.currentPage || 0,
@@ -81,19 +81,19 @@ const GominDetailPage = () => {
         setHotPost(null);
       }
     } catch (error) {
-      console.error('게시글을 불러오는 중 오류가 발생했습니다:', error);
-      setError('게시글을 불러오는 중 오류가 발생했습니다.');
+      setPosts([]);
+      setHotPost(null);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchPosts(); // 초기 로딩 시 첫 페이지 데이터 가져오기
+    fetchPosts();
   }, [category]);
 
   const handlePageChange = (newPage) => {
-    fetchPosts(newPage); // 페이지 변경 시 새로운 페이지 데이터 가져오기
+    fetchPosts(newPage);
   };
 
   return (
@@ -101,8 +101,6 @@ const GominDetailPage = () => {
       <CommunityNavigation />
 
       <div className="gomin-content">
-        <h2>고민 / {category} 대</h2>
-
         {loading && <p>로딩 중...</p>}
         {error && <p>{error}</p>}
 
@@ -128,7 +126,7 @@ const GominDetailPage = () => {
 
             {posts.length === 0 ? (
               <tr>
-                <td colSpan="4">게시글이 없습니다.</td>
+                <td colSpan="4">첫 게시글을 등록해보세요!</td>
               </tr>
             ) : (
               posts.map((post) => (
