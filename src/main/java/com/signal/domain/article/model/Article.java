@@ -53,11 +53,23 @@ public class Article extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-    
+
+    public static Article toEntity(ArticleRequest articleRequest, User user) {
+        return Article.builder()
+            .title(articleRequest.getTitle())
+            .contents(articleRequest.getContents())
+            .viewCount(0L)
+            .likesCount(0l)
+            .commentCount(0L)
+            .thumbnail(articleRequest.getThumbnail())
+            .user(user)
+            .build()
+            ;
+    }
+
     public void update(ArticleRequest articleRequest) {
         this.title = articleRequest.getTitle();
         this.contents = articleRequest.getContents();
         this.thumbnail = articleRequest.getThumbnail();
     }
-
 }

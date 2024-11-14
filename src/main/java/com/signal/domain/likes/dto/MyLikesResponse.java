@@ -1,4 +1,4 @@
-package com.signal.domain.article.dto.response;
+package com.signal.domain.likes.dto;
 
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -6,19 +6,19 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
 @Builder
-public class SearchResponse {
+public class MyLikesResponse {
 
     private int totalCount;
-    private List<ArticleResponse> articles;
+    private List<LikeResponse> myLikes;
 
-    public static SearchResponse toDto(int totalCount, List<ArticleResponse> articles) {
-        return SearchResponse.builder()
+    public static MyLikesResponse toDto(int totalCount, List<LikeResponse> myLikes) {
+        return MyLikesResponse.builder()
             .totalCount(totalCount)
-            .articles(articles)
+            .myLikes(myLikes)
             .build()
             ;
     }

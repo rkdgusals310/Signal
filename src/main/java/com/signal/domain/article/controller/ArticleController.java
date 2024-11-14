@@ -6,10 +6,9 @@ import com.signal.domain.article.dto.response.SearchResponse;
 import com.signal.domain.article.service.ArticleService;
 import com.signal.global.dto.PagedDto;
 import com.signal.global.sercurity.CustomUserDetails;
-
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api")
+@Tag(name = "article", description = "아티클")
 public class ArticleController {
 
     private final ArticleService articleService;
@@ -69,5 +69,18 @@ public class ArticleController {
             @AuthenticationPrincipal CustomUserDetails customUserDetails) {
     	Long userId = customUserDetails.getUserId();
         articleService.deleteArticle(articleId, userId);
+    }
+
+    @Operation(summary = "내가 쓴 아티클 조회")
+    @GetMapping("/consultant/my-article")
+    public ResponseEntity<PagedDto<SearchResponse>> getMyArticles(
+        @RequestParam(required = false, value = "size", defaultValue = "10") int size,
+        @RequestParam(required = false, value = "page", defaultValue = "0") int page,
+        @AuthenticationPrincipal CustomUserDetails customUserDetails
+    ) {
+        Long userId = customUserDetails.getUserId();
+        PagedDto<SearchResponse> articles = articleService.getMyArticles(userId, size, page);
+
+        return ResponseEntity.ok(articles);
     }
 }

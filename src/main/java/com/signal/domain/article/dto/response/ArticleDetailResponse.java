@@ -1,10 +1,7 @@
 package com.signal.domain.article.dto.response;
 
 import java.time.LocalDateTime;
-
 import com.signal.domain.article.model.Article;
-import com.signal.domain.auth.model.User;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -36,5 +33,5 @@ public class ArticleDetailResponse {
 				.contents(article.getContents())
 				.build();
 	}
-	
+
 }
