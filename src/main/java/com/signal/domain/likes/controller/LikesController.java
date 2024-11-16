@@ -45,7 +45,7 @@ public class LikesController {
     }
 
     @Operation(summary = "내가 좋아요한 글 조회")
-    @GetMapping
+    @GetMapping("/my-like")
     public ResponseEntity<PagedDto<MyLikesResponse>> getMyLikes (
         @AuthenticationPrincipal CustomUserDetails customUserDetails,
         @RequestParam(required = false, value = "size", defaultValue = "10") int size,
