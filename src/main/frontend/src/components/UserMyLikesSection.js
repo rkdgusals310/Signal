@@ -11,7 +11,7 @@ const UserMyLikesSection = () => {
 
   const fetchMyLikes = async (page) => {
     try {
-      const response = await fetch(`/api/user/my-like?page=${page}&size=5`);
+      const response = await fetch(`/api/common/my-like?page=${page}&size=5`);
       if (response.ok) {
         const data = await response.json();
         setLikes(data.content.myLikes);
