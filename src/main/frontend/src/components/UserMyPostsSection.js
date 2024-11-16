@@ -11,13 +11,27 @@ const UserMyPostsSection = () => {
 
   const fetchMyPosts = async (page) => {
     try {
-      const response = await fetch(`/api/user/my-post?page=${page}&size=5`);
+      const response = await fetch(`/api/user/my-post?page=${page}&size=10`, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
       if (response.ok) {
         const data = await response.json();
-        setPosts(data.content.myPost);
+        console.log('서버 응답 데이터:', data);
+        if (data.contents && data.contents.length > 0 && data.contents[0].myPost) {
+          setPosts(data.contents[0].myPost);
+        } else {
+          console.error('서버 응답 데이터 구조가 예상과 다릅니다:', data);
+          setPosts([]);
+        }
+      } else {
+        console.error('HTTP 요청 실패:', response.status);
       }
     } catch (error) {
-      console.error('Error fetching posts:', error);
+      console.error('내 게시글을 불러오는 중 오류 발생:', error);
     }
   };
 
