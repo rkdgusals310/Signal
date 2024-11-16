@@ -12,7 +12,7 @@ const UserMyLikesSection = () => {
 
   const fetchMyLikes = async (page) => {
     try {
-      const response = await fetch(`/api/user/my-like?page=${page}&size=10`, {
+      const response = await fetch(`/api/common/my-like?page=${page}&size=10`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
