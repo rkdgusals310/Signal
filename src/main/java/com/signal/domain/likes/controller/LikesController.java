@@ -18,14 +18,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/user")
+@RequestMapping("/api")
 @Tag(name = "like", description = "좋아요 기능")
 public class LikesController {
 
     private final LikesService likesService;
 
     @Operation(summary = "게시글 좋아요 추가/삭제")
-    @PostMapping("/post/{postId}/like")
+    @PostMapping("/user/post/{postId}/like")
     public ResponseEntity<String> likesPost(
         @PathVariable Long postId,
         @AuthenticationPrincipal CustomUserDetails customUserDetails
@@ -35,7 +35,7 @@ public class LikesController {
     }
 
     @Operation(summary = "아티클 좋아요 추가/삭제")
-    @PostMapping("/article/{articleId}/like")
+    @PostMapping("/user/article/{articleId}/like")
     public ResponseEntity<String> likesArticle(
         @PathVariable Long articleId,
         @AuthenticationPrincipal CustomUserDetails customUserDetails
@@ -45,7 +45,7 @@ public class LikesController {
     }
 
     @Operation(summary = "내가 좋아요한 글 조회")
-    @GetMapping("/my-like")
+    @GetMapping("/common/my-like")
     public ResponseEntity<PagedDto<MyLikesResponse>> getMyLikes (
         @AuthenticationPrincipal CustomUserDetails customUserDetails,
         @RequestParam(required = false, value = "size", defaultValue = "10") int size,
