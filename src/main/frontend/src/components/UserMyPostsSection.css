@@ -19,6 +19,7 @@
 .user-my-posts-section td {
     padding: 10px;
     border-bottom: 1px solid #ddd;
+    font-size: 20px;
 }
 
 .user-my-posts-section tr:hover {
