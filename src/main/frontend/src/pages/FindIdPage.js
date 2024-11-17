@@ -83,23 +83,23 @@ const FindIdPage = () => {
       <img
         src="/img/loginLogo.png"
         alt="Logo"
-        className="logo"
+        className="find-id-page-logo"
         onClick={() => (window.location.href = '/')}
       />
       {foundId ? (
-        <div className="result-section">
+        <div className="find-id-result-section">
           <h2>아이디 찾기 결과</h2>
           <p>고객님의 정보와 일치하는 아이디입니다.</p>
-          <div className="id-result">
+          <div className="find-id-result">
             <span>{foundId}</span>
             <span>{creationDate} 생성</span>
           </div>
           <button onClick={() => (window.location.href = '/login')}>로그인 이동</button>
         </div>
       ) : (
-        <div className="find-id-form">
+        <div className="find-id-form-section">
           <h2>아이디 찾기</h2>
-          <div className="input-group">
+          <div className="find-id-input-group">
             <input
               type="email"
               placeholder="이메일을 입력해주세요."
@@ -111,7 +111,7 @@ const FindIdPage = () => {
             </button>
           </div>
           {isCodeSent && (
-            <div className="input-group">
+            <div className="find-id-input-group">
               <input
                 type="text"
                 placeholder="인증번호 6자리를 입력해주세요."
@@ -122,12 +122,12 @@ const FindIdPage = () => {
             </div>
           )}
           {isVerified && (
-            <button onClick={findId} className="find-id-button">
+            <button onClick={findId} className="find-id-submit-button">
               아이디 찾기
             </button>
           )}
-          {error && <p className="error-message">{error}</p>}
-          {successMessage && <p className="success-message">{successMessage}</p>}
+          {error && <p className="find-id-error-message">{error}</p>}
+          {successMessage && <p className="find-id-success-message">{successMessage}</p>}
         </div>
       )}
     </div>

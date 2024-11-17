@@ -1,5 +1,4 @@
-/* Login.css */
-.login-container {
+.login-page-container {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -10,20 +9,19 @@
   margin: 0;
 }
 
-
-.logo img {
-  width: 700px; /* 로고 가로 크기 */
-  height: auto; /* 비율을 유지하면서 세로 크기 자동 조정 */
+.login-page-logo img {
+  width: 700px;
+  height: auto;
   margin-bottom: 20px;
 }
 
-.login-form {
+.login-page-form {
   display: flex;
   flex-direction: column;
   width: 500px;
 }
 
-.login-form input {
+.login-page-form input {
   margin-bottom: 40px;
   padding: 10px;
   font-size: 1rem;
@@ -32,11 +30,11 @@
   background-color: transparent; /* 배경 투명화 */
 }
 
-.login-form input:focus {
+.login-page-form input:focus {
   outline: none; /* 입력창 포커스 시 기본 테두리 제거 */
 }
 
-.login-button {
+.login-page-button {
   padding: 10px;
   font-size: 24px;
   background-color: black;
@@ -47,13 +45,18 @@
   margin-bottom: 25px;
 }
 
-.login-links {
+.login-page-links {
   margin-top: 20px;
   text-align: center;
 }
 
-.login-links a {
+.login-page-links a {
   margin: 0 10px;
   text-decoration: none;
   color: black;
+}
+
+.login-page-error-message {
+  color: red;
+  margin-top: 10px;
 }
