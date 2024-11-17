@@ -18,6 +18,7 @@ import ArticlePage from './pages/ArticlePage';
 import SingleArticlePage from './pages/SingleArticlePage';
 import ArticleCreatePage from './pages/ArticleCreatePage';
 import UserMyPage from './pages/UserMyPage';
+import FindIdPage from './pages/FindIdPage';
 
 // 별도의 컴포넌트로 useLocation을 포함한 내부 로직 처리
 function Layout() {
@@ -28,6 +29,7 @@ function Layout() {
     location.pathname === '/signup' ||
     location.pathname === '/select-user-type' ||
     location.pathname === '/consultant-signup' ||
+    location.pathname === '/find-id' ||
     location.pathname.startsWith('/consultant-signup');
 
   return (
@@ -59,6 +61,8 @@ function Layout() {
           <Route path="/login" element={<Login />} />
 
           <Route path="/post/edit/:postId" element={<EditPostPage />} />
+
+          <Route path="/find-id" element={<FindIdPage />} />
 
           {/* 회원가입 페이지 경로 추가 */}
           <Route path="/signup" element={<SignUp />} /> {/* 일반 사용자 회원가입 경로 */}
