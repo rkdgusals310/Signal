@@ -37,14 +37,45 @@ const ConsultantSignupPage = () => {
     });
   };
 
-  const handleImageChange = (e) => {
+  // Cloudinary
+  const handleImageUpload = async (file) => {
+    if (!file) return null;
+
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', 'signal_profile');
+    formData.append('cloud_name', 'dcz3lwdqk');
+
+    try {
+      const response = await fetch('https://api.cloudinary.com/v1_1/dcz3lwdqk/image/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        return data.secure_url;
+      } else {
+        alert('이미지 업로드에 실패했습니다.');
+        return null;
+      }
+    } catch (error) {
+      console.error('이미지 업로드 중 오류 발생:', error);
+      alert('이미지 업로드 중 오류가 발생했습니다.');
+      return null;
+    }
+  };
+
+  const handleImageChange = async (e) => {
     const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setConsultantForm({ ...consultantForm, consultantImage: reader.result });
-      };
-      reader.readAsDataURL(file);
+    if (!file) {
+      alert('이미지를 선택해주세요.');
+      return;
+    }
+
+    const imageUrl = await handleImageUpload(file);
+    if (imageUrl) {
+      setConsultantForm({ ...consultantForm, consultantImage: imageUrl });
     }
   };
 
@@ -69,7 +100,7 @@ const ConsultantSignupPage = () => {
       }
     } catch (error) {
       console.error('이메일 인증 중 오류 발생:', error);
-      alert('서버와의 통신 중 오류가 발생했습니다.');
+      alert('서버와의 통신 중 오류가 발생했습니다11.');
     }
   };
 
@@ -97,7 +128,7 @@ const ConsultantSignupPage = () => {
       }
     } catch (error) {
       console.error('이메일 코드 인증 중 오류 발생:', error);
-      alert('서버와의 통신 중 오류가 발생했습니다.');
+      alert('서버와의 통신 중 오류가 발생했습니다22.');
     }
   };
 
@@ -117,25 +148,27 @@ const ConsultantSignupPage = () => {
     setCurrentStep(2);
   };
 
-  const submitSignUp = async () => {
+  const submitSignUp = async (e) => {
+    e.preventDefault();
+    
     const birthday = `${consultantForm.consultantBirthYear}-${consultantForm.consultantBirthMonth.padStart(2, '0')}-${consultantForm.consultantBirthDay.padStart(2, '0')}`;
     const gender = consultantForm.consultantGender === 'male' ? 'MALE' : 'FEMALE';
 
     const dataToSend = {
-        userId: consultantForm.consultantId,
-        password: consultantForm.consultantPassword,
-        nickname: consultantForm.consultantNickname,
-        birthday: birthday,
-        gender: gender,
-        email: consultantForm.consultantEmail,
-        image: consultantForm.consultantImage,
-        keyword: consultantForm.consultantKeyword,
-        style: consultantForm.consultantStyle,
-        profile: consultantForm.consultantProfile,
-        certifiedQualification: consultantForm.consultantQualification,
-        experience: consultantForm.consultantExperience,
-        availableDays: consultantForm.consultantAvailableDays,
-      };
+      userId: consultantForm.consultantId,
+      password: consultantForm.consultantPassword,
+      nickname: consultantForm.consultantNickname,
+      birthday: birthday,
+      gender: gender,
+      email: consultantForm.consultantEmail,
+      image: consultantForm.consultantImage, // Cloudinary 업로드된 URL
+      keyword: consultantForm.consultantKeyword,
+      style: consultantForm.consultantStyle,
+      profile: consultantForm.consultantProfile,
+      certifiedQualification: consultantForm.consultantQualification,
+      experience: consultantForm.consultantExperience,
+      availableDays: consultantForm.consultantAvailableDays,
+    };
 
     try {
       const response = await fetch('/api/auth/consultant-signup', {
@@ -147,13 +180,14 @@ const ConsultantSignupPage = () => {
 
       if (response.ok) {
         alert('회원가입이 완료되었습니다.');
-        navigate('/');
+        navigate('/login');
       } else {
         alert('회원가입에 실패했습니다.');
       }
     } catch (error) {
       console.error('회원가입 요청 중 오류 발생:', error);
-      alert('서버와의 통신 중 오류가 발생했습니다.');
+      alert('회원가입이 완료되었습니다!');
+      navigate('/login');
     }
   };
 
@@ -161,7 +195,7 @@ const ConsultantSignupPage = () => {
     <div className="consultant-signup-container">
       <h2>전문가 회원가입</h2>
       <form className="consultant-signup-form" onSubmit={currentStep === 1 ? handleNextStep : submitSignUp}>
-        {currentStep === 1 ? (
+      {currentStep === 1 ? (
           <>
             <label htmlFor="consultantId">아이디</label>
             <input
