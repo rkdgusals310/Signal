@@ -84,6 +84,9 @@ public class ArticleService {
         		.contents(articleRequest.getContents())
         		.thumbnail(articleRequest.getThumbnail())
         		.user(user)
+        		.viewCount(0L)
+                .likesCount(0l)
+                .commentCount(0L)
         		.build();
 
         articleRepository.save(article);

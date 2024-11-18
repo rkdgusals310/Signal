@@ -29,6 +29,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 			log.info("UserData : {}", userData);
 			return new CustomUserDetails(userData); 
 		}
+		log.warn("No user found with userId: {}", userId);
 		throw new UsernameNotFoundException(userId);
 	}
 }
