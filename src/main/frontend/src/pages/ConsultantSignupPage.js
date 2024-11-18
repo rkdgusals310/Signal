@@ -283,7 +283,7 @@ const ConsultantSignupPage = () => {
                 onClick={sendEmailVerification}
                 disabled={emailCodeSent}
               >
-                {emailCodeSent ? '발송 완료' : '인증'}
+                {emailCodeSent ? '전송됨' : '인증'}
               </button>
             </div>
             <label>이메일 인증 번호</label>

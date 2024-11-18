@@ -260,7 +260,7 @@ const SignUp = () => {
             onClick={handleEmailVerification}
             disabled={emailSent}
           >
-            {emailSent ? '발송 완료' : '인증'}
+            {emailSent ? '전송됨' : '인증'}
           </button>
         </div>
 

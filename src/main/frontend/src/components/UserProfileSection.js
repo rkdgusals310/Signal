@@ -35,7 +35,7 @@ const UserProfileSection = () => {
   return (
     <div className="user-profile-section">
       <div className="profile-image">
-        <img src={profile.image || '/default-profile.png'} alt="Profile" />
+        <img src={profile.image || '/img/userDefaultImg.png'} alt="Profile" />
       </div>
       <div className="profile-info">
         <p>ID: {profile.userId}</p>
