@@ -49,6 +49,9 @@ public class ArticleService {
     // 모든 아티클 조회 (페이지네이션)**
     @Transactional
     public PagedDto<SearchResponse> getAllArticles(int page, int size) {
+        if (size < 1) {
+            size = 10; 
+        }
     	PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
     	 Page<Article> articlesPage = articleRepository.findAllByDeletedAtIsNull(pageRequest);
 

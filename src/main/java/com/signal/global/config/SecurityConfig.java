@@ -106,8 +106,5 @@ public class SecurityConfig {
         return source;
     }
 
-	/*
-	 * @Bean //필터를 거칠 필요 없는 경우 public WebSecurityCustomizer webSecurityCustomizer()
-	 * { return web -> web.ignoring().requestMatchers("/img/**"); }
-	 */
+
 }
