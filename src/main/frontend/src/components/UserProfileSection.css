@@ -13,12 +13,12 @@
     border-radius: 80px;
     object-fit: cover;
     border: 0;
-    margin-left: 400px;
+    margin-left: 200px;
 }
 
 .profile-info {
     flex: 1;
-    margin-left: 500px;
+    margin-left: 450px;
 }
 
 .profile-info p {

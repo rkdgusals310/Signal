@@ -39,12 +39,11 @@ const Login = () => {
   };
 
   return (
-    <div className="login-container">
-      <form className="login-form" onSubmit={handleLogin}>
-
-      <div className="logo" onClick={handleLogoClick} style={{ cursor: 'pointer' }}>
-        <img src="/img/loginLogo.png" alt="Signal Logo" />
-      </div>
+    <div className="login-page-container">
+      <div className="login-page-logo" onClick={handleLogoClick} style={{ cursor: 'pointer' }}>
+          <img src="/img/loginLogo.png" alt="Signal Logo" />
+        </div>
+      <form className="login-page-form" onSubmit={handleLogin}>
         <input
           id="userId"
           type="text"
@@ -63,11 +62,11 @@ const Login = () => {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <button type="submit" className="login-button">로그인</button>
+        <button type="submit" className="login-page-button">로그인</button>
       </form>
-      {error && <p className="error-message">{error}</p>}
+      {error && <p className="login-page-error-message">{error}</p>}
 
-      <div className="login-links">
+      <div className="login-page-links">
         <a href="/select-user-type">회원가입</a>
         <a href="/find-id">아이디 찾기</a>
         <a href="/find-password">비밀번호 찾기</a>
@@ -77,11 +76,3 @@ const Login = () => {
 };
 
 export default Login;
-
-
-
-
-
-
-
-

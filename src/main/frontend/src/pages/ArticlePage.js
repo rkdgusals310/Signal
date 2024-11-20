@@ -6,7 +6,7 @@ const ArticlePage = () => {
   const [articles, setArticles] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
-  const [loading, setLoading] = useState(false); // 로딩 상태 추가
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -22,21 +22,24 @@ const ArticlePage = () => {
           'Content-Type': 'application/json',
         },
       });
+
       if (response.ok) {
         const data = await response.json();
-        if (Array.isArray(data.content)) {
-          setArticles(data.content);
+
+        if (data.contents && data.contents.length > 0) {
+          const articlesData = data.contents[0].articles || [];
+          setArticles(articlesData);
+          setTotalPages(data.totalPages || 1);
         } else {
-          console.error("content가 배열이 아닙니다. 받은 데이터:", data.content);
+          console.error('응답 데이터가 예상과 다릅니다:', data);
           setArticles([]);
         }
-        setTotalPages(data.totalPages);
       } else {
-        console.error("게시글을 불러오는 중 오류가 발생했습니다.");
+        console.error('게시글 데이터를 가져오는 데 실패했습니다.');
         setArticles([]);
       }
     } catch (error) {
-      console.error("게시글을 불러오는 중 오류 발생:", error);
+      console.error('게시글 데이터를 가져오는 중 오류가 발생했습니다:', error);
       setArticles([]);
     } finally {
       setLoading(false);
@@ -44,7 +47,9 @@ const ArticlePage = () => {
   };
 
   const handlePageChange = (page) => {
-    setCurrentPage(page);
+    if (page >= 0 && page < totalPages) {
+      setCurrentPage(page);
+    }
   };
 
   const handleArticleClick = (id) => {

@@ -110,7 +110,7 @@ const SinglePost = () => {
   return (
     <div className="single-post-container">
       <div className="post-header">
-        <button className="back-button" onClick={() => navigate(-1)}>{'<'}</button>
+        <button className="singlepost-back-button" onClick={() => navigate(-1)}>{'<'}</button>
         <img
           src={liked ? likeAfter : likeBefore}
           alt="Like"
