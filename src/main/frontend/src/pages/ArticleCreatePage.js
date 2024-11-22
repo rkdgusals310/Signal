@@ -101,7 +101,7 @@ const ArticleCreatePage = () => {
   return (
     <div className="article-create-page">
       <button onClick={() => window.history.back()} className="back-button">
-        &lt; 뒤로가기
+        &lt; Back to Article list
       </button>
       <form className="create-article-form" onSubmit={handleSubmit}>
         <input
@@ -121,10 +121,13 @@ const ArticleCreatePage = () => {
           {thumbnailUrl ? (
             <img src={thumbnailUrl} alt="Thumbnail Preview" className="thumbnail-preview" />
           ) : (
-            <p>이미지를 여기에 드래그 앤 드롭하세요</p>
+            <div className="thumbnail-placeholder">
+              <p>이미지를 여기에<br />드래그 앤 드롭하세요</p>
+            </div>
           )}
         </div>
-        {uploading && <p>이미지 업로드 중...</p>}
+        {uploading && <p className="uploading-text">이미지 업로드 중...</p>}
+
 
         <textarea
           id="contents"
