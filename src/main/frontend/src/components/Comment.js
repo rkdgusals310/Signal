@@ -12,7 +12,6 @@ const Comment = ({ postId }) => {
   const [cursorId, setCursorId] = useState(null);
   const [hasNext, setHasNext] = useState(true);
   const [totalComments, setTotalComments] = useState(0);
-  const [showAllComments, setShowAllComments] = useState(false);
 
   const fetchComments = async (reset = false) => {
     if (!hasNext && !reset) return;
@@ -20,7 +19,7 @@ const Comment = ({ postId }) => {
     try {
       const url = cursorId
         ? `/api/common/post/${postId}/comment?cursorId=${cursorId}&size=10`
-        : `/api/common/post/${postId}/comment?size=10`;
+        : `/api/common/post/${postId}/comment?size=1`;
 
       const response = await fetch(url, {
         method: 'GET',
@@ -57,11 +56,7 @@ const Comment = ({ postId }) => {
       });
 
       if (response.ok) {
-        setNewComment('');
-        setCursorId(null);
-        setHasNext(true);
-        setShowAllComments(false);
-        fetchComments(true);
+        window.location.reload();
       } else {
         throw new Error('Error submitting comment');
       }
@@ -71,51 +66,8 @@ const Comment = ({ postId }) => {
     }
   };
 
-  const handleEditComment = async (id, currentContent) => {
-    const newContent = prompt('댓글을 수정하세요:', currentContent);
-    if (newContent && newContent !== currentContent) {
-      try {
-        const response = await fetch(`/api/common/post/${postId}/comment/${id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ contents: newContent }),
-        });
-
-        if (response.ok) {
-          fetchComments(true);
-        } else {
-          throw new Error('Error updating comment');
-        }
-      } catch (error) {
-        console.error('Error updating comment:', error);
-        setError('댓글 수정 중 오류가 발생했습니다.');
-      }
-    }
-  };
-
-  const handleDeleteComment = async (id) => {
-    const confirmDelete = window.confirm('댓글을 삭제하시겠습니까?');
-    if (confirmDelete) {
-      try {
-        const response = await fetch(`/api/common/post/${postId}/comment/${id}`, {
-          method: 'DELETE',
-          headers: { 'Content-Type': 'application/json' },
-        });
-
-        if (response.ok) {
-          setComments([]);
-          setCursorId(null);
-          setHasNext(true);
-          fetchComments(true);
-          setTotalComments((prevCount) => prevCount - 1);
-        } else {
-          throw new Error('Error deleting comment');
-        }
-      } catch (error) {
-        console.error('Error deleting comment:', error);
-        setError('댓글 삭제 중 오류가 발생했습니다.');
-      }
-    }
+  const handleLoadMore = () => {
+    fetchComments();
   };
 
   useEffect(() => {
@@ -129,7 +81,7 @@ const Comment = ({ postId }) => {
         <span className="comment-count">{totalComments}개</span>
       </div>
       <div className="comment-list">
-        {comments.slice(0, showAllComments ? comments.length : 2).map((comment) => (
+        {comments.map((comment) => (
           <div key={comment.id} className="comment-item">
             <img
               src={comment.gender === 'MALE' ? maleIcon : femaleIcon}
@@ -142,23 +94,23 @@ const Comment = ({ postId }) => {
                 src={updateIcon}
                 alt="Edit"
                 className="comment-action-icon"
-                onClick={() => handleEditComment(comment.id, comment.contents)}
+                onClick={() => console.log('Edit', comment.id)}
               />
               <img
                 src={deleteIcon}
                 alt="Delete"
                 className="comment-action-icon"
-                onClick={() => handleDeleteComment(comment.id)}
+                onClick={() => console.log('Delete', comment.id)}
               />
             </div>
           </div>
         ))}
-        {!showAllComments && comments.length > 2 && (
-          <button onClick={() => setShowAllComments(true)} className="load-more">
-            Show more comments
-          </button>
-        )}
       </div>
+      {hasNext && (
+        <button onClick={handleLoadMore} className="load-more">
+          댓글 더 보기
+        </button>
+      )}
       <form className="comment-form" onSubmit={handleCommentSubmit}>
         <input
           type="text"
