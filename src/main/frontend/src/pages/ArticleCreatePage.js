@@ -1,14 +1,59 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './ArticleCreatePage.css';
 
 const ArticleCreatePage = () => {
   const [title, setTitle] = useState('');
   const [contents, setContents] = useState('');
-  const [thumbnailUrl, setThumbnailUrl] = useState(''); // 썸네일 URL 상태
+  const [thumbnailUrl, setThumbnailUrl] = useState('');
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
+  const [uploading, setUploading] = useState(false);
+  const navigate = useNavigate();
 
-  // 글 작성 요청 핸들러
+  // Cloudinary
+  const handleImageUpload = async (file) => {
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', 'signal_Article');
+    formData.append('cloud_name', 'dcz3lwdqk');
+
+    setUploading(true);
+    try {
+      const response = await fetch('https://api.cloudinary.com/v1_1/dcz3lwdqk/image/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setThumbnailUrl(data.secure_url); // Cloudinary
+        setError(null);
+      } else {
+        setError('이미지 업로드에 실패했습니다.');
+      }
+    } catch (error) {
+      console.error('이미지 업로드 중 오류 발생:', error);
+      setError('이미지 업로드 중 오류가 발생했습니다.');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files[0];
+    if (file) {
+      handleImageUpload(file);
+    }
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -17,7 +62,6 @@ const ArticleCreatePage = () => {
       return;
     }
 
-    // 작성 확인 모달
     if (window.confirm('게시글을 작성하시겠습니까?')) {
       const requestData = {
         title,
@@ -30,10 +74,10 @@ const ArticleCreatePage = () => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'accept': 'application/json',
+            accept: 'application/json',
           },
           body: JSON.stringify(requestData),
-          credentials: 'include', // 세션 쿠키를 포함하여 인증
+          credentials: 'include',
         });
 
         if (response.ok) {
@@ -42,6 +86,7 @@ const ArticleCreatePage = () => {
           setTitle('');
           setContents('');
           setThumbnailUrl('');
+          setTimeout(() => navigate('/article'), 2000);
         } else {
           const data = await response.json();
           setError(`${data.error}: ${data.message}`);
@@ -68,14 +113,19 @@ const ArticleCreatePage = () => {
           required
         />
 
-        <input
-          id="thumbnailUrl"
-          type="text"
-          value={thumbnailUrl}
-          onChange={(e) => setThumbnailUrl(e.target.value)}
-          placeholder="썸네일 이미지 URL을 입력하세요" //이거 추후에 서버 API로 이미지 올리고 URL받아오는 형태 취해야됨
-        />
-        
+        <div
+          className="thumbnail-upload-area"
+          onDrop={handleDrop}
+          onDragOver={handleDragOver}
+        >
+          {thumbnailUrl ? (
+            <img src={thumbnailUrl} alt="Thumbnail Preview" className="thumbnail-preview" />
+          ) : (
+            <p>이미지를 여기에 드래그 앤 드롭하세요</p>
+          )}
+        </div>
+        {uploading && <p>이미지 업로드 중...</p>}
+
         <textarea
           id="contents"
           value={contents}

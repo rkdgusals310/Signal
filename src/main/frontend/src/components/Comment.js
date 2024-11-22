@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import './Comment.css';
+import maleIcon from '../assets/male-icon.png';
+import femaleIcon from '../assets/female-icon.png';
+import deleteIcon from '../assets/delete-post.png';
+import updateIcon from '../assets/update-post.png';
 
 const Comment = ({ postId }) => {
   const [comments, setComments] = useState([]);
@@ -8,15 +12,15 @@ const Comment = ({ postId }) => {
   const [cursorId, setCursorId] = useState(null);
   const [hasNext, setHasNext] = useState(true);
   const [totalComments, setTotalComments] = useState(0);
-  const [showAllComments, setShowAllComments] = useState(false); // 전체 댓글 표시 여부
+  const [showAllComments, setShowAllComments] = useState(false);
 
   const fetchComments = async (reset = false) => {
     if (!hasNext && !reset) return;
 
     try {
       const url = cursorId
-        ? `/api/common/post/${postId}/comment?cursorId=${cursorId}&size=50`
-        : `/api/common/post/${postId}/comment?size=50`;
+        ? `/api/common/post/${postId}/comment?cursorId=${cursorId}&size=10`
+        : `/api/common/post/${postId}/comment?size=10`;
 
       const response = await fetch(url, {
         method: 'GET',
@@ -54,10 +58,10 @@ const Comment = ({ postId }) => {
 
       if (response.ok) {
         setNewComment('');
-        setCursorId(null); // 새로고침을 위해 cursorId 초기화
+        setCursorId(null);
         setHasNext(true);
-        setShowAllComments(false); // 처음 두 개만 표시
-        fetchComments(true); // 댓글 목록 새로고침
+        setShowAllComments(false);
+        fetchComments(true);
       } else {
         throw new Error('Error submitting comment');
       }
@@ -124,20 +128,34 @@ const Comment = ({ postId }) => {
         <h3>댓글</h3>
         <span className="comment-count">{totalComments}개</span>
       </div>
-      <div className="comment-list" style={{ maxHeight: '400px', overflowY: 'auto' }}>
+      <div className="comment-list">
         {comments.slice(0, showAllComments ? comments.length : 2).map((comment) => (
           <div key={comment.id} className="comment-item">
-            <p>{comment.contents}</p>
-            <span>{new Date(comment.createdAt).toLocaleString()}</span>
+            <img
+              src={comment.gender === 'MALE' ? maleIcon : femaleIcon}
+              alt={comment.gender}
+              className="comment-gender-icon"
+            />
+            <span className="comment-content">{comment.contents}</span>
             <div className="comment-actions">
-              <button onClick={() => handleEditComment(comment.id, comment.contents)}>수정</button>
-              <button onClick={() => handleDeleteComment(comment.id)}>삭제</button>
+              <img
+                src={updateIcon}
+                alt="Edit"
+                className="comment-action-icon"
+                onClick={() => handleEditComment(comment.id, comment.contents)}
+              />
+              <img
+                src={deleteIcon}
+                alt="Delete"
+                className="comment-action-icon"
+                onClick={() => handleDeleteComment(comment.id)}
+              />
             </div>
           </div>
         ))}
         {!showAllComments && comments.length > 2 && (
           <button onClick={() => setShowAllComments(true)} className="load-more">
-            ---더보기---
+            Show more comments
           </button>
         )}
       </div>
