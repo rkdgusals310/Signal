@@ -8,6 +8,8 @@ import updateIcon from '../assets/update-post.png';
 const Comment = ({ postId }) => {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
+  const [editingCommentId, setEditingCommentId] = useState(null);
+  const [editingContent, setEditingContent] = useState('');
   const [error, setError] = useState(null);
   const [cursorId, setCursorId] = useState(null);
   const [hasNext, setHasNext] = useState(true);
@@ -66,6 +68,65 @@ const Comment = ({ postId }) => {
     }
   };
 
+  const handleEditComment = (commentId, currentContent) => {
+    setEditingCommentId(commentId);
+    setEditingContent(currentContent);
+  };
+
+  const confirmEditComment = async () => {
+    if (editingContent.trim() === '') return;
+  
+    const confirmEdit = window.confirm('댓글을 수정하시겠습니까?');
+    if (confirmEdit) {
+      try {
+        const response = await fetch(`/api/common/post/${postId}/comment/${editingCommentId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contents: editingContent }),
+        });
+  
+        if (response.ok) {
+          alert('댓글이 수정되었습니다.');
+          window.location.reload();
+        } else {
+          throw new Error('Error updating comment');
+        }
+      } catch (error) {
+        console.error('Error updating comment:', error);
+        setError('댓글 수정 중 오류가 발생했습니다.');
+      } finally {
+        setEditingCommentId(null);
+        setEditingContent('');
+      }
+    }
+  };
+  
+
+  const handleDeleteComment = async (commentId) => {
+    const confirm = window.confirm('댓글을 삭제하시겠습니까?');
+    if (!confirm) return;
+
+    try {
+      const response = await fetch(
+        `/api/common/post/${postId}/comment/${commentId}`,
+        {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+
+      if (response.ok) {
+        alert('댓글이 삭제되었습니다.');
+        window.location.reload();
+      } else {
+        throw new Error('Error deleting comment');
+      }
+    } catch (error) {
+      console.error('Error deleting comment:', error);
+      setError('댓글 삭제 중 오류가 발생했습니다.');
+    }
+  };
+
   const handleLoadMore = () => {
     fetchComments();
   };
@@ -88,19 +149,30 @@ const Comment = ({ postId }) => {
               alt={comment.gender}
               className="comment-gender-icon"
             />
-            <span className="comment-content">{comment.contents}</span>
+            {editingCommentId === comment.id ? (
+              <div className="editing-comment">
+                <input
+                  type="text"
+                  value={editingContent}
+                  onChange={(e) => setEditingContent(e.target.value)}
+                />
+                <button onClick={confirmEditComment}>수정 확인</button>
+              </div>
+            ) : (
+              <span className="comment-content">{comment.contents}</span>
+            )}
             <div className="comment-actions">
               <img
                 src={updateIcon}
                 alt="Edit"
                 className="comment-action-icon"
-                onClick={() => console.log('Edit', comment.id)}
+                onClick={() => handleEditComment(comment.id, comment.contents)}
               />
               <img
                 src={deleteIcon}
                 alt="Delete"
                 className="comment-action-icon"
-                onClick={() => console.log('Delete', comment.id)}
+                onClick={() => handleDeleteComment(comment.id)}
               />
             </div>
           </div>
