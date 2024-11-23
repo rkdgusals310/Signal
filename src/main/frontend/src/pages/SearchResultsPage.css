@@ -1,0 +1,97 @@
+.search-results-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  .search-result-item {
+    background-color: #FFF9F8;
+    border-radius: 20px;
+  }
+  
+  .search-results-page h1 {
+    font-size: 32px;
+    margin-bottom: 20px;
+  }
+  
+  .search-results-page ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .search-results-page li {
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .search-results-page li:hover {
+    background-color: #FFEDEB;
+    transform: translateY(-3px);
+    cursor: pointer;
+  }
+  
+  .search-results-page li h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  
+  .search-results-page li p {
+    margin: 5px 0;
+    color: #555;
+  }
+  
+  .pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  .pagination button {
+    margin: 0 5px;
+    padding: 10px 15px;
+    background-color: #000000;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .pagination button:hover {
+    background-color: #333333;
+    transform: translateY(-3px);
+  }
+  
+  .pagination button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
+  
+  .search-results-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    background-color: #FFF9F8;
+    border-radius: 20px;
+  }
+  
+  .search-result-icon {
+    font-size: 30px;
+    color: #888;
+    margin-left: 20px;
+  }
+
+  .search-results-input {
+    font-size: 24px;
+    padding: 14px 12px;
+    border: 1px solid #FFF9F8;
+    border-radius: 8px;
+    flex: 1;
+    outline: none;
+    background-color: #FFF9F8;
+  }
+  
+  .search-results-input:focus {
+    border-color: #ffb5b5;
+    box-shadow: 0 0 5px rgba(255, 85, 85, 0.2);
+  }
