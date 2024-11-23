@@ -32,6 +32,10 @@ public class Review extends BaseEntity {
     @JoinColumn(name = "user_id",nullable = false)
     private User user;
 
+    @ManyToOne
+    @JoinColumn(name = "consultant_id",nullable = false)
+    private User consultant;
+
     @Column(nullable = false)
     private Double rating;
 
