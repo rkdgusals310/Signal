@@ -17,6 +17,7 @@ const Header = () => {
       const confirmLogout = window.confirm("정말 로그아웃하시겠습니까?");
       if (confirmLogout) {
         sessionStorage.removeItem('isLoggedIn');
+        sessionStorage.removeItem('userId');
         setIsLoggedIn(false);
         navigate('/');
       }

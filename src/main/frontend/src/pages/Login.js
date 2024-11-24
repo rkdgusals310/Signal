@@ -15,7 +15,7 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     setError(null);
-
+  
     try {
       const response = await fetch('/loginProc', {
         method: 'POST',
@@ -25,9 +25,27 @@ const Login = () => {
         body: new URLSearchParams({ userId, password }),
         credentials: 'include',
       });
-
+  
       if (response.ok) {
         sessionStorage.setItem('isLoggedIn', 'true');
+  
+        // 사용자 정보 가져오기
+        const userInfoResponse = await fetch('/api/auth/user/my-information', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+        });
+  
+        if (userInfoResponse.ok) {
+          const userInfo = await userInfoResponse.json();
+          sessionStorage.setItem('userId', userInfo.id);
+          console.log('User ID stored in sessionStorage:', userInfo.id);
+        } else {
+          console.error('Failed to fetch user information');
+        }
+  
         navigate('/');
       } else {
         setError('로그인에 실패했습니다. 아이디와 비밀번호를 확인해주세요.');
@@ -37,6 +55,7 @@ const Login = () => {
       setError('서버 오류가 발생했습니다. 다시 시도해주세요.');
     }
   };
+  
 
   return (
     <div className="login-page-container">
