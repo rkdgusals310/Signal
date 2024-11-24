@@ -80,7 +80,7 @@ const ArticlePage = () => {
               </div>
             ))
           ) : (
-            <p>No articles available</p>
+            <p>첫 아티클을 등록해보세요!</p>
           )}
         </div>
       )}
