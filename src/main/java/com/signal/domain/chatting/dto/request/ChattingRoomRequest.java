@@ -13,6 +13,6 @@ import lombok.NoArgsConstructor;
 public class ChattingRoomRequest {
     private Long userId;       
     private Long consultantId;  
-    private ChattingRoomStatus status;
+  
     
 }
