@@ -36,7 +36,9 @@ public class ChattingService {
     private final ChattingMessagesRepository chattingMessagesRepository;
     private final AuthRepository authRepository;
 
-    public ChattingRoom createRoom(ChattingRoomRequest request) {
+    public ChattingRoom getOrCreateRoom(ChattingRoomRequest request) {
+    	return chattingRoomRepository.findByUserIdAndConsultantIdAndStatus(request.getUserId(), request.getConsultantId(), ChattingRoomStatus.ACTIVE)
+                .orElseGet(() -> {
         User user = authRepository.findById(request.getUserId())
             .orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
         User consultant = authRepository.findById(request.getConsultantId())
@@ -49,7 +51,7 @@ public class ChattingService {
             .build();
 
         return chattingRoomRepository.save(room);
-    }
+    });}
 
     public ChattingMessages sendMessage(ChattingMessageRequest request) {
         ChattingRoom room = chattingRoomRepository.findById(request.getRoomId())

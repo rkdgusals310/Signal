@@ -34,8 +34,7 @@ public class ChattingController {
     @Operation(summary = "상담방 생성")
     @PostMapping("/room")
     public ChattingRoomWithMessagesResponse createRoom(@RequestBody ChattingRoomRequest request) {
-        ChattingRoom room = chattingService.createRoom(request);
-
+        ChattingRoom room = chattingService.getOrCreateRoom(request);
         return ChattingRoomWithMessagesResponse.builder()
             .roomId(room.getId())
             .otherPartyName(room.getConsultant().getNickname())
