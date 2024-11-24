@@ -23,6 +23,7 @@ public class CommentPagedResponse {
 	private int repliesCount;
 	private Long nextCursorId; // 다음 커서로 사용할 마지막 댓글 ID
 	private boolean hasNext; // 다음 페이지가 있는지 여부
+	
 
 	 public static CommentPagedResponse toDto(List<CommentResponse> comments, int repliesCount, Long nextCursorId, boolean hasNext) {
 	        return CommentPagedResponse.builder()

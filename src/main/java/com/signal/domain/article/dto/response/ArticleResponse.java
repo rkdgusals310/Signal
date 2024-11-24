@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class ArticleResponse {
+	private String thumbnail;
 	private Long id;
 	private String title;
 	private String consultantName;
@@ -24,6 +25,7 @@ public class ArticleResponse {
 	        throw new IllegalArgumentException("Article or User cannot be null");
 	    }
 		return ArticleResponse.builder()
+				.thumbnail(article.getThumbnail())
 				.id(article.getId())
 				.title(article.getTitle())
 				.consultantName(article.getUser().getNickname())

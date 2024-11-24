@@ -89,7 +89,8 @@ public class CommentController {
 	        response.getComments(),
 	        response.getRepliesCount(),
 	        response.getNextCursorId(),
-	        response.isHasNext()
+	        response.isHasNext(),
+	        size
 	    );
 
 	    return ResponseEntity.ok(cursorPagedResponse);

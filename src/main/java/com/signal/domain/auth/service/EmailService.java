@@ -32,8 +32,6 @@ public class EmailService {
     public String sendVerificationCode(EmailRequest emailRequest) {
         String email = emailRequest.getEmail();
 
-        authRepository.existsUserByEmail(email);
-
         String verificationCode = generateVerificationCode();
         redisTemplate
             .opsForValue()
@@ -86,5 +84,10 @@ public class EmailService {
 
         mailSender.send(message);
         log.info("Email sent to {}, subject {} text{} ", to, subject, text);
+    }
+
+    public void verifyDuplicateEmail(EmailRequest emailRequest) {
+        String email = emailRequest.getEmail();
+        authRepository.existsUserByEmail(email);
     }
 }

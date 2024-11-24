@@ -16,5 +16,7 @@ public class CursorPagedDto<T> {
     private int repliesCount;
     private Long nextCursorId;
     private boolean hasNext;
+    private int size;
+    
 
 }

@@ -1,8 +1,11 @@
 package com.signal.domain.chatting.model;
 
 import com.signal.domain.auth.model.User;
+import com.signal.domain.chatting.model.enums.ChattingRoomStatus;
 import com.signal.global.entity.BaseEntity;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -29,4 +32,7 @@ public class ChattingRoom extends BaseEntity {
     private User consultant;
 
     private LocalDateTime completedAt;
+    
+    @Enumerated(EnumType.STRING)
+    private ChattingRoomStatus status; 
 }

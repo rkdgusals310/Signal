@@ -83,4 +83,16 @@ public class ArticleController {
 
         return ResponseEntity.ok(articles);
     }
+
+    @Operation(summary = "특정 상담사가 작성한 아티클 조회")
+    @GetMapping("/common/consultant/{consultantId}/article")
+    public ResponseEntity<PagedDto<SearchResponse>> getConsultantArticle(
+        @PathVariable Long consultantId,
+        @RequestParam(required = false, value = "size", defaultValue = "10") int size,
+        @RequestParam(required = false, value = "page", defaultValue = "0") int page
+    ) {
+        PagedDto<SearchResponse> articles = articleService.getConsultantArticle(consultantId, size, page);
+
+        return ResponseEntity.ok(articles);
+    }
 }

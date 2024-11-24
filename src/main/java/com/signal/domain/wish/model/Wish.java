@@ -29,4 +29,12 @@ public class Wish extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "consultant_id",nullable = false)
     private User consultant;
+
+    public static Wish create(User user, User consultant) {
+        return Wish.builder()
+            .user(user)
+            .consultant(consultant)
+            .build()
+            ;
+    }
 }
