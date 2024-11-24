@@ -35,8 +35,12 @@ public enum ErrorCode {
     WRONG_ROLE_ARTICLE(HttpStatus.UNAUTHORIZED.value(), "R002", "일반 사용자는 아티클을 작성할 수 없습니다."),
 
     //COMMENT
-    COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "C001", "해당 댓글이 존재하지 않습니다.");
-    
+    COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "C001", "해당 댓글이 존재하지 않습니다."),
+
+    //CONSULTANT
+    CONSULTANT_NOT_FOUND(HttpStatus.BAD_REQUEST.value(), "N001", "해당 상담사가 존재하지 않습니다."),
+
+    ;
     
     private final Integer status;
     private final String code;

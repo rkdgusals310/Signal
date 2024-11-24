@@ -1,5 +1,6 @@
 package com.signal.domain.auth.model;
 
+import com.signal.domain.auth.dto.request.ConsultantUpdateRequest;
 import com.signal.domain.auth.dto.request.UserPasswordResetRequest;
 import com.signal.domain.auth.dto.request.UserSignUpRequest;
 import com.signal.domain.auth.dto.request.UserUpdateRequest;
@@ -87,6 +88,32 @@ public class User extends BaseEntity {
 
         if(userUpdateRequest.getImage() != null) {
             this.image = userUpdateRequest.getImage();
+        }
+    }
+
+    public void update(ConsultantUpdateRequest consultantUpdateRequest) {
+        if(consultantUpdateRequest.getKeyword() != null) {
+            this.keyword = consultantUpdateRequest.getKeyword();
+        }
+
+        if(consultantUpdateRequest.getProfileImage() != null) {
+            this.image = consultantUpdateRequest.getProfileImage();
+        }
+
+        if(consultantUpdateRequest.getProfile() != null) {
+            this.profile = consultantUpdateRequest.getProfile();
+        }
+
+        if(consultantUpdateRequest.getAvailableDays() != null) {
+            this.availableDays = consultantUpdateRequest.getAvailableDays();
+        }
+
+        if(consultantUpdateRequest.getCertifiedQualification() != null) {
+            this.certifiedQualification = consultantUpdateRequest.getCertifiedQualification();
+        }
+
+        if(consultantUpdateRequest.getExperience() != null) {
+            this.experience = consultantUpdateRequest.getExperience();
         }
     }
 
