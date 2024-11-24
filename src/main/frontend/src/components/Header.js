@@ -18,6 +18,7 @@ const Header = () => {
       if (confirmLogout) {
         sessionStorage.removeItem('isLoggedIn');
         sessionStorage.removeItem('userId');
+        sessionStorage.removeItem('role');
         setIsLoggedIn(false);
         navigate('/');
       }
