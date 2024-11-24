@@ -21,6 +21,8 @@ import UserMyPage from './pages/UserMyPage';
 import FindIdPage from './pages/FindIdPage';
 import FindPasswordPage from './pages/FindPasswordPage';
 import SearchResultsPage from './pages/SearchResultsPage';
+import ConsultingPage from './pages/ConsultingPage';
+import ChatRoomPage from './pages/ChatRoomPage';
 
 // 별도의 컴포넌트로 useLocation을 포함한 내부 로직 처리
 function Layout() {
@@ -78,6 +80,10 @@ function Layout() {
           <Route path="/select-user-type" element={<UserTypeSelection />} /> {/* 일반 사용자 / 전문가 선택 경로 */}
 
           <Route path="/consultant-signup" element={<ConsultantSignupPage />} />
+
+          <Route path="/consulting" element={<ConsultingPage />} />
+
+          <Route path="/chat/:roomId" element={<ChatRoomPage />} />
 
           {/* 마이페이지관련 */}
           <Route path="/mypage" element={<UserMyPage />} /> 
