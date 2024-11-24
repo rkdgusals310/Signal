@@ -1,6 +1,7 @@
 package com.signal.domain.auth.controller;
 
 import com.signal.domain.auth.dto.request.ConsultantSignUpRequest;
+import com.signal.domain.auth.dto.request.ConsultantUpdateRequest;
 import com.signal.domain.auth.dto.request.EmailRequest;
 import com.signal.domain.auth.dto.request.UserPasswordResetRequest;
 import com.signal.domain.auth.dto.request.UserSignUpRequest;
@@ -76,6 +77,17 @@ public class UserController {
     ) {
         Long userId = customUserDetails.getUserId();
         return ResponseEntity.ok(userService.editUserInformation(userUpdateRequest, userId));
+    }
+
+    @PutMapping("/consultant/edit/my-information")
+    @Operation(summary = "전문 상담사 프로필 수정")
+    public ResponseEntity<String> editConsultantInformation (
+        @Valid @RequestBody
+        ConsultantUpdateRequest consultantUpdateRequest,
+        @AuthenticationPrincipal CustomUserDetails customUserDetails
+    ) {
+        Long consultantId = customUserDetails.getUserId();
+        return ResponseEntity.ok(userService.editConsultantInformation(consultantUpdateRequest, consultantId));
     }
 
     @GetMapping("/find-id")

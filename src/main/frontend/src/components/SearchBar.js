@@ -1,15 +1,21 @@
 import React, { useState } from 'react';
 import './SearchBar.css';
-import { FaSearch } from 'react-icons/fa'; //React Icons 패키지
+import { FaSearch } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 const SearchBar = () => {
   const [query, setQuery] = useState('');
+  const navigate = useNavigate();
 
   const handleSearch = () => {
-    console.log('검색어:', query);
+    if (query.trim()) {
+      navigate(`/search-results?search=${encodeURIComponent(query.trim())}`);
+    } else {
+      alert('검색어를 입력해주세요.');
+    }
   };
 
-  // Enter 키검색
+  // Enter 키 검색
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
       handleSearch();

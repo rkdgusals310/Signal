@@ -17,7 +17,6 @@ const SinglePost = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const navigate = useNavigate();
 
-  // Get the current user's ID from session storage
   const currentUserId = sessionStorage.getItem('userId');
 
   const fetchPost = async () => {
@@ -109,47 +108,45 @@ const SinglePost = () => {
 
   return (
     <div className="single-post-container">
-      <div className="post-header">
-        <button className="singlepost-back-button" onClick={() => navigate(-1)}>{'<'}</button>
+      <div className="single-post-header">
+        <button className="single-post-back-button" onClick={() => navigate(-1)}>{'<'}</button>
         <img
-          src={liked ? likeAfter : likeBefore}
+          src={liked ? likeBefore : likeAfter}
           alt="Like"
-          className="like-icon"
+          className="single-post-like-icon"
           onClick={handleLikeToggle}
         />
-        <h2 className="post-title">{post.title}</h2>
+        <div className="single-post-title">{post.title}</div>
 
-        {/* 유저확인수정,삭제온오프기능(id받아와야됨) */}
         {post.authorId === Number(currentUserId) && (
-          <div className="post-actions">
-            <img src={updateIcon} alt="Edit" className="action-icon" onClick={handleEdit} />
-            <img src={deleteIcon} alt="Delete" className="action-icon" onClick={openDeleteModal} />
+          <div className="single-post-actions">
+            <img src={updateIcon} alt="Edit" className="single-post-action-icon" onClick={handleEdit} />
+            <img src={deleteIcon} alt="Delete" className="single-post-action-icon" onClick={openDeleteModal} />
           </div>
         )}
       </div>
-      <hr className="divider" />
-      <div className="post-meta">
+      <hr className="single-post-divider" />
+      <div className="single-post-meta">
         <span>{new Date(post.createdAt).toLocaleDateString()}</span>
-        <div className="meta-icons">
+        <div className="single-post-meta-icons">
           <img src={viewIcon} alt="Views" />
           <span>{post.viewCount}</span>
           <img src={likeStateIcon} alt="Likes" />
           <span>{post.likeCount}</span>
         </div>
       </div>
-      <div className="post-content">
+      <div className="single-post-content">
         <p>{post.contents}</p>
       </div>
-      <hr className="divider" />
+      <hr className="single-post-divider" />
       <Comment postId={postId} />
 
-      {/* 삭제 모달 */}
       {showDeleteModal && (
-        <div className="modal-overlay">
-          <div className="modal-content">
+        <div className="single-post-modal-overlay">
+          <div className="single-post-modal-content">
             <p>게시글을 삭제하겠습니까?</p>
-            <button className="confirm-button" onClick={handleDelete}>예</button>
-            <button className="cancel-button" onClick={closeDeleteModal}>아니오</button>
+            <button className="single-post-confirm-button" onClick={handleDelete}>예</button>
+            <button className="single-post-cancel-button" onClick={closeDeleteModal}>아니오</button>
           </div>
         </div>
       )}

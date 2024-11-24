@@ -1,6 +1,7 @@
 package com.signal.domain.auth.service;
 
 import com.signal.domain.auth.dto.request.ConsultantSignUpRequest;
+import com.signal.domain.auth.dto.request.ConsultantUpdateRequest;
 import com.signal.domain.auth.dto.request.EmailRequest;
 import com.signal.domain.auth.dto.request.UserPasswordResetRequest;
 import com.signal.domain.auth.dto.request.UserSignUpRequest;
@@ -90,6 +91,14 @@ public class UserService {
         user.update(userUpdateRequest);
 
         return "User Updated Successfully";
+    }
+
+    public String editConsultantInformation(ConsultantUpdateRequest consultantUpdateRequest, Long consultantId) {
+        User user = authRepository.findConsultantById(consultantId);
+
+        user.update(consultantUpdateRequest);
+
+        return "Consultant Updated Successfully";
     }
 
     public FindIdResponse findId(EmailRequest emailRequest) {

@@ -20,6 +20,7 @@ import ArticleCreatePage from './pages/ArticleCreatePage';
 import UserMyPage from './pages/UserMyPage';
 import FindIdPage from './pages/FindIdPage';
 import FindPasswordPage from './pages/FindPasswordPage';
+import SearchResultsPage from './pages/SearchResultsPage';
 
 // 별도의 컴포넌트로 useLocation을 포함한 내부 로직 처리
 function Layout() {
@@ -43,6 +44,8 @@ function Layout() {
         <Routes>
           {/* 메인 페이지 */}
           <Route path="/" element={<HomePage />} />
+
+          <Route path="/search-results" element={<SearchResultsPage />} />
 
           {/* 커뮤니티 관련 경로 */}
           <Route path="/community" element={<CommunityPage />} />

@@ -141,4 +141,23 @@ public class ArticleService {
         SearchResponse searchResponse = SearchResponse.toDto(totalCount, articleResponses);
         return PagedDto.toDTO(page, size, totalPages, List.of(searchResponse));
     }
+
+    public PagedDto<SearchResponse> getConsultantArticle (Long consultantId, int size, int page) {
+        authRepository.existsConsultantById(consultantId);
+
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Direction.DESC, "createdAt"));
+
+        Page<Article> articles = articleRepository.findByUserId(consultantId, pageRequest);
+
+        List<ArticleResponse> articleResponses = articles.stream()
+            .map(
+                ArticleResponse::toDto
+            ).collect(Collectors.toList());
+
+        int totalCount = (int) articles.getTotalElements();
+        int totalPages = (totalCount + size - 1) / size;
+
+        SearchResponse searchResponse = SearchResponse.toDto(totalCount, articleResponses);
+        return PagedDto.toDTO(page, size, totalPages, List.of(searchResponse));
+    }
 }

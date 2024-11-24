@@ -36,4 +36,12 @@ public class EmailController {
     ) {
         return ResponseEntity.ok(emailService.verifyEmailCode(emailVerifyRequest));
     }
+
+    @Operation(summary = "이메일 중복 여부 확인")
+    @PostMapping("/verify-duplicate-email")
+    public void verifyDuplicateEmail(
+        @RequestBody EmailRequest emailRequest
+    ) {
+        emailService.verifyDuplicateEmail(emailRequest);
+    }
 }
