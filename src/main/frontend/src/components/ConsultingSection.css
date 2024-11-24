@@ -29,6 +29,8 @@
   width: 100%;
   justify-content: center;
   margin-bottom: 100px;
+  margin-top: 50px;
+  padding: 25px;
 }
 
 .consultant {
@@ -59,7 +61,7 @@
   cursor: pointer;
   padding: 10px;
   position: absolute;
-  top: 50%;
+  top: 40%;
   transform: translateY(-50%);
   background-color: transparent;
 }
@@ -73,5 +75,18 @@
 }
 
 .prev-arrow:hover, .next-arrow:hover {
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: rgba(30, 56, 56, 0.8);
+}
+
+.consultant:hover {
+  transform: scale(1.1);
+}
+
+.consultant:hover img {
+  transform: scale(1.2);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.consultant:hover span {
+  color: #ff7396;
 }

@@ -23,6 +23,7 @@ import FindPasswordPage from './pages/FindPasswordPage';
 import SearchResultsPage from './pages/SearchResultsPage';
 import ConsultingPage from './pages/ConsultingPage';
 import ChatRoomPage from './pages/ChatRoomPage';
+import ConsultantProfilePage from './pages/ConsultantProfilePage';
 
 // 별도의 컴포넌트로 useLocation을 포함한 내부 로직 처리
 function Layout() {
@@ -83,7 +84,11 @@ function Layout() {
 
           <Route path="/consulting" element={<ConsultingPage />} />
 
+          <Route path="/consultant/:consultantId" element={<ConsultantProfilePage />} />
+
+
           <Route path="/chat/:roomId" element={<ChatRoomPage />} />
+
 
           {/* 마이페이지관련 */}
           <Route path="/mypage" element={<UserMyPage />} /> 

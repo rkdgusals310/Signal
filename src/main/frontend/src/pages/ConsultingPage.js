@@ -14,7 +14,6 @@ const ConsultingPage = () => {
   const size = 5;
   const navigate = useNavigate();
 
-  // Fetch consultant list
   useEffect(() => {
     fetchConsultants();
   }, [searchQuery, genderFilter, currentPage]);
@@ -23,16 +22,28 @@ const ConsultingPage = () => {
     setLoading(true);
     setError(null);
 
-    try {
-      const response = await fetch(
-        `/api/common/consultant/search?search=${encodeURIComponent(
-          searchQuery
-        )}&gender=${genderFilter}&page=${currentPage}&size=${size}`
-      );
+    const baseUrl = searchQuery || genderFilter
+      ? `/api/common/consultant/search`
+      : `/api/common/consultant`;
 
+    const params = new URLSearchParams({
+      search: searchQuery || '',
+      gender: genderFilter || '',
+      page: currentPage,
+      size,
+    });
+
+    try {
+      const response = await fetch(`${baseUrl}?${params.toString()}`);
       if (response.ok) {
         const data = await response.json();
-        setConsultants(data.consultants || []);
+
+        const consultantData =
+          searchQuery || genderFilter
+            ? data.contents || []
+            : data.contents[0]?.consultants || [];
+
+        setConsultants(consultantData);
         setTotalPages(data.totalPages || 0);
       } else {
         setError('상담사 목록을 가져오지 못했습니다.');
@@ -44,23 +55,30 @@ const ConsultingPage = () => {
     }
   };
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    setCurrentPage(0); // 검색 시 페이지 초기화
-    fetchConsultants();
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+    setCurrentPage(0);
   };
 
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
+  const handleGenderFilterChange = (e) => {
+    setGenderFilter(e.target.value);
+    setCurrentPage(0);
   };
 
   const handleChatStart = async (consultantId, consultantName) => {
     try {
+      const userId = sessionStorage.getItem('userId');
+      if (!userId) {
+        alert('로그인이 필요합니다.');
+        navigate('/login');
+        return;
+      }
+
       const response = await fetch('/api/auth/chat/room', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          userId: 1, // 로그인된 유저 ID로 대체 필요
+          userId,
           consultantId,
         }),
       });
@@ -76,39 +94,34 @@ const ConsultingPage = () => {
     }
   };
 
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
   return (
     <div className="consulting-page">
-      {/* Consulting Section Slider */}
       <ConsultingSection />
 
-      {/* Filters and Consultant List */}
       <div className="consulting-page-content">
-        {/* Search Filters */}
         <div className="search-filters">
-          <form onSubmit={handleSearch}>
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="상담사 검색"
-              className="search-box"
-            />
-            <select
-              value={genderFilter}
-              onChange={(e) => setGenderFilter(e.target.value)}
-              className="gender-filter"
-            >
-              <option value="">성별 선택</option>
-              <option value="MALE">남자</option>
-              <option value="FEMALE">여자</option>
-            </select>
-            <button type="submit" className="search-button">
-              검색
-            </button>
-          </form>
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={handleSearchChange}
+            placeholder="상담사 검색"
+            className="search-box"
+          />
+          <select
+            value={genderFilter}
+            onChange={handleGenderFilterChange}
+            className="gender-filter"
+          >
+            <option value="">성별 선택</option>
+            <option value="MALE">남자</option>
+            <option value="FEMALE">여자</option>
+          </select>
         </div>
 
-        {/* Consultant List */}
         <div className="consultant-list">
           {loading && <p>로딩 중...</p>}
           {error && <p>{error}</p>}
@@ -122,8 +135,8 @@ const ConsultingPage = () => {
                 />
                 <div className="consultant-info">
                   <h3>{consultant.name}</h3>
-                  <p>전문 분야: {consultant.keyword.join(', ')}</p>
-                  <p>총 평점: {consultant.totalRating}</p>
+                  <p>전문 분야: {consultant.keyword}</p>
+                  <p>총 평점: {consultant.totalRating || 'N/A'}</p>
                   <p>상담 횟수: {consultant.chattingCount}</p>
                 </div>
                 <button
@@ -139,7 +152,6 @@ const ConsultingPage = () => {
           )}
         </div>
 
-        {/* Pagination */}
         <div className="pagination">
           {Array.from({ length: totalPages }, (_, idx) => (
             <button
