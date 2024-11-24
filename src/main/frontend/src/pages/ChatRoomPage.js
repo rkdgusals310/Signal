@@ -48,7 +48,7 @@ const ChatRoomPage = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           roomId,
-          senderId: userId, // 세션스토리지에서 가져온 userId 사용
+          senderId: userId,
           message: messageInput,
         }),
       });
