@@ -9,7 +9,7 @@ const ArticleCreatePage = () => {
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
   const [uploading, setUploading] = useState(false);
-  const [isButtonDisabled, setIsButtonDisabled] = useState(false); // 버튼 비활성화 상태 추가
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const navigate = useNavigate();
 
   const handleImageUpload = async (file) => {
@@ -63,7 +63,6 @@ const ArticleCreatePage = () => {
     }
 
     if (window.confirm('게시글을 작성하시겠습니까?')) {
-      // 버튼 비활성화
       setIsButtonDisabled(true);
 
       const requestData = {
@@ -98,7 +97,6 @@ const ArticleCreatePage = () => {
         console.error('Error submitting article:', error);
         setError('서버 오류가 발생했습니다. 다시 시도해주세요.');
       } finally {
-        // 3초 후 버튼 활성화
         setTimeout(() => setIsButtonDisabled(false), 3000);
       }
     }

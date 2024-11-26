@@ -15,6 +15,8 @@ const Comment = ({ postId }) => {
   const [hasNext, setHasNext] = useState(true);
   const [totalComments, setTotalComments] = useState(0);
 
+  const currentUserId = sessionStorage.getItem('userId'); // 세션 스토리지에서 userId 가져오기
+
   const fetchComments = async (reset = false) => {
     if (!hasNext && !reset) return;
 
@@ -75,7 +77,7 @@ const Comment = ({ postId }) => {
 
   const confirmEditComment = async () => {
     if (editingContent.trim() === '') return;
-  
+
     const confirmEdit = window.confirm('댓글을 수정하시겠습니까?');
     if (confirmEdit) {
       try {
@@ -84,7 +86,7 @@ const Comment = ({ postId }) => {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ contents: editingContent }),
         });
-  
+
         if (response.ok) {
           alert('댓글이 수정되었습니다.');
           window.location.reload();
@@ -100,7 +102,6 @@ const Comment = ({ postId }) => {
       }
     }
   };
-  
 
   const handleDeleteComment = async (commentId) => {
     const confirm = window.confirm('댓글을 삭제하시겠습니까?');
@@ -161,20 +162,23 @@ const Comment = ({ postId }) => {
             ) : (
               <span className="comment-content">{comment.contents}</span>
             )}
-            <div className="comment-actions">
-              <img
-                src={updateIcon}
-                alt="Edit"
-                className="comment-action-icon"
-                onClick={() => handleEditComment(comment.id, comment.contents)}
-              />
-              <img
-                src={deleteIcon}
-                alt="Delete"
-                className="comment-action-icon"
-                onClick={() => handleDeleteComment(comment.id)}
-              />
-            </div>
+            {/* 수정, 삭제 버튼 표시 */}
+            {comment.userId === Number(currentUserId) && (
+              <div className="comment-actions">
+                <img
+                  src={updateIcon}
+                  alt="Edit"
+                  className="comment-action-icon"
+                  onClick={() => handleEditComment(comment.id, comment.contents)}
+                />
+                <img
+                  src={deleteIcon}
+                  alt="Delete"
+                  className="comment-action-icon"
+                  onClick={() => handleDeleteComment(comment.id)}
+                />
+              </div>
+            )}
           </div>
         ))}
       </div>

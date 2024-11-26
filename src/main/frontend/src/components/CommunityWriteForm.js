@@ -9,14 +9,14 @@ const CommunityWriteForm = () => {
   const [invalidSentences, setInvalidSentences] = useState(null);
   const [filtered, setfiltered] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [isButtonDisabled, setIsButtonDisabled] = useState(false); // 버튼 비활성화 상태 추가
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // 버튼 비활성화
+
     setIsButtonDisabled(true);
 
     const requestBody = {
@@ -64,7 +64,6 @@ const CommunityWriteForm = () => {
     } catch (error) {
       console.error('서버와의 통신 중 오류 발생:', error);
     } finally {
-      // 일정 시간(예: 3초) 후 버튼 활성화
       setTimeout(() => setIsButtonDisabled(false), 3000);
     }
   };
