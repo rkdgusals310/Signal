@@ -1,12 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import './ChatRoomPage.css';
 
 const ChatRoomPage = () => {
   const { roomId } = useParams();
   const location = useLocation();
+  const navigate = useNavigate();
   const consultantName = location.state?.consultantName || '상담사';
-  const [messages, setMessages] = useState([]);
+  const userRole = sessionStorage.getItem('role'); // 현재 사용자의 role 가져오기
+
+  const welcomeMessage = {
+    messageId: 'welcome',
+    senderName: consultantName,
+    message: '상담을 원하시는 내용을 입력해주세요. 가능한 빨리 답변 드리도록 하겠습니다.',
+    sentAt: new Date().toISOString(),
+    senderType: 'CONSULTANT',
+  };
+
+  const [messages, setMessages] = useState([welcomeMessage]);
   const [messageInput, setMessageInput] = useState('');
   const [cursor, setCursor] = useState(null);
   const [hasNext, setHasNext] = useState(true);
@@ -19,12 +30,13 @@ const ChatRoomPage = () => {
   const fetchMessages = async () => {
     try {
       const response = await fetch(
-        `/api/auth/chat/room/${roomId}/details?size=10&cursor=${cursor || ''}&role=USER`
+        `/api/auth/chat/room/${roomId}/details?size=10&cursor=${cursor || ''}&role=${userRole}`
       );
 
       if (response.ok) {
         const data = await response.json();
-        setMessages((prev) => [...data.messages, ...prev]);
+        // 새로운 메시지를 welcomeMessage 아래에 추가
+        setMessages((prev) => [welcomeMessage, ...data.messages, ...prev.filter((m) => m.messageId !== 'welcome')]);
         setCursor(data.nextCursor);
         setHasNext(data.hasNext);
       } else {
@@ -36,6 +48,7 @@ const ChatRoomPage = () => {
   };
 
   const handleSendMessage = async () => {
+    if (!messageInput.trim()) return; // 빈 메시지 전송 방지
     try {
       const userId = sessionStorage.getItem('userId'); // 세션스토리지에서 userId 가져오기
       if (!userId) {
@@ -55,7 +68,7 @@ const ChatRoomPage = () => {
 
       if (response.ok) {
         const newMessage = await response.json();
-        setMessages((prev) => [...prev, newMessage]);
+        setMessages((prev) => [welcomeMessage, ...prev.filter((m) => m.messageId !== 'welcome'), newMessage]);
         setMessageInput('');
       } else {
         alert('메시지를 전송할 수 없습니다.');
@@ -65,12 +78,27 @@ const ChatRoomPage = () => {
     }
   };
 
+  const handleEnterPress = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleSendMessage();
+    }
+  };
+
   return (
     <div className="chat-room">
-      <h1>{consultantName}와의 상담</h1>
+      <div className="chat-header">
+        <button className="chatroomback-button" onClick={() => navigate(-1)}>
+          &lt;
+        </button>
+        <h1>{consultantName}와의 상담</h1>
+      </div>
       <div className="chat-messages">
         {messages.map((msg) => (
-          <div key={msg.messageId} className="chat-message">
+          <div
+            key={msg.messageId}
+            className={`chat-message ${msg.senderType === userRole ? 'user-message' : 'consultant-message'}`}
+          >
             <strong>{msg.senderName}</strong>: {msg.message} <small>{msg.sentAt}</small>
           </div>
         ))}
@@ -82,6 +110,7 @@ const ChatRoomPage = () => {
           value={messageInput}
           onChange={(e) => setMessageInput(e.target.value)}
           placeholder="메시지를 입력하세요."
+          onKeyDown={handleEnterPress} // Enter 키 이벤트 추가
         />
         <button onClick={handleSendMessage}>전송</button>
       </div>

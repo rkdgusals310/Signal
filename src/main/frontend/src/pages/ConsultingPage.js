@@ -14,7 +14,7 @@ const ConsultingPage = () => {
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
-  const [likeStates, setLikeStates] = useState({}); // 좋아요 상태 관리
+  const [likeStates, setLikeStates] = useState({});
   const size = 5;
   const navigate = useNavigate();
 
@@ -48,7 +48,6 @@ const ConsultingPage = () => {
 
         setConsultants(consultantData);
 
-        // 좋아요 초기 상태 설정
         const initialLikeStates = consultantData.reduce((acc, consultant) => {
           acc[consultant.id] = consultant.isLiked ? likeBefore : likeAfter;
           return acc;
