@@ -26,7 +26,7 @@ public class UserService {
 
     private final AuthRepository authRepository;
     private final EmailService emailService;
-    //TODO : SecurityConfig 만들어지면 @EnableWebSecuriy 어노테이션 있을 경우 에러 해결됨
+    //TODO : SecurityConfig 만들어지면 @EnableWebSecurity 어노테이션 있을 경우 에러 해결됨
     private final BCryptPasswordEncoder passwordEncoder;
 
     public String userSignup(UserSignUpRequest userSignUpRequest) {
@@ -99,10 +99,7 @@ public class UserService {
     }
 
     public FindIdResponse findId(EmailRequest emailRequest) {
-        String email = emailRequest.getEmail();
-
-        authRepository.existsUserByEmail(email);
-        emailService.isEmailVerified(emailRequest.getEmail());
+        String email = emailRequest.getEmail();emailService.isEmailVerified(emailRequest.getEmail());
         User user = authRepository.findUserByEmail(email);
 
         return FindIdResponse.toDto(user);
