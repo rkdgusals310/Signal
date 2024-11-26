@@ -237,9 +237,9 @@ const ConsultingPage = () => {
           ) : (
             <p>검색 결과가 없습니다.</p>
           )}
-        </div>
-
-        <div className="pagination">
+        </div>        
+      </div>
+      <div className="pagination">
           {Array.from({ length: totalPages }, (_, idx) => (
             <button
               key={idx}
@@ -251,7 +251,6 @@ const ConsultingPage = () => {
             </button>
           ))}
         </div>
-      </div>
     </div>
   );
 };
