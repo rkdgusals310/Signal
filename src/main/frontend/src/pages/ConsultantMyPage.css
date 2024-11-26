@@ -1,0 +1,12 @@
+.consultant-my-page {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.consultant-page-sections {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* 2열 레이아웃 */
+    gap: 20px;
+    margin-top: 40px;
+}

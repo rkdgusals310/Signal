@@ -11,7 +11,7 @@ const UserMyChattingSection = () => {
 
   const fetchMyChatting = async (page) => {
     try {
-      const response = await fetch(`/api/member/my-chatting?page=${page}&size=5`);
+      const response = await fetch(`/api/user/my-chatting?page=${page}&size=5`);
       if (response.ok) {
         const data = await response.json();
         setChatting(data.content.myChatting);
