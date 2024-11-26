@@ -1,9 +1,9 @@
 import React from 'react';
-import UserProfileSection from '../components/UserProfileSection';
-import MyPostsSection from '../components/UserMyPostsSection';
-import MyLikesSection from '../components/UserMyLikesSection';
-import MyCommentsSection from '../components/UserMyCommentsSection';
-import MyChattingSection from '../components/UserMyChattingSection';
+import UserProfileSection from '../components/UserProfile/UserProfileSection';
+import MyPostsSection from '../components/UserProfile/UserMyPostsSection';
+import MyLikesSection from '../components/UserProfile/UserMyLikesSection';
+import MyCommentsSection from '../components/UserProfile/UserMyCommentsSection';
+import MyChattingSection from '../components/UserProfile/UserMyChattingSection';
 import './UserMyPage.css';
 
 const UserMyPage = () => {

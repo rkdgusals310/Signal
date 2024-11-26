@@ -1,0 +1,125 @@
+.consultant-profile-page {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .consultant-profile-header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    position: relative;
+    margin-bottom: 50px;
+  }
+  
+  .consultant-profile-back-button {
+    position: absolute;
+    left: 0;
+    font-size: 60px;
+    background: none;
+    border: none;
+    color: #000000;
+    cursor: pointer;
+    padding: 50px;
+  }
+  
+  .consultant-title {
+    flex: 1;
+    text-align: center;
+    font-size: 56px;
+    font-weight: bold;
+    padding: 40px;
+    margin: 0;
+    background-color: #fdf1c3;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+  }
+  
+  .consultant-main-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    margin-bottom: 40px;
+    text-align: center;
+  }
+  
+  .consultant-profile-image {
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-left: 150px;
+  }
+  
+  .consultant-details {
+    flex: 1;
+  }
+  
+  .consultant-details h2 {
+    font-size: 36px;
+    margin-bottom: 50px;
+  }
+  
+  .chat-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: white;
+    color: black;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 24px;
+    font-weight: bolder;
+    border: 2px solid black;
+  }
+  
+  .chat-button:hover {
+    background-color: #949494;
+  }
+  
+  .consultant-extra-info h3 {
+    font-size: 48px;
+    margin-top: 100px;
+    margin-left: 150px;
+  }
+  
+  
+  .consultant-extra-info p {
+    font-size: 24px;
+    margin-top: 10px;
+    line-height: 1.6;
+    max-width: 1000px;
+    margin-left: 250px;
+  }
+  
+  .consultant-summary {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    max-width: 500px;
+    margin-left: 230px;
+    margin-bottom: 30px;
+    background-color: #EBE9E9;
+    padding: 30px;
+    border-radius: 20px;
+  }
+  
+  .consultant-summary-item {
+    flex: 1;
+    text-align: center;
+  }
+  
+  .consultant-summary-item strong {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 24px;
+    color: #424242;
+  }
+  
+  .consultant-summary-item p {
+    font-size: 24px;
+    margin: 0;
+    color: #006F9C;
+    font-weight: bolder;
+  }
+  

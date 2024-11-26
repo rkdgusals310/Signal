@@ -28,6 +28,40 @@ const Login = () => {
 
       if (response.ok) {
         sessionStorage.setItem('isLoggedIn', 'true');
+
+        // Step 1: Check consultant information
+        const consultantInfoResponse = await fetch('/api/auth/consultant/my-information', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+        });
+
+        if (consultantInfoResponse.ok) {
+          const consultantInfo = await consultantInfoResponse.json();
+          sessionStorage.setItem('userId', consultantInfo.id);
+          sessionStorage.setItem('role', 'CONSULTANT'); // Assign CONSULTANT role
+          console.log('Logged in as CONSULTANT, Consultant ID:', consultantInfo.id);
+        } else {
+          // If consultant check fails, assign USER role by default
+          const userInfoResponse = await fetch('/api/auth/user/my-information', {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+          });
+
+          if (userInfoResponse.ok) {
+            const userInfo = await userInfoResponse.json();
+            sessionStorage.setItem('userId', userInfo.id);
+          }
+
+          sessionStorage.setItem('role', 'USER');
+          console.log('Logged in as USER');
+        }
+
         navigate('/');
       } else {
         setError('로그인에 실패했습니다. 아이디와 비밀번호를 확인해주세요.');
@@ -41,8 +75,8 @@ const Login = () => {
   return (
     <div className="login-page-container">
       <div className="login-page-logo" onClick={handleLogoClick} style={{ cursor: 'pointer' }}>
-          <img src="/img/loginLogo.png" alt="Signal Logo" />
-        </div>
+        <img src="/img/loginLogo.png" alt="Signal Logo" />
+      </div>
       <form className="login-page-form" onSubmit={handleLogin}>
         <input
           id="userId"
