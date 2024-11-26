@@ -2,12 +2,14 @@ package com.signal.domain.article.controller;
 
 import com.signal.domain.article.dto.request.ArticleRequest;
 import com.signal.domain.article.dto.response.ArticleDetailResponse;
+import com.signal.domain.article.dto.response.RecommendArticleResponse;
 import com.signal.domain.article.dto.response.SearchResponse;
 import com.signal.domain.article.service.ArticleService;
 import com.signal.global.dto.PagedDto;
 import com.signal.global.sercurity.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -92,6 +94,14 @@ public class ArticleController {
         @RequestParam(required = false, value = "page", defaultValue = "0") int page
     ) {
         PagedDto<SearchResponse> articles = articleService.getConsultantArticle(consultantId, size, page);
+
+        return ResponseEntity.ok(articles);
+    }
+
+    @Operation(summary = "추천 아티클 조회")
+    @GetMapping("/common/home/recommend-article")
+    public ResponseEntity<List<RecommendArticleResponse>> getRecommendArticle() {
+        List<RecommendArticleResponse> articles = articleService.getRecommendArticle();
 
         return ResponseEntity.ok(articles);
     }

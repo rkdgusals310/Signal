@@ -1,5 +1,6 @@
 package com.signal.domain.post.repository;
 
+import com.signal.domain.article.model.Article;
 import com.signal.domain.post.model.Post;
 import com.signal.domain.post.model.enums.Category;
 import com.signal.global.exception.errorCode.ErrorCode;
@@ -70,4 +71,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
        @Param("search") String search,
        Pageable pageable
    );
+
+   @Query("SELECT p FROM Post p WHERE p.deletedAt IS NULL ORDER BY p.viewCount DESC, p.createdAt DESC")
+   Page<Post> findTop5ByViewCount(Pageable pageable);
 }

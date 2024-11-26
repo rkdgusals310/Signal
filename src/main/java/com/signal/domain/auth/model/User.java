@@ -78,10 +78,6 @@ public class User extends BaseEntity {
 
 
     public void update(UserUpdateRequest userUpdateRequest) {
-        if(userUpdateRequest.getEmail() != null) {
-            this.email = userUpdateRequest.getEmail();
-        }
-
         if(userUpdateRequest.getNickname() != null) {
             this.nickname = userUpdateRequest.getNickname();
         }

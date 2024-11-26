@@ -10,6 +10,7 @@ import com.signal.domain.post.dto.request.CompletionRequestDto;
 import com.signal.domain.post.dto.request.PostRequest;
 import com.signal.domain.post.dto.response.CategoryResponse;
 import com.signal.domain.post.dto.response.FilterResponse;
+import com.signal.domain.post.dto.response.HotPostResponse;
 import com.signal.domain.post.dto.response.MyPostResponse;
 import com.signal.domain.post.dto.response.PostDetailResponse;
 import com.signal.domain.post.dto.response.PostResponse;
@@ -28,6 +29,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
@@ -211,5 +213,17 @@ public class PostService {
         SearchResponse searchResponse = SearchResponse.toDto(totalCount, postsResponse);
 
         return PagedDto.toDTO(page, size, totalPages, List.of(searchResponse));
+    }
+
+    public List<HotPostResponse> getHotPosts() {
+        Pageable pageable = PageRequest.of(0, 5);
+        Page<Post> hotposts = postRepository.findTop5ByViewCount(pageable);
+
+        List<HotPostResponse> hotPostResponses = hotposts.stream()
+            .map(
+                HotPostResponse::toDto
+            ).collect(Collectors.toList());
+
+        return hotPostResponses;
     }
 }

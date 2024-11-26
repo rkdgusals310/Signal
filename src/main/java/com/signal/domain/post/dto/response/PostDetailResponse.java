@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class PostDetailResponse {
     private Long id;
+    private Long userId;
     private String title;
     private String contents;
     private Category category;
@@ -25,6 +26,7 @@ public class PostDetailResponse {
     public static PostDetailResponse toDto(Post post){
         return PostDetailResponse.builder()
             .id(post.getId())
+            .userId(post.getUser().getId())
             .title(post.getTitle())
             .contents(post.getContents())
             .category(post.getCategory())
