@@ -37,12 +37,18 @@ const ChatRoomPage = () => {
 
   const handleSendMessage = async () => {
     try {
+      const userId = sessionStorage.getItem('userId'); // 세션스토리지에서 userId 가져오기
+      if (!userId) {
+        alert('로그인이 필요합니다.');
+        return;
+      }
+
       const response = await fetch('/api/auth/chat/message', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           roomId,
-          senderId: 1, // 로그인된 유저 ID로 대체 필요
+          senderId: userId,
           message: messageInput,
         }),
       });
@@ -51,6 +57,8 @@ const ChatRoomPage = () => {
         const newMessage = await response.json();
         setMessages((prev) => [...prev, newMessage]);
         setMessageInput('');
+      } else {
+        alert('메시지를 전송할 수 없습니다.');
       }
     } catch (err) {
       alert('메시지를 전송할 수 없습니다.');

@@ -24,6 +24,7 @@ import SearchResultsPage from './pages/SearchResultsPage';
 import ConsultingPage from './pages/ConsultingPage';
 import ChatRoomPage from './pages/ChatRoomPage';
 import ConsultantProfilePage from './pages/ConsultantProfilePage';
+import ConsultantMyPage from './pages/ConsultantMyPage';
 
 // 별도의 컴포넌트로 useLocation을 포함한 내부 로직 처리
 function Layout() {
@@ -91,7 +92,8 @@ function Layout() {
 
 
           {/* 마이페이지관련 */}
-          <Route path="/mypage" element={<UserMyPage />} /> 
+          <Route path="/usermypage" element={<UserMyPage />} /> 
+          <Route path="/consultantmypage" element={<ConsultantMyPage />} /> 
 
           {/* 404 페이지 */}
           <Route path="*" element={<div>페이지를 찾을 수 없습니다.</div>} />

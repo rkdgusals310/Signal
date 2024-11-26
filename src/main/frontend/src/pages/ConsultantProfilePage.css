@@ -70,6 +70,7 @@
     cursor: pointer;
     font-size: 24px;
     font-weight: bolder;
+    border: 2px solid black;
   }
   
   .chat-button:hover {
