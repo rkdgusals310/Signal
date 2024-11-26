@@ -1,5 +1,6 @@
 package com.signal.domain.chatting.dto.response;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.signal.domain.auth.model.enums.Role;
@@ -23,6 +24,7 @@ public class ChattingRoomWithMessagesResponse {
     private List<ChattingMessageResponse> messages;
     private Long nextCursor;
     private boolean hasNext; // 추가된 필드
+    private LocalDateTime lastActivityAt;
 
     public ChattingRoomWithMessagesResponse(ChattingRoom room, List<ChattingMessages> messages, Role role, Long nextCursor) {
         this.roomId = room.getId();
@@ -42,6 +44,7 @@ public class ChattingRoomWithMessagesResponse {
                                  .toList();
         this.nextCursor = nextCursor;
         this.hasNext = hasNext;
+       
     }
 
 }

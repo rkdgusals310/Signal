@@ -15,8 +15,10 @@ import com.signal.domain.chatting.service.ChattingService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,7 +33,7 @@ public class ChattingController {
         this.chattingService = chattingService;
     }
 
-    @Operation(summary = "상담방 생성")
+    @Operation(summary = "채팅방 생성")
     @PostMapping("/room")
     public ChattingRoomWithMessagesResponse createRoom(@RequestBody ChattingRoomRequest request) {
         ChattingRoom room = chattingService.getOrCreateRoom(request);
@@ -41,14 +43,28 @@ public class ChattingController {
             .title(room.getConsultant().getNickname() + " 상담사와의 상담방")
             .messages(List.of()) // 빈 메시지 리스트
             .nextCursor(null) // 초기 상태에서는 커서 없음
+            .lastActivityAt(room.getLastActivityAt())
             .build();
     }
+
+	@Operation(summary = "채팅 종료")
+	@PutMapping("/room/{roomId}/status")
+	public void updateRoomStatus(@PathVariable Long roomId) {
+		chattingService.completeChattingRoom(roomId);
+	}
 
 
     @Operation(summary = "메시지 전송")
     @PostMapping("/message")
-    public void sendMessage(@RequestBody ChattingMessageRequest request) {
-        chattingService.sendMessage(request);
+    public ChattingMessageResponse sendMessage(@RequestBody ChattingMessageRequest request) {
+        ChattingMessages messages=chattingService.sendMessage(request);
+		return ChattingMessageResponse.builder()
+				.messageId(messages.getId())
+				.message(messages.getMessage())
+				.senderName(messages.getUserId().getNickname())
+				.sentAt(messages.getCreatedAt())
+				.lastActivityAt(messages.getChattingRoom().getLastActivityAt())
+				.build();
     }
 
     

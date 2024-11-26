@@ -24,7 +24,9 @@ import com.signal.domain.auth.repository.AuthRepository;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -35,7 +37,8 @@ public class ChattingService {
     private final ChattingRoomRepository chattingRoomRepository;
     private final ChattingMessagesRepository chattingMessagesRepository;
     private final AuthRepository authRepository;
-
+   
+    @Transactional
     public ChattingRoom getOrCreateRoom(ChattingRoomRequest request) {
     	return chattingRoomRepository.findByUserIdAndConsultantIdAndStatus(request.getUserId(), request.getConsultantId(), ChattingRoomStatus.ACTIVE)
                 .orElseGet(() -> {
@@ -48,11 +51,15 @@ public class ChattingService {
             .user(user)
             .consultant(consultant)
             .status(ChattingRoomStatus.ACTIVE)
+            .createdAt(LocalDateTime.now())
+            .lastActivityAt(LocalDateTime.now())
+            .completedAt(null)
             .build();
 
         return chattingRoomRepository.save(room);
     });}
-
+    
+    @Transactional
     public ChattingMessages sendMessage(ChattingMessageRequest request) {
         ChattingRoom room = chattingRoomRepository.findById(request.getRoomId())
             .orElseThrow(() -> new IllegalArgumentException("Invalid room ID"));
@@ -64,9 +71,11 @@ public class ChattingService {
             .userId(sender)
             .message(request.getMessage())
             .isRead(false)
+            .createdAt(LocalDateTime.now())
             .build();
-
-        return chattingMessagesRepository.save(message);
+        ChattingMessages savedMessage = chattingMessagesRepository.save(message);
+        chattingRoomRepository.updateLastActivityAt(request.getRoomId(), LocalDateTime.now());
+        return savedMessage;
     }
 
     public List<ChattingRoom> getRoomsByStatus(ChattingRoomStatus status) {
@@ -108,9 +117,20 @@ public class ChattingService {
             otherPartyName,
             messageResponses,
             nextCursor,
-            hasNext 
+            hasNext,
+            room.getLastActivityAt()
         );
     }
+    
+    @Transactional
+	public void completeChattingRoom(Long roomId) {
+		ChattingRoom room=chattingRoomRepository.findById(roomId)
+				.orElseThrow(()->new IllegalArgumentException("Invalid room ID"));
+		
+		room.setStatus(ChattingRoomStatus.COMPLETED);
+		room.setCompletedAt(LocalDateTime.now());
+		chattingRoomRepository.save(room);
+	}
 
     
     
