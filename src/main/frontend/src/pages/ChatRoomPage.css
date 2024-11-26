@@ -17,11 +17,12 @@
 }
 
 .chatroomback-button {
-  font-size: 20px;
+  font-size: 40px;
   background: none;
   border: none;
   color: #333;
   cursor: pointer;
+  margin-right: 1600px;
 }
 
 .chat-room h1 {

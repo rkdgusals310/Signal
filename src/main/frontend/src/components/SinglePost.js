@@ -118,12 +118,13 @@ const SinglePost = () => {
         />
         <div className="single-post-title">{post.title}</div>
 
-        {post.authorId === Number(currentUserId) && (
+        {post.userId === Number(currentUserId) && (
           <div className="single-post-actions">
             <img src={updateIcon} alt="Edit" className="single-post-action-icon" onClick={handleEdit} />
             <img src={deleteIcon} alt="Delete" className="single-post-action-icon" onClick={openDeleteModal} />
           </div>
         )}
+
       </div>
       <hr className="single-post-divider" />
       <div className="single-post-meta">

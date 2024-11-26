@@ -9,11 +9,15 @@ const CommunityWriteForm = () => {
   const [invalidSentences, setInvalidSentences] = useState(null);
   const [filtered, setfiltered] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false); // 버튼 비활성화 상태 추가
 
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // 버튼 비활성화
+    setIsButtonDisabled(true);
 
     const requestBody = {
       title: title,
@@ -43,13 +47,12 @@ const CommunityWriteForm = () => {
           setInvalidSentences(result.invalidSentences);
           setfiltered(true);
           setIsSubmitted(false);
-          return;
         } else {
           console.log('게시글 작성 성공!');
           setIsSubmitted(true);
           setfiltered(false);
           setInvalidSentences(null);
-          
+
           setTimeout(() => {
             navigate(`/community/gomin/${category}`);
           }, 2000);
@@ -60,6 +63,9 @@ const CommunityWriteForm = () => {
       }
     } catch (error) {
       console.error('서버와의 통신 중 오류 발생:', error);
+    } finally {
+      // 일정 시간(예: 3초) 후 버튼 활성화
+      setTimeout(() => setIsButtonDisabled(false), 3000);
     }
   };
 
@@ -122,7 +128,7 @@ const CommunityWriteForm = () => {
       </div>
 
       <textarea
-        className={`content-textarea ${filtered ? 'error-content' : isSubmitted ? 'success-content' : ''}`}  // 성공 시 초록색 테두리
+        className={`content-textarea ${filtered ? 'error-content' : isSubmitted ? 'success-content' : ''}`}
         value={content}
         onChange={(e) => setContent(e.target.value)}
         placeholder="내용"
@@ -147,8 +153,8 @@ const CommunityWriteForm = () => {
       )}
 
       <div className="form-footer">
-        <button type="submit" className="submit-button">
-          작성하기
+        <button type="submit" className="submit-button" disabled={isButtonDisabled}>
+          {isButtonDisabled ? '작성 중...' : '작성하기'}
         </button>
       </div>
     </form>

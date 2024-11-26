@@ -9,9 +9,9 @@ const ArticleCreatePage = () => {
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
   const [uploading, setUploading] = useState(false);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false); // 버튼 비활성화 상태 추가
   const navigate = useNavigate();
 
-  // Cloudinary
   const handleImageUpload = async (file) => {
     if (!file) return;
 
@@ -63,6 +63,9 @@ const ArticleCreatePage = () => {
     }
 
     if (window.confirm('게시글을 작성하시겠습니까?')) {
+      // 버튼 비활성화
+      setIsButtonDisabled(true);
+
       const requestData = {
         title,
         contents,
@@ -94,6 +97,9 @@ const ArticleCreatePage = () => {
       } catch (error) {
         console.error('Error submitting article:', error);
         setError('서버 오류가 발생했습니다. 다시 시도해주세요.');
+      } finally {
+        // 3초 후 버튼 활성화
+        setTimeout(() => setIsButtonDisabled(false), 3000);
       }
     }
   };
@@ -128,7 +134,6 @@ const ArticleCreatePage = () => {
         </div>
         {uploading && <p className="uploading-text">이미지 업로드 중...</p>}
 
-
         <textarea
           id="contents"
           value={contents}
@@ -137,7 +142,9 @@ const ArticleCreatePage = () => {
           required
         />
 
-        <button type="submit" className="submit-button">작성하기</button>
+        <button type="submit" className="submit-button" disabled={isButtonDisabled}>
+          {isButtonDisabled ? '작성 중...' : '작성하기'}
+        </button>
       </form>
 
       {error && <p className="error-message">{error}</p>}
