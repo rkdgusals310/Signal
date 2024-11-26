@@ -99,9 +99,7 @@ public class UserService {
     }
 
     public FindIdResponse findId(EmailRequest emailRequest) {
-        String email = emailRequest.getEmail();
-
-        emailService.isEmailVerified(emailRequest.getEmail());
+        String email = emailRequest.getEmail();emailService.isEmailVerified(emailRequest.getEmail());
         User user = authRepository.findUserByEmail(email);
 
         return FindIdResponse.toDto(user);
