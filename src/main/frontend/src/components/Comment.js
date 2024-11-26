@@ -36,6 +36,7 @@ const Comment = ({ postId }) => {
         setCursorId(data.nextCursorId);
         setHasNext(data.hasNext);
         setTotalComments(data.repliesCount);
+        setError(null); // 오류 메시지 초기화
       } else {
         throw new Error('Error fetching comments');
       }
@@ -143,46 +144,50 @@ const Comment = ({ postId }) => {
         <span className="comment-count">{totalComments}개</span>
       </div>
       <div className="comment-list">
-        {comments.map((comment) => (
-          <div key={comment.id} className="comment-item">
-            <img
-              src={comment.gender === 'MALE' ? maleIcon : femaleIcon}
-              alt={comment.gender}
-              className="comment-gender-icon"
-            />
-            {editingCommentId === comment.id ? (
-              <div className="editing-comment">
-                <input
-                  type="text"
-                  value={editingContent}
-                  onChange={(e) => setEditingContent(e.target.value)}
-                />
-                <button onClick={confirmEditComment}>수정 확인</button>
-              </div>
-            ) : (
-              <span className="comment-content">{comment.contents}</span>
-            )}
+        {comments.length > 0 ? (
+          comments.map((comment) => (
+            <div key={comment.id} className="comment-item">
+              <img
+                src={comment.gender === 'MALE' ? maleIcon : femaleIcon}
+                alt={comment.gender}
+                className="comment-gender-icon"
+              />
+              {editingCommentId === comment.id ? (
+                <div className="editing-comment">
+                  <input
+                    type="text"
+                    value={editingContent}
+                    onChange={(e) => setEditingContent(e.target.value)}
+                  />
+                  <button onClick={confirmEditComment}>수정 확인</button>
+                </div>
+              ) : (
+                <span className="comment-content">{comment.contents}</span>
+              )}
 
-            {comment.userId === Number(currentUserId) && (
-              <div className="comment-actions">
-                <img
-                  src={updateIcon}
-                  alt="Edit"
-                  className="comment-action-icon"
-                  onClick={() => handleEditComment(comment.id, comment.contents)}
-                />
-                <img
-                  src={deleteIcon}
-                  alt="Delete"
-                  className="comment-action-icon"
-                  onClick={() => handleDeleteComment(comment.id)}
-                />
-              </div>
-            )}
-          </div>
-        ))}
+              {comment.userId === Number(currentUserId) && (
+                <div className="comment-actions">
+                  <img
+                    src={updateIcon}
+                    alt="Edit"
+                    className="comment-action-icon"
+                    onClick={() => handleEditComment(comment.id, comment.contents)}
+                  />
+                  <img
+                    src={deleteIcon}
+                    alt="Delete"
+                    className="comment-action-icon"
+                    onClick={() => handleDeleteComment(comment.id)}
+                  />
+                </div>
+              )}
+            </div>
+          ))
+        ) : (
+          <p className="no-comments-message">작성된 댓글이 없습니다.</p>
+        )}
       </div>
-      {hasNext && (
+      {hasNext && comments.length > 0 && (
         <button onClick={handleLoadMore} className="load-more">
           댓글 더 보기
         </button>
