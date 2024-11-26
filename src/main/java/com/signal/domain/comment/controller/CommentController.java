@@ -81,16 +81,20 @@ public class CommentController {
 	public ResponseEntity<CursorPagedDto<CommentResponse>> getCommentByPostId(
 	        @PathVariable Long postId,
 	        @RequestParam(required = false) Long cursorId,
-	        @RequestParam(defaultValue = "10") int size
+	        @RequestParam(defaultValue = "10") int size,
+	        @AuthenticationPrincipal CustomUserDetails customUserDetails
+	        
 	) {
 	    CommentPagedResponse response = commentService.getCommentsByPostIdWithCursor(postId, cursorId, size);
-
+	    Long userId = customUserDetails.getUserId();
+	    
 	    CursorPagedDto<CommentResponse> cursorPagedResponse = new CursorPagedDto<>(
 	        response.getComments(),
 	        response.getRepliesCount(),
 	        response.getNextCursorId(),
 	        response.isHasNext(),
-	        size
+	        size,
+	        userId
 	    );
 
 	    return ResponseEntity.ok(cursorPagedResponse);
