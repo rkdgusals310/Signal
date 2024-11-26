@@ -44,7 +44,7 @@ const SinglePost = () => {
 
   const handleLikeToggle = async () => {
     try {
-      const response = await fetch(`/api/user/post/${postId}/like`, {
+      const response = await fetch(`/api/common/post/${postId}/like`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
