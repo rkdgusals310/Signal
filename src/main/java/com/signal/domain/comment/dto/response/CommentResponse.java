@@ -24,6 +24,7 @@ public class CommentResponse {
 	private Gender gender;
 	private String contents;
 	private LocalDateTime createdAt;
+	private Long userId;
 
 	
 	public static CommentResponse toDto(Comment comment) {
@@ -33,6 +34,7 @@ public class CommentResponse {
 				.gender(comment.getUser().getGender())
 				.contents(comment.getContents())
 				.createdAt(comment.getCreatedAt())
+				.userId(comment.getUser().getId())
 				.build();
 		
 	}
