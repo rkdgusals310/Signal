@@ -8,6 +8,7 @@ const ArticlePage = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const userRole = sessionStorage.getItem('role');
 
   useEffect(() => {
     fetchArticles(currentPage);
@@ -97,7 +98,11 @@ const ArticlePage = () => {
           다음 &gt;
         </button>
       </div>
-      <button onClick={handleCreateArticle} className="create-article-button">전문가글 작성하기</button>
+      {userRole === 'CONSULTANT' && (
+        <button onClick={handleCreateArticle} className="create-article-button">
+          전문가글 작성하기
+        </button>
+      )}
     </div>
   );
 };
