@@ -15,7 +15,7 @@ const Comment = ({ postId }) => {
   const [hasNext, setHasNext] = useState(true);
   const [totalComments, setTotalComments] = useState(0);
 
-  const currentUserId = sessionStorage.getItem('userId'); // 세션 스토리지에서 userId 가져오기
+  const currentUserId = sessionStorage.getItem('userId');
 
   const fetchComments = async (reset = false) => {
     if (!hasNext && !reset) return;
@@ -162,7 +162,7 @@ const Comment = ({ postId }) => {
             ) : (
               <span className="comment-content">{comment.contents}</span>
             )}
-            {/* 수정, 삭제 버튼 표시 */}
+
             {comment.userId === Number(currentUserId) && (
               <div className="comment-actions">
                 <img
