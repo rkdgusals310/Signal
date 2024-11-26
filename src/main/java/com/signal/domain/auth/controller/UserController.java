@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.Mapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -90,7 +91,7 @@ public class UserController {
         return ResponseEntity.ok(userService.editConsultantInformation(consultantUpdateRequest, consultantId));
     }
 
-    @GetMapping("/find-id")
+    @PostMapping("/find-id")
     @Operation(summary = "id 찾기")
     public ResponseEntity<FindIdResponse> findId(
         @Valid @RequestBody

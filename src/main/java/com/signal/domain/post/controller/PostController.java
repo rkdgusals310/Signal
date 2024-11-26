@@ -3,6 +3,7 @@ package com.signal.domain.post.controller;
 import com.signal.domain.post.dto.request.PostRequest;
 import com.signal.domain.post.dto.response.CategoryResponse;
 import com.signal.domain.post.dto.response.FilterResponse;
+import com.signal.domain.post.dto.response.HotPostResponse;
 import com.signal.domain.post.dto.response.MyPostResponse;
 import com.signal.domain.post.dto.response.PostDetailResponse;
 import com.signal.domain.post.dto.response.SearchResponse;
@@ -13,6 +14,7 @@ import com.signal.global.sercurity.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -106,5 +108,12 @@ public class PostController {
     ) {
         PagedDto<SearchResponse> searchResponse = postService.getSearchPosts(search, size, page);
         return ResponseEntity.ok(searchResponse);
+    }
+
+    @Operation(summary = "핫 게시글 조회")
+    @GetMapping("common/home/hot-post")
+    public ResponseEntity<List<HotPostResponse>> getHotPosts() {
+        List<HotPostResponse> hotPostResponse = postService.getHotPosts();
+        return ResponseEntity.ok(hotPostResponse);
     }
 }

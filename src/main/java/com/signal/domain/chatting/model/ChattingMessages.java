@@ -34,5 +34,6 @@ public class ChattingMessages extends BaseEntity {
     
     @Column(nullable = false)
     private boolean isRead;
-
+    
+    
 }

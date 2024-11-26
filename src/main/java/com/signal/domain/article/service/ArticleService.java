@@ -1,5 +1,6 @@
 package com.signal.domain.article.service;
 
+import com.signal.domain.article.dto.response.RecommendArticleResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -159,5 +160,17 @@ public class ArticleService {
 
         SearchResponse searchResponse = SearchResponse.toDto(totalCount, articleResponses);
         return PagedDto.toDTO(page, size, totalPages, List.of(searchResponse));
+    }
+
+    public List<RecommendArticleResponse> getRecommendArticle() {
+        Pageable pageable = PageRequest.of(0, 5);
+        Page<Article> top5Articles = articleRepository.findTop5ByViewCount(pageable);
+
+        List<RecommendArticleResponse> articles = top5Articles.stream()
+            .map(
+                RecommendArticleResponse::toDto
+            ).collect(Collectors.toList());
+
+        return articles;
     }
 }

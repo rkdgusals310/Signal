@@ -83,12 +83,8 @@ public class UserService {
     public String editUserInformation(UserUpdateRequest userUpdateRequest, Long userId) {
         User user = authRepository.findUserById(userId);
 
-        if (userUpdateRequest.getEmail() != null && user.getId() == userId) {
-            authRepository.existsUserByEmail(userUpdateRequest.getEmail());
-            emailService.isEmailVerified(userUpdateRequest.getEmail());
-        }
-
         user.update(userUpdateRequest);
+        authRepository.save(user);
 
         return "User Updated Successfully";
     }
@@ -97,6 +93,7 @@ public class UserService {
         User user = authRepository.findConsultantById(consultantId);
 
         user.update(consultantUpdateRequest);
+        authRepository.save(user);
 
         return "Consultant Updated Successfully";
     }

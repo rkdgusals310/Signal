@@ -54,4 +54,7 @@ public interface ArticleRepository extends JpaRepository<Article,Long> {
         @Param("userId") Long userId,
         Pageable pageable
     );
+
+    @Query("SELECT a FROM Article a WHERE a.deletedAt IS NULL ORDER BY a.viewCount DESC, a.createdAt DESC")
+    Page<Article> findTop5ByViewCount(Pageable pageable);
 }
