@@ -1,6 +1,7 @@
 package com.signal.domain.post.model;
 
 import com.signal.domain.auth.model.User;
+
 import com.signal.domain.post.dto.request.PostRequest;
 import com.signal.domain.post.model.enums.Category;
 import com.signal.global.entity.BaseEntity;
@@ -21,8 +22,8 @@ import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.LastModifiedDate;
 
 @Entity
-@Table(name = "post")
 @Getter
+@Table(name = "post")
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder

@@ -1,0 +1,61 @@
+.consultant-my-chatting-section {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.consultant-my-chatting-section h3 {
+    margin-bottom: 15px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+}
+
+.consultant-my-chatting-section table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.consultant-my-chatting-section th {
+    background-color: #f5f5f5;
+    font-weight: bold;
+    color: #555;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+.consultant-my-chatting-section td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    font-size: 20px;
+}
+
+.consultant-my-chatting-section tr:hover {
+    background-color: #f9f9f9;
+    cursor: pointer;
+}
+
+.pagination {
+    margin-top: 15px;
+    text-align: center;
+}
+
+.pagination button {
+    margin: 0 5px;
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.pagination button.active {
+    background-color: #0056b3;
+}
+
+.pagination button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}

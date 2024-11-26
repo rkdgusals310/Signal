@@ -1,0 +1,56 @@
+.footerLogin {
+    position: relative;
+    width: 100%;
+    background-color: white;
+    padding: 20px 0;
+    text-align: center;
+  }
+  
+  .footerLogin-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 80%;
+    max-width: 2580px;
+    margin: 0 auto;
+  }
+  
+  /* 푸터 상단 선  */
+  .footerLogin::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    max-width: 3000px;
+    height: 5px;
+    background-color: #000000;
+  }
+  
+  .footerLogin-left .footerLogin-logo {
+    width: 100px;
+    height: 75px;
+  }
+  
+  .footerLogin-center p {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 800;
+  }
+  
+  .footerLogin-right {
+    display: flex;
+    gap: 15px;
+  }
+  
+  .social-iconLogin {
+    width: 55px;
+    height: 55px;
+    cursor: pointer;
+  }
+  
+  .social-iconLogin:hover {
+    opacity: 0.7;
+  }
+  

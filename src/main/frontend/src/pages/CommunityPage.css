@@ -1,0 +1,39 @@
+/* CommunityPage 전체 레이아웃 스타일 */
+.community-page-container {
+    display: flex;
+    justify-content: center; /* 좌우 중앙 정렬 */
+    padding: 20px;
+    background-color: white;
+    min-height: 80vh; /* 콘텐츠가 적을 때도 일정한 높이 유지 */
+}
+
+.community-page {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    width: 1700px; /* 가로 길이를 1700px로 고정 */
+    background-color: white;
+    margin: 0 auto; /* 전체 페이지를 중앙에 배치 */
+}
+
+/* 좌측에 위치한 네비게이션 스타일 */
+.community-page .community-navigation {
+    width: 260px;
+    margin-right: 20px;
+    background-color: white;
+    padding: 15px;
+    margin-bottom: 50px;
+}
+
+/* 콘텐츠 영역 스타일 */
+.community-content {
+    flex-grow: 1;
+    background-color: white;
+    padding: 20px;
+}
+
+.community-content h2 {
+    font-size: 24px;
+    margin-bottom: 15px;
+    color: #000000;
+}

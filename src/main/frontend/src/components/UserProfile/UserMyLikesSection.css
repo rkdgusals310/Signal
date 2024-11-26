@@ -1,0 +1,33 @@
+.user-my-likes-section {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.user-my-likes-section h3 {
+    margin-bottom: 15px;
+}
+
+.user-my-likes-section table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.user-my-likes-section th{
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    font-size: 20px;
+}
+
+.user-my-likes-section td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    font-size: 20px;
+}
+
+.user-my-likes-section tr:hover {
+    background-color: #f9f9f9;
+    cursor: pointer;
+}

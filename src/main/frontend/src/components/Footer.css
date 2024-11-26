@@ -1,0 +1,56 @@
+.footer {
+    position: relative;
+    width: 100%;
+    background-color: white;
+    padding: 20px 0;
+    text-align: center;
+  }
+  
+  .footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 2580px;
+    margin: 0 auto;
+  }
+  
+  /* 푸터 상단 선  */
+  .footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 3000px;
+    height: 5px;
+    background-color: #FFA49C;
+  }
+  
+  .footer-left .footer-logo {
+    width: 100px;
+    height: 75px;
+  }
+  
+  .footer-center p {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 800;
+  }
+  
+  .footer-right {
+    display: flex;
+    gap: 15px;
+  }
+  
+  .social-icon {
+    width: 55px;
+    height: 55px;
+    cursor: pointer;
+  }
+  
+  .social-icon:hover {
+    opacity: 0.7;
+  }
+  

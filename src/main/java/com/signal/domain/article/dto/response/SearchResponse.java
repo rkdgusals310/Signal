@@ -1,0 +1,25 @@
+package com.signal.domain.article.dto.response;
+
+import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class SearchResponse {
+
+    private int totalCount;
+    private List<ArticleResponse> articles;
+
+    public static SearchResponse toDto(int totalCount, List<ArticleResponse> articles) {
+        return SearchResponse.builder()
+            .totalCount(totalCount)
+            .articles(articles)
+            .build()
+            ;
+    }
+}

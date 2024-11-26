@@ -1,21 +1,36 @@
 package com.signal.domain.comment.service;
 
 
+import com.signal.domain.article.model.Article;
+import com.signal.domain.article.repository.ArticleRepository;
+import com.signal.domain.auth.model.User;
+import com.signal.domain.comment.dto.response.CommentSumResponse;
+import com.signal.domain.comment.dto.response.MyCommentResponse;
+import com.signal.domain.post.model.Post;
+import com.signal.global.dto.PagedDto;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.signal.domain.auth.repository.UserRepository;
+import com.signal.domain.auth.repository.AuthRepository;
+import com.signal.domain.comment.dto.response.CommentPagedResponse;
+import com.signal.domain.comment.dto.response.CommentResponse;
 import com.signal.domain.comment.dto.resquest.CommentCreateRequest;
 import com.signal.domain.comment.dto.resquest.CommentUpdateRequest;
 import com.signal.domain.comment.model.Comment;
 import com.signal.domain.comment.repository.CommentRepository;
 import com.signal.domain.post.repository.PostRepository;
-import com.signal.domain.post.service.ChatGPTServiceImpl;
-import com.signal.domain.post.service.PostService;
+import com.signal.global.exception.errorCode.ErrorCode;
+import com.signal.global.exception.handler.AccessDeniedException;
+import com.signal.global.exception.handler.CustomIllegalArgumentException;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,15 +41,16 @@ import lombok.extern.slf4j.Slf4j;
 public class CommentService {
 	private final PostRepository postRepository;
 	private final CommentRepository commentRepository;
-	private final UserRepository userRepository;
+	private final AuthRepository authRepository;
+	private final ArticleRepository articleRepository;
 
 	@Transactional
-	public void createComment(CommentCreateRequest request) {
-	    var post = postRepository.findById(request.getPostId())
-	            .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 존재하지 않습니다."));
+	public void createComment(CommentCreateRequest request, Long userId) {
+	    Post post = postRepository.findById(request.getPostId())
+	            .orElseThrow(() -> new CustomIllegalArgumentException(ErrorCode.POST_NOT_FOUND));
 	    
-	    var user = userRepository.findById(request.getUserId())
-	            .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 존재하지 않습니다."));
+	    User user = authRepository.findById(userId)
+	            .orElseThrow(() -> new CustomIllegalArgumentException(ErrorCode.USER_NOT_FOUND));
 
 	    Comment comment = new Comment(post, user, request.getContents());
 	    commentRepository.save(comment);
@@ -42,10 +58,12 @@ public class CommentService {
 	}
 
 	@Transactional
-	public void updateComment(Long commentId,CommentUpdateRequest request) {
+	public void updateComment(Long commentId,CommentUpdateRequest request, Long userId) {
 		Comment comment=commentRepository.findById(commentId)
-				.orElseThrow(()->new IllegalArgumentException("해당 댓글이 존재하지 않습니다"));
-		
+				.orElseThrow(()->new CustomIllegalArgumentException(ErrorCode.COMMENT_NOT_FOUND));
+		if(!comment.getUser().getId().equals(userId)) {
+			throw new AccessDeniedException(ErrorCode.USER_NOT_FOUND);
+		}
 		
 		/*
 		  comment.setContents(request.getContents());
@@ -57,25 +75,85 @@ public class CommentService {
 	}
 	
 	@Transactional
-	public void deleteComment(Long commentId) {
-		if(!commentRepository.existsById(commentId)) {
-			throw new IllegalArgumentException("해당 댓글을 찾을 수 없습니다.");
-		}
-		commentRepository.deleteById(commentId);
-		log.info("댓글 삭제 완료: 댓글 ID{}",commentId);
+	public void deleteComment(Long commentId, Long userId) {
+	    // 댓글이 존재하는지 확인하고 댓글 객체를 가져옵니다.
+	    Comment comment = commentRepository.findById(commentId)
+	        .orElseThrow(() -> new CustomIllegalArgumentException(ErrorCode.COMMENT_NOT_FOUND));
+
+	    // 댓글 작성자와 현재 요청한 사용자의 ID가 일치하는지 확인합니다.
+	    if (!comment.getUser().getId().equals(userId)) {
+	        throw new AccessDeniedException(ErrorCode.USER_NOT_FOUND);
+	    }
+
+	    // 댓글 삭제
+	    commentRepository.deleteById(commentId);
+	    log.info("댓글 삭제 완료: 댓글 ID {}", commentId);
 	}
-	
-	
-	
-	
-	public Page<Comment> getCommentByPostID(Long postId,Pageable pageable){
-		postRepository.findById(postId)
-			.orElseThrow(()-> new IllegalArgumentException("해당 게시물은 존재하지 않습니다"));
-		 Page<Comment> comments=commentRepository.findByPost_Id(postId,pageable);
-		 log.info("게시물 ID{}에 대한 댓글 조회 완료{}개 ",postId, comments.getTotalElements());
-		 
-		return comments;
-		
+
+
+//	public int getTotalCommentsCountForPost(Long postId) {
+//	        return commentRepository.countByPostId(postId);
+//	  }
+//
+//
+//	public Page<Comment> getCommentByPostID(Long postId,Pageable pageable){
+//		postRepository.findById(postId)
+//			.orElseThrow(()-> new CustomIllegalArgumentException(ErrorCode.POST_NOT_FOUND));
+//		 Page<Comment> comments=commentRepository.findByPost_Id(postId,pageable);
+//		 log.info("게시물 ID{}에 대한 댓글 조회 완료{}개 ",postId, comments.getTotalElements());
+//
+//		return comments;
+//
+//	}
+
+	@Transactional(readOnly = true)
+	public CommentPagedResponse getCommentsByPostIdWithCursor(Long postId, Long cursorId, int size) {
+	    Pageable pageable = PageRequest.of(0, size);
+
+	    List<Comment> comments = (cursorId == null)
+	        ? commentRepository.findTopByPostIdOrderByIdDesc(postId, pageable)
+	        : commentRepository.findByPostIdAndIdLessThanOrderByIdDesc(postId, cursorId, pageable);
+
+	    List<CommentResponse> commentResponses = comments.stream()
+	        .map(CommentResponse::toDto)
+	        .collect(Collectors.toList());
+
+	    Long nextCursorId = !comments.isEmpty() ? comments.get(comments.size() - 1).getId() : null;
+	    boolean hasNext = comments.size() == size;
+
+	    int repliesCount = commentRepository.countByPostId(postId);
+
+	    return CommentPagedResponse.toDto(commentResponses, repliesCount, nextCursorId, hasNext);
 	}
-	
+
+	@Transactional
+	public PagedDto<MyCommentResponse> getMyComments(Long userId, int size, int page) {
+		authRepository.findById(userId);
+
+		PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Direction.DESC, "createdAt"));
+
+		Page<Comment> comments = commentRepository.findCommentsByUserId(userId, pageRequest);
+
+		List<CommentSumResponse> commentResponses = comments.stream()
+			.map(
+				comment -> {
+					if (comment.getArticle() != null) {
+						Long articleId = comment.getArticle().getId();
+						Article article = articleRepository.findArticleById(articleId);
+						return CommentSumResponse.toDto(article, comment);
+					} else {
+						Long postId = comment.getPost().getId();
+						Post post = postRepository.findPostById(postId);
+						return CommentSumResponse.toDto(post, comment);
+					}
+				}
+			).collect(Collectors.toList());
+
+		int totalCount = (int) comments.getTotalElements();
+		int totalPages = (totalCount + size - 1) / size;
+
+		MyCommentResponse myCommentResponse = MyCommentResponse.toDto(totalCount, commentResponses);
+
+		return PagedDto.toDTO(page, size, totalPages, List.of(myCommentResponse));
+	}
 }

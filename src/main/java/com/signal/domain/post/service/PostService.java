@@ -1,15 +1,18 @@
 package com.signal.domain.post.service;
 
-import com.fasterxml.jackson.core.JsonParseException;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
+
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.signal.domain.auth.model.User;
-import com.signal.domain.auth.repository.UserRepository;
+import com.signal.domain.auth.model.enums.Role;
+import com.signal.domain.auth.repository.AuthRepository;
 import com.signal.domain.post.dto.request.CompletionRequestDto;
 import com.signal.domain.post.dto.request.PostRequest;
+import com.signal.domain.post.dto.response.CategoryResponse;
 import com.signal.domain.post.dto.response.FilterResponse;
+import com.signal.domain.post.dto.response.HotPostResponse;
+import com.signal.domain.post.dto.response.MyPostResponse;
 import com.signal.domain.post.dto.response.PostDetailResponse;
 import com.signal.domain.post.dto.response.PostResponse;
 import com.signal.domain.post.dto.response.SearchResponse;
@@ -19,17 +22,15 @@ import com.signal.domain.post.repository.PostRepository;
 import com.signal.global.dto.PagedDto;
 import com.signal.global.exception.errorCode.ErrorCode;
 import com.signal.global.exception.handler.InvalidValueException;
-import io.swagger.v3.core.util.Json;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Filter;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
@@ -41,11 +42,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class PostService {
 
     private final PostRepository postRepository;
-    private final UserRepository userRepository;
+    private final AuthRepository authRepository;
     private final ChatGPTServiceImpl chatGPTService;
 
     @Transactional
-    public PagedDto<SearchResponse> getPosts(
+    public PagedDto<CategoryResponse> getPosts(
         Category category, int size, int page
     ) {
         Post hotpost = postRepository.findTopByCategoryOrderByViewCountDesc(category);
@@ -63,7 +64,7 @@ public class PostService {
         int totalCount = (int) posts.getTotalElements();
         int totalPages = (totalCount + size - 1) / size;
 
-        SearchResponse searchResponse = SearchResponse.toDto(totalCount, hotpostResponse, postsResponse);
+        CategoryResponse searchResponse = CategoryResponse.toDto(totalCount, hotpostResponse, postsResponse);
 
         return PagedDto.toDTO(page, size, totalPages, List.of(searchResponse));
     }
@@ -81,9 +82,11 @@ public class PostService {
     @Transactional
     public FilterResponse createPost(PostRequest postRequest, Long userId){
 
-        // userId  검증필요, 임시 User 생성
         // consultant가 아닌지도 확인 필요 추후 수정해야 함.
-        User user = userRepository.findUserById(userId);
+        User user = authRepository.findUserById(userId);
+        if (user.getRole().equals(Role.CONSULTANT)) {
+            throw new InvalidValueException(ErrorCode.WRONG_ROLE_POST);
+        }
 
         FilterResponse filterResponse = filterChatGPT(postRequest.getTitle() + " " + postRequest.getContents());
 
@@ -170,5 +173,58 @@ public class PostService {
         }
 
         return FilterResponse.toDto(false, invalidSentences);
+    }
+
+    @Transactional
+    public PagedDto<MyPostResponse> getMyPosts(
+        Long userId, int size, int page
+    ) {
+        authRepository.existsById(userId);
+
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Direction.DESC, "createdAt"));
+
+        Page<Post> posts = postRepository.findByUserId(userId, pageRequest);
+
+        List<PostResponse> postsResponse = posts.stream()
+            .map(
+                PostResponse::toDto
+            ).collect(Collectors.toList());
+
+        int totalCount = (int) posts.getTotalElements();
+        int totalPages = (totalCount + size - 1) / size;
+
+        MyPostResponse myPostResponse = MyPostResponse.toDto(totalCount, postsResponse);
+
+        return PagedDto.toDTO(page, size, totalPages, List.of(myPostResponse));
+    }
+
+    public PagedDto<SearchResponse> getSearchPosts(String search, int size, int page) {
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Direction.DESC, "createdAt"));
+
+        Page<Post> posts = postRepository.findBySearch(search, pageRequest);
+
+        List<PostResponse> postsResponse = posts.stream()
+            .map(
+                PostResponse::toDto
+            ).collect(Collectors.toList());
+
+        int totalCount = (int) posts.getTotalElements();
+        int totalPages = (totalCount + size - 1) / size;
+
+        SearchResponse searchResponse = SearchResponse.toDto(totalCount, postsResponse);
+
+        return PagedDto.toDTO(page, size, totalPages, List.of(searchResponse));
+    }
+
+    public List<HotPostResponse> getHotPosts() {
+        Pageable pageable = PageRequest.of(0, 5);
+        Page<Post> hotposts = postRepository.findTop5ByViewCount(pageable);
+
+        List<HotPostResponse> hotPostResponses = hotposts.stream()
+            .map(
+                HotPostResponse::toDto
+            ).collect(Collectors.toList());
+
+        return hotPostResponses;
     }
 }

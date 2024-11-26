@@ -1,0 +1,41 @@
+.user-profile-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.profile-image img {
+    width: 380px;
+    height: 320px;
+    border-radius: 80px;
+    object-fit: cover;
+    border: 0;
+}
+
+.profile-info {
+    flex: 1;
+    margin-left: 20px;
+}
+
+.profile-info p {
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.edit-info-button {
+    margin-top: 15px;
+    padding: 10px 20px;
+    background-color: #FFCFC8;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.edit-info-button:hover {
+    background-color: #e65a5a;
+}

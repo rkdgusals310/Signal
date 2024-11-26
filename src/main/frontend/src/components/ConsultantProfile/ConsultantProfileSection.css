@@ -1,0 +1,215 @@
+.consultant-profile-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.profile-image {
+    margin-left: 200px;
+}
+
+.profile-image img,
+.profile-image-edit img {
+    width: 380px;
+    height: 320px;
+    border-radius: 80px;
+    object-fit: cover;
+    border: 0;
+}
+
+.profile-image-edit {
+    width: 380px;
+    height: 320px;
+    border: 2px dashed #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 80px;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    margin-left: 200px;
+}
+
+/* 프로필 정보 */
+.profile-info {
+    flex: 1;
+    margin-left: 450px;
+}
+
+.profile-info-edit {
+    flex: 1;
+    margin-left: 300px;
+}
+
+.profile-info p {
+    font-size: 36px;
+    margin-bottom: 5px;
+}
+
+.profile-info-edit p {
+    font-size: 36px;
+    margin-bottom: 40px;
+}
+
+.next-step-button {
+    width: 100px;
+    height: 45px;
+    font-size: 24px;
+    margin-left: 530px;
+    background-color: #FFCFC8;
+    border-color: #ffcfc8;
+    color: black;
+    border-radius: 8px;
+}
+
+.next-step-button:hover {
+    background-color: #e65a5a;
+}
+
+.nickname-input {
+    width: 90%;
+    font-size: 36px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+/* 버튼 스타일 */
+.edit-info-button {
+    margin-top: 15px;
+    padding: 10px 20px;
+    background-color: #ffcfc8;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-left: 310px;
+    margin-top: 30px;
+}
+
+.edit-info-button:hover {
+    background-color: #e65a5a;
+}
+
+.save-info-button {
+    display: block;
+    margin: 40px auto 0;
+    padding: 15px 30px;
+    background-color: #4CAF50;
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.save-info-button:hover {
+    background-color: #45A049;
+}
+
+/* 세부 정보 섹션 */
+.edit-details {
+    border-radius: 30px;
+    width: 1200px;
+    padding: 40px;
+    margin-top: 20px;
+    margin: 0 auto;
+}
+
+.edit-details h3 {
+    font-size: 48px;
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.edit-section {
+    margin-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.edit-section label {
+    font-size: 40px;
+    font-weight: bold;
+    color: #424242;
+    margin-bottom: 10px;
+}
+
+.edit-section input[type="text"],
+.edit-section textarea {
+    font-size: 24px;
+    padding: 10px;
+    border: 2px solid #DDD;
+    border-radius: 8px;
+    width: 100%;
+    resize: none;
+    background-color: #F5F5F5;
+}
+
+.edit-section textarea {
+    height: 120px;
+}
+
+.edit-section input[type="text"]:focus,
+.edit-section textarea:focus {
+    border-color: #006F9C;
+    outline: none;
+}
+
+.checkbox-group {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.checkbox-group input {
+    width: 35px;
+    height: 35px;
+}
+
+.checkbox-group label {
+    font-size: 32px;
+    color: #006F9C;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* 요약 정보 */
+.consultant-summary {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    max-width: 500px;
+    margin: 20px auto;
+    background-color: #EBE9E9;
+    padding: 30px;
+    border-radius: 20px;
+}
+
+.consultant-summary-item {
+    flex: 1;
+    text-align: center;
+}
+
+.consultant-summary-item strong {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 24px;
+    color: #424242;
+}
+
+.consultant-summary-item p {
+    font-size: 24px;
+    margin: 0;
+    color: #006F9C;
+    font-weight: bold;
+}

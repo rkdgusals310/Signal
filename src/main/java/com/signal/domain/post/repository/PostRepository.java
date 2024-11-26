@@ -1,5 +1,6 @@
 package com.signal.domain.post.repository;
 
+import com.signal.domain.article.model.Article;
 import com.signal.domain.post.model.Post;
 import com.signal.domain.post.model.enums.Category;
 import com.signal.global.exception.errorCode.ErrorCode;
@@ -29,10 +30,10 @@ public interface PostRepository extends JpaRepository<Post, Long> {
    );
 
    @Query("SELECT p.id FROM Post p WHERE p.id = :postId AND p.user.id = :userId")
-   Long findPostIdByIdAndUserId(Long postId, Long userId);
+   Long findByPostIdAndUserId(Long postId, Long userId);
 
    default boolean existsByIdAndUserId(Long postId, Long userId) {
-      if (findPostIdByIdAndUserId(postId, userId) == null) throw new EntityNotFoundException(
+      if (findByPostIdAndUserId(postId, userId) == null) throw new EntityNotFoundException(
           ErrorCode.NOT_FOUND);
       return true;
    }
@@ -55,4 +56,22 @@ public interface PostRepository extends JpaRepository<Post, Long> {
    @Modifying
    @Query("UPDATE Post p SET p.viewCount = p.viewCount + 1 WHERE p.id = :postId")
    void incrementViewCountById(Long postId);
+
+   @Query("SELECT p FROM Post p WHERE p.deletedAt IS NULL AND p.user.id = :userId")
+   Page<Post> findByUserId(
+       @Param("userId") Long userId,
+       Pageable pageable
+   );
+
+   @Query("SELECT p FROM Post p "
+       + "WHERE p.deletedAt is NULL "
+       + "AND (LOWER(p.title) LIKE LOWER(CONCAT('%', :search, '%')) "
+       + "OR LOWER(p.contents) LIKE LOWER(CONCAT('%', :search, '%')))")
+   Page<Post> findBySearch(
+       @Param("search") String search,
+       Pageable pageable
+   );
+
+   @Query("SELECT p FROM Post p WHERE p.deletedAt IS NULL ORDER BY p.viewCount DESC, p.createdAt DESC")
+   Page<Post> findTop5ByViewCount(Pageable pageable);
 }

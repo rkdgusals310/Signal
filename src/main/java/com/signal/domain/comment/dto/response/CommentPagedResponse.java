@@ -1,6 +1,7 @@
 package com.signal.domain.comment.dto.response;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.data.domain.Page;
 
@@ -18,13 +19,24 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class CommentPagedResponse {
-	private PagedDto<CommentResponse> conmments;
+	private List<CommentResponse> comments;
+	private int repliesCount;
+	private Long nextCursorId; // 다음 커서로 사용할 마지막 댓글 ID
+	private boolean hasNext; // 다음 페이지가 있는지 여부
 	
-	public static CommentPagedResponse toDto(Page<Comment> commentPage) {
-	    // 바로 Page<CommentResponse>로 변환
-	    return CommentPagedResponse.builder()
-	        .conmments(PagedDto.toDTO(commentPage.map(CommentResponse::toDto)))  
-	        .build();
+
+	 public static CommentPagedResponse toDto(List<CommentResponse> comments, int repliesCount, Long nextCursorId, boolean hasNext) {
+	        return CommentPagedResponse.builder()
+	            .comments(comments)
+	            .repliesCount(repliesCount)
+	            .nextCursorId(nextCursorId)
+	            .hasNext(hasNext)
+	            .build();
+	    }
+
+	public CommentPagedResponse withRepliesCount(int repliesCount) {
+		this.repliesCount = repliesCount;
+		return this;
 	}
 
 }

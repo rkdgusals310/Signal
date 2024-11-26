@@ -1,0 +1,54 @@
+.hero-slider-container {
+  position: relative;
+  width: 100%;
+  max-width: 1920px;
+  height: 600px;
+  overflow: hidden;
+  margin: auto;
+}
+
+.hero-slider {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+  width: 100%;
+}
+
+.slide {
+  min-width: 100%;
+  height: 600px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+img {
+  width: 60%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.prev-arrow, .next-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  color: black;
+  font-size: 30px;
+  padding: 10px;
+  cursor: pointer;
+  border: none;
+  background-color: transparent;
+}
+
+.prev-arrow {
+  left: 10px;
+}
+
+.next-arrow {
+  right: 10px;
+}
+
+.prev-arrow:hover, .next-arrow:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+}

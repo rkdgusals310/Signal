@@ -1,0 +1,112 @@
+.gomin-detail-page {
+    display: flex;
+    flex-direction: row;  /* 가로로 배치 */
+    padding: 20px;
+    width: 1700px;
+    margin: 0 auto;
+  }
+  
+  .gomin-content {
+    flex-grow: 1;
+    background-color: white;
+    padding-left: 40px;
+  }
+  
+  .hot-post {
+    background-color: #FFEBF8;
+    font-weight: bold;
+  }
+  
+  .post-list-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .post-list-table th, .post-list-table td {
+    padding: 15px;
+    border-bottom: 1px solid #d4d4d4;
+  }
+  
+  .post-list-table th {
+    background-color: white;
+    color: rgb(150, 150, 150);
+  }
+  
+  .post-list-table td {
+    color: #333;
+  }
+  
+  .post-list-table tr:hover {
+    background-color: #f5f5f5;
+  }
+  
+  /* 첫 번째 열(제목)은 왼쪽 정렬 */
+  .post-list-table th:first-child, 
+  .post-list-table td:first-child {
+    text-align: left;
+    width: 50%; /* 제목 칸 넓게 */
+  }
+  
+  /* 나머지 열(작성일시, 조회수, 좋아요)은 오른쪽 정렬 */
+  .post-list-table th:not(:first-child),
+  .post-list-table td:not(:first-child) {
+    text-align: right;
+    width: 20%; /* 작성일시 칸 좁게 */
+  }
+
+  .pagination-container {
+    text-align: center;
+    }
+  
+  .gomin-detail-page .pagination-container button {
+    all: unset; /* 모든 기본 스타일 초기화 */
+    appearance: none; /* 브라우저 기본 appearance 제거 */
+  
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin: 0 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s, color 0.3s;
+    text-align: center;
+    box-sizing: border-box; /* 요소의 크기를 올바르게 계산 */
+  }
+  
+  .gomin-detail-page .pagination-container button.active {
+    background-color: #000000;
+    color: rgb(255, 255, 255);
+    border: #000000;
+  }
+  
+  .gomin-detail-page .pagination-container button:hover {
+    background-color: #0056b3;
+    color: white;
+  }
+  
+  .write-post-button {
+    background-color: #FFEBF8;
+    color: black;
+    font-weight: bolder;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+  }
+  
+  .write-post-button:hover {
+    background-color: #d4206e;
+    color: white;
+  }
+  
+  .write-post-container {
+    display: flex;
+    justify-content: flex-end; /* 오른쪽 정렬 */
+    margin-top: 20px;
+  }
+  
+  
+  

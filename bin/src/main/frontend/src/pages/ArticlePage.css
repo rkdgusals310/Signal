@@ -1,0 +1,86 @@
+/* ArticlePage.css */
+.article-page {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.article-list {
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+}
+
+.article-card {
+    display: flex;
+    overflow: hidden;
+    background-color: white;
+    height: 420px;
+}
+
+.article-image {
+    width: 600px;
+    height: auto;
+    object-fit: cover;
+}
+
+.article-content {
+    padding: 20px;
+    flex-grow: 1;
+}
+
+.article-content h2 {
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+
+.article-content p {
+    font-size: 20px;
+    color: #555;
+}
+
+/* Pagination styles */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 100px;
+    margin-bottom: 100px;
+}
+
+.pagination button {
+    all: unset;
+    appearance: none;
+    background-color: white;
+    border-radius: 8px;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s, color 0.3s;
+    text-align: center;
+}
+
+.pagination button.active {
+    background-color: #000000;
+    color: #fff;
+    border: 1px solid #000000;
+}
+
+.pagination button:disabled {
+    background-color: #ddd;
+    color: #999;
+    cursor: default;
+}
+
+.create-article-button {
+    width: 150px;
+    height: 50px;
+    background-color: #C294F0;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-left: 1300px;
+  }

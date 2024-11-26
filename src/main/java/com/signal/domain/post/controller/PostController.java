@@ -1,16 +1,20 @@
 package com.signal.domain.post.controller;
 
 import com.signal.domain.post.dto.request.PostRequest;
+import com.signal.domain.post.dto.response.CategoryResponse;
 import com.signal.domain.post.dto.response.FilterResponse;
+import com.signal.domain.post.dto.response.HotPostResponse;
+import com.signal.domain.post.dto.response.MyPostResponse;
 import com.signal.domain.post.dto.response.PostDetailResponse;
-import com.signal.domain.post.dto.response.PostResponse;
 import com.signal.domain.post.dto.response.SearchResponse;
 import com.signal.domain.post.model.enums.Category;
 import com.signal.domain.post.service.PostService;
 import com.signal.global.dto.PagedDto;
+import com.signal.global.sercurity.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -34,12 +38,12 @@ public class PostController {
 
     @Operation(summary = "게시판 전체 조회")
     @GetMapping("/common/post")
-    public ResponseEntity<PagedDto<SearchResponse>> getPosts (
+    public ResponseEntity<PagedDto<CategoryResponse>> getPosts (
         @RequestParam Category category,
         @RequestParam(required = false, value = "size", defaultValue = "10") int size,
         @RequestParam(required = false, value = "page", defaultValue = "0") int page
     ) {
-        PagedDto<SearchResponse> posts = postService.getPosts(category, size, page);
+        PagedDto<CategoryResponse> posts = postService.getPosts(category, size, page);
 
         return ResponseEntity.ok(posts);
     }
@@ -54,31 +58,62 @@ public class PostController {
     @Operation(summary = "게시글 작성")
     @PostMapping("/user/post")
     public ResponseEntity<FilterResponse> createPost(
-        @Valid @RequestBody PostRequest postReqeust
-//        @AuthenticationPrincipal CustomUserDetails customUserDetails
+        @Valid @RequestBody PostRequest postRequest,
+        @AuthenticationPrincipal CustomUserDetails customUserDetails
     ) {
-//        Long userId = customUserDetails.getUserId();
-        return ResponseEntity.ok(postService.createPost(postReqeust, 1L));
+        Long userId = customUserDetails.getUserId();
+        return ResponseEntity.ok(postService.createPost(postRequest, userId));
     }
 
     @Operation(summary = "게시글 수정")
     @PutMapping("/user/post/{postId}")
     public ResponseEntity<FilterResponse> updatePost(
         @Valid @RequestBody PostRequest postRequest,
-        @PathVariable Long postId
-//        @AuthenticationPrincipal CustomUserDetails customUserDetails
+        @PathVariable Long postId,
+        @AuthenticationPrincipal CustomUserDetails customUserDetails
     ) {
-//        Long userId = customeUserDetails.getUserId();
-        return ResponseEntity.ok(postService.updatePost(postRequest, postId, 1L));
+        Long userId = customUserDetails.getUserId();
+        return ResponseEntity.ok(postService.updatePost(postRequest, postId, userId));
     }
 
     @Operation(summary = "게시글 삭제")
     @DeleteMapping("/user/post/{postId}")
     public void deletePost(
-        @PathVariable Long postId
-//        @AuthenticationPrincipal CustomUserDetails customUserDetails
+        @PathVariable Long postId,
+        @AuthenticationPrincipal CustomUserDetails customUserDetails
     ) {
-//        Long userId = customUserDetails.getUserId();
-        postService.deletePost(postId, 1L);
+        Long userId = customUserDetails.getUserId();
+        postService.deletePost(postId, userId);
+    }
+
+    @Operation(summary = "내가 쓴 게시글 조회")
+    @GetMapping("/user/my-post")
+    public ResponseEntity<PagedDto<MyPostResponse>> getMyPosts(
+        @RequestParam(required = false, value = "size", defaultValue = "10") int size,
+        @RequestParam(required = false, value = "page", defaultValue = "0") int page,
+        @AuthenticationPrincipal CustomUserDetails customUserDetails
+    ) {
+        Long userId = customUserDetails.getUserId();
+        PagedDto<MyPostResponse> posts = postService.getMyPosts(userId, size, page);
+
+        return ResponseEntity.ok(posts);
+    }
+
+    @Operation(summary = "게시글 검색어로 조회")
+    @GetMapping("/common/post/search")
+    public ResponseEntity<PagedDto<SearchResponse>> getSearchPosts (
+        @RequestParam(value = "search") String search,
+        @RequestParam(required = false, value = "size", defaultValue = "10") int size,
+        @RequestParam(required = false, value = "page", defaultValue = "0") int page
+    ) {
+        PagedDto<SearchResponse> searchResponse = postService.getSearchPosts(search, size, page);
+        return ResponseEntity.ok(searchResponse);
+    }
+
+    @Operation(summary = "핫 게시글 조회")
+    @GetMapping("common/home/hot-post")
+    public ResponseEntity<List<HotPostResponse>> getHotPosts() {
+        List<HotPostResponse> hotPostResponse = postService.getHotPosts();
+        return ResponseEntity.ok(hotPostResponse);
     }
 }
