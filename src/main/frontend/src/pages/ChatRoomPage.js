@@ -7,7 +7,7 @@ const ChatRoomPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const consultantName = location.state?.consultantName || '상담사';
-  const userRole = sessionStorage.getItem('role'); // 현재 사용자의 role 가져오기
+  const userRole = sessionStorage.getItem('role');
 
   const welcomeMessage = {
     messageId: 'welcome',
@@ -22,10 +22,17 @@ const ChatRoomPage = () => {
   const [cursor, setCursor] = useState(null);
   const [hasNext, setHasNext] = useState(true);
   const [error, setError] = useState(null);
+  const [didMount, setDidMount] = useState(false);
 
   useEffect(() => {
-    fetchMessages();
-  }, [cursor]);
+    setDidMount(true);
+  }, []);
+
+  useEffect(() => {
+    if (didMount) {
+      fetchMessages();
+    }
+  }, [cursor, didMount]);
 
   const fetchMessages = async () => {
     try {
@@ -35,7 +42,6 @@ const ChatRoomPage = () => {
 
       if (response.ok) {
         const data = await response.json();
-        // 새로운 메시지를 welcomeMessage 아래에 추가
         setMessages((prev) => [welcomeMessage, ...data.messages, ...prev.filter((m) => m.messageId !== 'welcome')]);
         setCursor(data.nextCursor);
         setHasNext(data.hasNext);
@@ -48,9 +54,9 @@ const ChatRoomPage = () => {
   };
 
   const handleSendMessage = async () => {
-    if (!messageInput.trim()) return; // 빈 메시지 전송 방지
+    if (!messageInput.trim()) return;
     try {
-      const userId = sessionStorage.getItem('userId'); // 세션스토리지에서 userId 가져오기
+      const userId = sessionStorage.getItem('userId');
       if (!userId) {
         alert('로그인이 필요합니다.');
         return;

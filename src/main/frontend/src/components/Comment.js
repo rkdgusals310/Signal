@@ -36,7 +36,7 @@ const Comment = ({ postId }) => {
         setCursorId(data.nextCursorId);
         setHasNext(data.hasNext);
         setTotalComments(data.repliesCount);
-        setError(null); // 오류 메시지 초기화
+        setError(null);
       } else {
         throw new Error('Error fetching comments');
       }

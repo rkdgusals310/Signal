@@ -74,7 +74,7 @@ const ArticlePage = () => {
                 <div className="article-content">
                   <h2>{article.title}</h2>
                   <p>
-                    <span>{article.createAt} • {article.commentCount} Comments • {article.consultantName}</span>
+                    <span>{article.createAt.split('T')[0]} • {article.commentCount} Comments • {article.consultantName}</span>
                   </p>
                   <p>{article.contents}</p>
                 </div>
