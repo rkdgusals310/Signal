@@ -3,6 +3,7 @@ package com.signal.domain.review.controller;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,7 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.signal.domain.chatting.model.ChattingRoom;
 import com.signal.domain.chatting.repository.ChattingRoomRepository;
 import com.signal.domain.review.dto.request.ReviewCreateRequest;
-import com.signal.domain.review.dto.response.ReviewCreateResponse;
+
+import com.signal.domain.review.dto.response.ReviewResponse;
+import com.signal.domain.review.model.Review;
 import com.signal.domain.review.service.ReviewService;
 import com.signal.global.sercurity.CustomUserDetails;
 
@@ -28,9 +31,35 @@ public class ReviewController {
 	private final ReviewService reviewService;
 	private final ChattingRoomRepository chattingRoomRepository;
 	
+	@GetMapping("/auth/chat/room/{roomId}/review-page")
+	@Operation(summary="리뷰 작성 이동")
+	public ReviewResponse getReviewPageUrl(
+			@AuthenticationPrincipal CustomUserDetails customUserDetails,
+			@PathVariable Long roomId
+	) {
+
+		ChattingRoom room=chattingRoomRepository.findById(roomId)
+				.orElseThrow(() -> new IllegalArgumentException("Invalid room ID"));
+		Long consultantId=room.getConsultant().getId();
+		Long user=customUserDetails.getUserId();
+		
+		Double averageRating = reviewService.getAverageRatingByConsultantId(consultantId);
+		
+		
+		return ReviewResponse.builder()
+				.profileImage(room.getConsultant().getProfile())
+				.consultantName(room.getConsultant().getNickname())
+				.keyword(room.getConsultant().getKeyword())
+				.style(room.getConsultant().getStyle())
+				.averageRating(averageRating)
+				.build();
+	
+	}
+	
+	
 	@PostMapping("/auth/chat/room/{roomId}/review")
 	@Operation(summary="리뷰 작성")
-	public ReviewCreateResponse createReview(
+	public void createReview(
 			@RequestBody ReviewCreateRequest request,
 			@AuthenticationPrincipal CustomUserDetails customUserDetails,
 			@PathVariable Long roomId
@@ -40,12 +69,6 @@ public class ReviewController {
 				.orElseThrow(() -> new IllegalArgumentException("Invalid room ID"));
 		Long consultantId=room.getConsultant().getId();
 		 
-		reviewService.createReview(userId, consultantId, request);
-		return ReviewCreateResponse.builder()
-				.consultantName(room.getConsultant().getNickname())
-				.keyword(room.getConsultant().getKeyword())
-				.profileImage(room.getConsultant().getProfile())
-				.build();
-		
+		reviewService.createReview(userId, consultantId, request);	
 	}
 }

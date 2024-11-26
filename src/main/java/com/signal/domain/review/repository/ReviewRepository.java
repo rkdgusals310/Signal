@@ -9,4 +9,10 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     @Query("SELECT COUNT(r) FROM Review r WHERE r.consultant.id = :consultantId")
     int countReviewsByConsultantId(@Param("consultantId") Long consultantId);
+    
+ 
+    
+    @Query("SELECT COALESCE(AVG(r.rating), 0) FROM Review r WHERE r.consultant.id = :consultantId")
+    Double calculateAverageRatingByConsultantId(@Param("consultantId") Long consultantId);
+
 }

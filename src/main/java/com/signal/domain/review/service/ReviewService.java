@@ -1,5 +1,6 @@
 package com.signal.domain.review.service;
 
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 
 import org.springframework.stereotype.Service;
@@ -23,6 +24,21 @@ public class ReviewService {
 	private final ReviewRepository reviewRepository;
 	private final AuthRepository authRepository;
 	
+	public Double getAverageRatingByConsultantId(Long consultantId) {
+		  Double averageRating = reviewRepository.calculateAverageRatingByConsultantId(consultantId);
+		  return formatToDouble(averageRating);
+    }
+	
+	
+	private Double formatToDouble(Double value) {
+		if (value == null) {
+	        return 0.0;
+	    }
+		DecimalFormat df = new DecimalFormat("#.##");
+	    return Double.valueOf(df.format(value));
+	}
+
+
 	@Transactional
 	public void createReview(Long userId, Long consultantId,ReviewCreateRequest request) {
 		User user=authRepository.findById(userId)
