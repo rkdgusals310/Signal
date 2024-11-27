@@ -4,6 +4,7 @@ import com.signal.domain.auth.model.enums.Role;
 import com.signal.domain.chatting.model.ChattingRoom;
 import com.signal.domain.chatting.model.enums.ChattingRoomStatus;
 import com.signal.domain.review.model.Review;
+import jakarta.annotation.Nullable;
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,16 +21,20 @@ public class ChattingListResponse {
     private String other;
     private LocalDate lastActivityAt;
     private ChattingRoomStatus status;
+
+    @Nullable
     private Long reviewId;
 
     public static ChattingListResponse toDto(ChattingRoom chattingRoom, Review review, Role role) {
+        Long reviewId = (review != null) ? review.getId() : null;
+
         if (role == Role.CONSULTANT) {
             return ChattingListResponse.builder()
                 .id(chattingRoom.getId())
                 .other(chattingRoom.getUser().getNickname())
                 .lastActivityAt(LocalDate.from(chattingRoom.getLastActivityAt()))
                 .status(chattingRoom.getStatus())
-                .reviewId(review.getId())
+                .reviewId(reviewId)
                 .build()
                 ;
         } else {
@@ -38,7 +43,7 @@ public class ChattingListResponse {
                 .other(chattingRoom.getConsultant().getNickname())
                 .lastActivityAt(LocalDate.from(chattingRoom.getLastActivityAt()))
                 .status(chattingRoom.getStatus())
-                .reviewId(review.getId())
+                .reviewId(reviewId)
                 .build()
                 ;
         }
