@@ -36,7 +36,7 @@ const UserMyChattingSection = () => {
           {chatting.map((chat) => (
             <tr key={chat.id}>
               <td>{chat.consultant}</td>
-              <td>{chat.createdAt}</td>
+              <td>{chat.createdAt.split('T')[0]}</td>
               <td>{chat.status === 'completed' ? <button>리뷰 보기</button> : '상담 진행중'}</td>
             </tr>
           ))}
