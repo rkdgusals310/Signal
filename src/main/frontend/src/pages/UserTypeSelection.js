@@ -24,15 +24,15 @@ const UserTypeSelection = () => {
     <div className="user-type-selection-container">
       {/* 로고 클릭 시 홈으로 이동 */}
       <div className="logo" onClick={handleLogoClick} style={{ cursor: 'pointer' }}>
-        <img src="/img/loginLogo.png" alt="Signal Logo" />
+        <img src={`${process.env.PUBLIC_URL}/img/loginLogo.png`} alt="Signal Logo" />
       </div>
       <div className="user-type-options">
         <div className="user-option" onClick={handleGeneralUserClick}>
-          <img src="/img/generalUserIcon.png" alt="일반 사용자" />
+          <img src={`${process.env.PUBLIC_URL}/img/generalUserIcon.png`} alt="일반 사용자" />
           <p>일반사용자</p>
         </div>
         <div className="user-option" onClick={handleConsultantClick}>
-          <img src="/img/consultantIcon.png" alt="전문가(상담사)" />
+          <img src={`${process.env.PUBLIC_URL}/img/consultantIcon.png`} alt="전문가(상담사)" />
           <p>전문가(상담사)</p>
         </div>
       </div>

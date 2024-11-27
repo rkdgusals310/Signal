@@ -62,7 +62,10 @@ const ConsultingSection = () => {
                 onClick={() => handleConsultantClick(consultant.id)}
               >
                 <img
-                  src={consultant.image || '/img/userDefaultImg.png'}
+                  src={
+                    consultant.image ||
+                    `${process.env.PUBLIC_URL}/img/userDefaultImg.png`
+                  }
                   alt={consultant.name}
                 />
                 <span>{consultant.name}</span>
@@ -82,7 +85,10 @@ const ConsultingSection = () => {
                   onClick={() => handleConsultantClick(consultant.id)}
                 >
                   <img
-                    src={consultant.image || '/img/userDefaultImg.png'}
+                    src={
+                      consultant.image ||
+                      `${process.env.PUBLIC_URL}/img/userDefaultImg.png`
+                    }
                     alt={consultant.name}
                   />
                   <span>{consultant.name}</span>
