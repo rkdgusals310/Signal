@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.signal.domain.auth.dto.response.ConsultantDetailReviewResponse;
 import com.signal.domain.auth.model.User;
 import com.signal.domain.auth.repository.AuthRepository;
+import com.signal.domain.chatting.model.ChattingRoom;
+import com.signal.domain.chatting.repository.ChattingRoomRepository;
 import com.signal.domain.review.dto.request.ReviewCreateRequest;
 import com.signal.domain.review.model.Review;
 import com.signal.domain.review.repository.ReviewRepository;
@@ -25,6 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ReviewService {
 	private final ReviewRepository reviewRepository;
 	private final AuthRepository authRepository;
+	private final ChattingRoomRepository chattingRoomRepository;
 	
 	public Double getAverageRatingByConsultantId(Long consultantId) {
 		  Double averageRating = reviewRepository.calculateAverageRatingByConsultantId(consultantId);
@@ -54,9 +57,11 @@ public class ReviewService {
 		
 		User consultant =authRepository.findById(consultantId)
 				.orElseThrow(()->new IllegalArgumentException("Invalid user ID"));
-
+		ChattingRoom room=chattingRoomRepository.findById(roomId)
+				.orElseThrow(()->new IllegalArgumentException("Invalid room ID"));
+			
 		Review review=Review.builder()
-				.chattingRoomId(roomId)
+				.chattingRoomId(room)
 				.user(user)
 				.consultant(consultant)
 				.rating(request.getRating())

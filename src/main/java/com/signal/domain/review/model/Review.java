@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import com.signal.domain.auth.model.User;
+import com.signal.domain.chatting.model.ChattingRoom;
 import com.signal.global.entity.BaseEntity;
 
 import jakarta.persistence.Column;
@@ -52,6 +53,6 @@ public class Review extends BaseEntity {
     private LocalDateTime modifiedAt;
     
     @OneToOne
-    @Column(name = "chatting_romId")
-    private Long chattingRoomId;
+    @JoinColumn(name = "chatting_roomid",referencedColumnName = "id")
+    private ChattingRoom chattingRoomId;
 };
