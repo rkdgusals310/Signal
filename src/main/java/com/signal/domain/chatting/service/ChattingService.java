@@ -3,15 +3,22 @@ package com.signal.domain.chatting.service;
 import com.signal.domain.chatting.dto.request.ChattingMessageRequest;
 
 import com.signal.domain.chatting.dto.request.ChattingRoomRequest;
+import com.signal.domain.chatting.dto.response.ChattingListResponse;
 import com.signal.domain.chatting.dto.response.ChattingMessageResponse;
 
+import com.signal.domain.chatting.dto.response.ChattingResponse;
 import com.signal.domain.chatting.dto.response.ChattingRoomWithMessagesResponse;
 import com.signal.domain.chatting.model.ChattingMessages;
 import com.signal.domain.chatting.model.ChattingRoom;
 import com.signal.domain.chatting.model.enums.ChattingRoomStatus;
 import com.signal.domain.chatting.repository.ChattingMessagesRepository;
+import com.signal.domain.chatting.repository.ChattingRepository;
 import com.signal.domain.chatting.repository.ChattingRoomRepository;
 
+import com.signal.domain.review.model.Review;
+import com.signal.domain.review.repository.ReviewRepository;
+import com.signal.global.dto.PagedDto;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,8 +28,11 @@ import com.signal.domain.auth.model.User;
 import com.signal.domain.auth.model.enums.Role;
 import com.signal.domain.auth.repository.AuthRepository;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,7 +47,9 @@ public class ChattingService {
     private final ChattingRoomRepository chattingRoomRepository;
     private final ChattingMessagesRepository chattingMessagesRepository;
     private final AuthRepository authRepository;
-   
+    private final ChattingRepository chattingRepository;
+    private final ReviewRepository reviewRepository;
+
     @Transactional
     public ChattingRoom getOrCreateRoom(ChattingRoomRequest request) {
     	return chattingRoomRepository.findByUserIdAndConsultantIdAndStatus(request.getUserId(), request.getConsultantId(), ChattingRoomStatus.ACTIVE)
@@ -132,7 +144,45 @@ public class ChattingService {
 		chattingRoomRepository.save(room);
 	}
 
-    
-    
-    
+    public PagedDto<ChattingResponse> getUserChattingResponse (int page, int size, Long userId) {
+        authRepository.existsUserById(userId);
+
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Direction.DESC, "lastActivityAt"));
+
+        Page<ChattingRoom> userChattingRooms = chattingRepository.findByUserId(userId, pageRequest);
+
+        List<ChattingListResponse> chattingListResponses = userChattingRooms.stream()
+            .map( userChattingRoom -> {
+//                Review review =
+                return ChattingListResponse.toDto(userChattingRoom, Role.USER);
+            }).collect(Collectors.toList());
+
+        int totalCount = (int) userChattingRooms.getTotalElements();
+        int totalPages = (totalCount + size - 1) / size;
+
+        ChattingResponse chattingResponse = ChattingResponse.toDto(totalCount, chattingListResponses);
+
+        return PagedDto.toDTO(page, size, totalPages, List.of(chattingResponse));
+    }
+
+    public PagedDto<ChattingResponse> getConsultantChattingResponse (int page, int size, Long consultantId) {
+        authRepository.existsConsultantById(consultantId);
+
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Direction.DESC, "lastActivityAt"));
+
+        Page<ChattingRoom> userChattingRooms = chattingRepository.findByConsultantId(consultantId, pageRequest);
+
+        List<ChattingListResponse> chattingListResponses = userChattingRooms.stream()
+            .map( userChattingRoom -> {
+//                Review review =
+                return ChattingListResponse.toDto(userChattingRoom, Role.CONSULTANT);
+            }).collect(Collectors.toList());
+
+        int totalCount = (int) userChattingRooms.getTotalElements();
+        int totalPages = (totalCount + size - 1) / size;
+
+        ChattingResponse chattingResponse = ChattingResponse.toDto(totalCount, chattingListResponses);
+
+        return PagedDto.toDTO(page, size, totalPages, List.of(chattingResponse));
+    }
 }

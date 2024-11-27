@@ -73,4 +73,12 @@ public interface AuthRepository extends JpaRepository<User, Long> {
         if (findConsultantById(consultantId) != null) throw new EntityNotFoundException(ErrorCode.CONSULTANT_NOT_FOUND);
         return true;
     }
+
+    @Query("SELECT u FROM User u WHERE u.id = :userId AND u.role = 'USER'")
+    User findStandardUserById(@Param("userId") Long userId);
+
+    default boolean existsUserById(Long userId) {
+        if (findStandardUserById(userId) != null) throw new EntityNotFoundException(ErrorCode.CONSULTANT_NOT_FOUND);
+        return true;
+    }
 }
