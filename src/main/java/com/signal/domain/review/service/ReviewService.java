@@ -26,20 +26,20 @@ public class ReviewService {
 	private final ReviewRepository reviewRepository;
 	private final AuthRepository authRepository;
 	
-	public Double getAverageRatingByConsultantId(Long consultantId,Long user) {
+	public Double getAverageRatingByConsultantId(Long consultantId) {
 		  Double averageRating = reviewRepository.calculateAverageRatingByConsultantId(consultantId);
 		
-		  return formatToDouble(averageRating,user);
+		  return formatToDouble(averageRating,consultantId);
     }
 	
 	
-	private Double formatToDouble(Double value,Long userId) {
+	private Double formatToDouble(Double value,Long consultantId) {
 		if (value == null) {
 	        return 0.0;
 	    }
 		DecimalFormat df = new DecimalFormat("#.##");
 		Double d=Double.valueOf(df.format(value));
-		authRepository.updateTotalRating(userId, d);
+		authRepository.updateTotalRating(consultantId, d);
 	    return d;
 	}
 	public int countReviewsByConsultantId(Long consultantId) {

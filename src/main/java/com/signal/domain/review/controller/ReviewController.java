@@ -46,7 +46,7 @@ public class ReviewController {
 		Long consultantId=room.getConsultant().getId();
 		Long user=customUserDetails.getUserId();
 		
-		Double averageRating = reviewService.getAverageRatingByConsultantId(consultantId,user);
+		Double averageRating = reviewService.getAverageRatingByConsultantId(consultantId);
 		int totalReviews = reviewService.countReviewsByConsultantId(consultantId);
 		
 		
