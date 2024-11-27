@@ -64,7 +64,7 @@ public class ChattingController {
 				.senderName(messages.getUserId().getNickname())
 				.sentAt(messages.getCreatedAt())
 				.lastActivityAt(messages.getChattingRoom().getLastActivityAt())
-				.senederId(messages.getUserId().getId())
+				.senderId(messages.getUserId().getId())
 				.build();
     }
 
