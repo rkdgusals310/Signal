@@ -18,6 +18,8 @@ const ConsultingPage = () => {
   const size = 5;
   const navigate = useNavigate();
 
+  const userRole = sessionStorage.getItem('role'); // 세션스토리지에서 role 가져오기
+
   useEffect(() => {
     fetchConsultants();
   }, [searchQuery, genderFilter, currentPage]);
@@ -223,33 +225,36 @@ const ConsultingPage = () => {
                   <p>총 평점: {renderStars(consultant.totalRating || 0)}</p>
                   <p>상담 횟수: {consultant.chattingCount}</p>
                 </div>
-                <button
-                  className="chat-button"
-                  onClick={() =>
-                    handleChatStart(consultant.id, consultant.name)
-                  }
-                >
-                  상담 채팅 바로가기
-                </button>
+                {/* userRole이 CONSULTANT가 아닐 때만 버튼 표시 */}
+                {userRole !== 'CONSULTANT' && (
+                  <button
+                    className="chat-button"
+                    onClick={() =>
+                      handleChatStart(consultant.id, consultant.name)
+                    }
+                  >
+                    상담 채팅 바로가기
+                  </button>
+                )}
               </div>
             ))
           ) : (
             <p>검색 결과가 없습니다.</p>
           )}
-        </div>        
+        </div>
       </div>
       <div className="pagination">
-          {Array.from({ length: totalPages }, (_, idx) => (
-            <button
-              key={idx}
-              onClick={() => handlePageChange(idx)}
-              disabled={idx === currentPage}
-              className={idx === currentPage ? 'active' : ''}
-            >
-              {idx + 1}
-            </button>
-          ))}
-        </div>
+        {Array.from({ length: totalPages }, (_, idx) => (
+          <button
+            key={idx}
+            onClick={() => handlePageChange(idx)}
+            disabled={idx === currentPage}
+            className={idx === currentPage ? 'active' : ''}
+          >
+            {idx + 1}
+          </button>
+        ))}
+      </div>
     </div>
   );
 };
