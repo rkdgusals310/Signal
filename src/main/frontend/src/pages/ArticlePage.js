@@ -8,6 +8,7 @@ const ArticlePage = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const userRole = sessionStorage.getItem('role');
 
   useEffect(() => {
     fetchArticles(currentPage);
@@ -73,7 +74,7 @@ const ArticlePage = () => {
                 <div className="article-content">
                   <h2>{article.title}</h2>
                   <p>
-                    <span>{article.createAt} • {article.commentCount} Comments • {article.consultantName}</span>
+                    <span>{article.createAt.split('T')[0]} • {article.commentCount} Comments • {article.consultantName}</span>
                   </p>
                   <p>{article.contents}</p>
                 </div>
@@ -97,7 +98,11 @@ const ArticlePage = () => {
           다음 &gt;
         </button>
       </div>
-      <button onClick={handleCreateArticle} className="create-article-button">전문가글 작성하기</button>
+      {userRole === 'CONSULTANT' && (
+        <button onClick={handleCreateArticle} className="create-article-button">
+          전문가글 작성하기
+        </button>
+      )}
     </div>
   );
 };

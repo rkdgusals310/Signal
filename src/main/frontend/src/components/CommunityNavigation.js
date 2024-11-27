@@ -81,7 +81,7 @@ const CommunityNavigation = () => {
             </li>
             <li>
               <Link 
-                to="/community/gomin/cc" 
+                to="/community/gomin/CC" 
                 className={activeCategory === 'gomin-cc' ? 'active' : ''} 
                 onClick={() => handleCategoryClick('gomin-cc')}
               >

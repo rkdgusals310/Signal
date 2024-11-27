@@ -83,6 +83,10 @@
   border-radius: 8px;
 }
 
+.single-post-content p {
+  width: 700px;
+}
+
 .single-post-modal-overlay {
   position: fixed;
   top: 0;

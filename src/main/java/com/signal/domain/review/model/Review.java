@@ -6,12 +6,14 @@ import java.time.LocalDateTime;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import com.signal.domain.auth.model.User;
+import com.signal.domain.chatting.model.ChattingRoom;
 import com.signal.global.entity.BaseEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -49,4 +51,8 @@ public class Review extends BaseEntity {
     @Column(name = "modified_at")
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime modifiedAt;
+    
+    @OneToOne
+    @JoinColumn(name = "chatting_roomid",referencedColumnName = "id")
+    private ChattingRoom chattingRoomId;
 };

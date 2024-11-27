@@ -60,7 +60,7 @@ const UserMyLikesSection = () => {
               onClick={() => window.location.href = `/${like.type.toLowerCase()}/${like.id}`}
             >
               <td>{like.title}</td>
-              <td>{like.createdAt}</td>
+              <td>{like.createdAt.split('T')[0]}</td>
               <td>{like.likesCount}</td>
               <td>{like.viewCount}</td>
             </tr>

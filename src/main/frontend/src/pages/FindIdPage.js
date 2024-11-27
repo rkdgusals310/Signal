@@ -59,11 +59,12 @@ const FindIdPage = () => {
     setError('');
     setSuccessMessage('');
     try {
-      const response = await fetch(`/api/auth/find-id?email=${encodeURIComponent(email)}`, {
-        method: 'GET',
+      const response = await fetch('/api/auth/find-id', {
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
       });
-
+  
       if (response.ok) {
         const data = await response.json();
         setFoundId(data.userId);
@@ -77,6 +78,7 @@ const FindIdPage = () => {
       setError('서버 오류가 발생했습니다.');
     }
   };
+  
 
   return (
     <div className="find-id-page">

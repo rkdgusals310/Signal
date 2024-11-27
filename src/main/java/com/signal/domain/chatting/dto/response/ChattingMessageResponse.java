@@ -23,6 +23,7 @@ public class ChattingMessageResponse {
     private String senderName;
     private LocalDateTime sentAt;
     private LocalDateTime lastActivityAt;
+    private Long senderId;
 
     public ChattingMessageResponse(ChattingMessages message) {
         this.messageId = message.getId();
@@ -30,5 +31,7 @@ public class ChattingMessageResponse {
         this.senderName = message.getUserId().getNickname();
         this.sentAt = message.getCreatedAt();
         this.lastActivityAt=message.getChattingRoom().getLastActivityAt();
+        this.senderId=message.getUserId().getId();
+        
     }
 }

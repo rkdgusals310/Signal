@@ -1,0 +1,110 @@
+.review-page {
+    width: 1400px;
+    height: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 8px;
+    margin-bottom: 100px;
+  }
+
+  .review-page h1{
+    font-size: 42px;
+    text-align: center;
+  }
+  
+  .review-back-button {
+    background: none;
+    border: none;
+    font-size: 30px;
+    margin-bottom: 20px;
+    cursor: pointer;
+  }
+  
+  .review-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    justify-content: center;
+    margin-bottom: 100px;
+  }
+  
+  .review-profile-image {
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 20px;
+  }
+  
+  .review-info h2 {
+    font-size: 24px;
+    margin: 0;
+  }
+  
+  .keyword,
+  .style,
+  .rating {
+    display: block;
+    margin: 5px 0;
+    font-size: 24px;
+    color: #555;
+  }
+  
+  .review-form {
+    margin-top: 20px;
+  }
+  
+  .rating-input {
+    margin-bottom: 20px;
+  }
+  
+  .rating-input .star {
+    font-size: 36px;
+    cursor: pointer;
+    color: #ccc;
+  }
+  
+  .rating-input .star.selected {
+    color: #F5BC00;
+  }
+  
+  textarea {
+    width: 100%;
+    height: 100px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .review-submit-button {
+    background: #ff7676;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    font-size: 24px;
+    cursor: pointer;
+    width: 160px;
+    height: 80px;
+  }
+  
+  .review-submit-button:hover {
+    background: #ff5a5a;
+  }
+  
+  .error-message {
+    color: red;
+    font-size: 14px;
+  }
+  
+  .rating-input p {
+    font-family: 'Arial', sans-serif;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+  }
+  

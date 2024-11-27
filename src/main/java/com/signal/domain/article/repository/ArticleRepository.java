@@ -1,9 +1,15 @@
 package com.signal.domain.article.repository;
 
 import com.signal.domain.article.model.Article;
+import com.signal.domain.auth.dto.response.ConsultantDetailArticleResponse;
+import com.signal.domain.auth.dto.response.ConsultantDetailReviewResponse;
 import com.signal.domain.post.model.Post;
+import com.signal.domain.review.model.Review;
 import com.signal.global.exception.errorCode.ErrorCode;
 import com.signal.global.exception.handler.EntityNotFoundException;
+
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -57,4 +63,13 @@ public interface ArticleRepository extends JpaRepository<Article,Long> {
 
     @Query("SELECT a FROM Article a WHERE a.deletedAt IS NULL ORDER BY a.viewCount DESC, a.createdAt DESC")
     Page<Article> findTop5ByViewCount(Pageable pageable);
+    
+    
+    @Query("SELECT new com.signal.domain.auth.dto.response.ConsultantDetailArticleResponse(a.thumbnail, a.title) " +
+    	       "FROM Article a WHERE a.user.id = :consultantId")
+    	List<ConsultantDetailArticleResponse> findConsultantById(@Param("consultantId") Long consultantId);
+
+    
+    
+    
 }

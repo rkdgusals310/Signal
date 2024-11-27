@@ -113,12 +113,15 @@ public class ChattingService {
 
         String otherPartyName;
         String title;
+        Long userId;
         if (role == Role.USER) {
             otherPartyName = room.getConsultant().getNickname();
             title = room.getConsultant().getNickname() + " 상담사와의 상담방";
+            userId=room.getConsultant().getId();
         } else if (role == Role.CONSULTANT) {
             otherPartyName = room.getUser().getNickname();
             title = room.getUser().getNickname() + " 사용자의 상담방";
+            userId=room.getUser().getId();
         } else {
             throw new IllegalArgumentException("Invalid role");
         }
@@ -130,7 +133,8 @@ public class ChattingService {
             messageResponses,
             nextCursor,
             hasNext,
-            room.getLastActivityAt()
+            room.getLastActivityAt(),
+            userId
         );
     }
     

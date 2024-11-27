@@ -59,7 +59,7 @@ const UserMyPostsSection = () => {
           {posts.map((post) => (
             <tr key={post.id} onClick={() => window.location.href = `/post/${post.id}`}>
               <td>{post.title}</td>
-              <td>{post.createdAt}</td>
+              <td>{post.createdAt.split('T')[0]}</td>
               <td>{post.likesCount}</td>
               <td>{post.viewCount}</td>
             </tr>
