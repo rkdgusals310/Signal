@@ -75,7 +75,7 @@ public class ReviewController {
 				.orElseThrow(() -> new IllegalArgumentException("Invalid room ID"));
 		Long consultantId=room.getConsultant().getId();
 		 
-		reviewService.createReview(userId, consultantId, request);	
+		reviewService.createReview(userId, consultantId, request,roomId);	
 	}
 	
 	

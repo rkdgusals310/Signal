@@ -48,7 +48,7 @@ public class ReviewService {
 	}
 
 	@Transactional
-	public void createReview(Long userId, Long consultantId,ReviewCreateRequest request) {
+	public void createReview(Long userId, Long consultantId,ReviewCreateRequest request,Long roomId) {
 		User user=authRepository.findById(userId)
 				.orElseThrow(()->new IllegalArgumentException("Invalid user ID"));
 		
@@ -56,6 +56,7 @@ public class ReviewService {
 				.orElseThrow(()->new IllegalArgumentException("Invalid user ID"));
 
 		Review review=Review.builder()
+				.chattingRoomId(roomId)
 				.user(user)
 				.consultant(consultant)
 				.rating(request.getRating())
