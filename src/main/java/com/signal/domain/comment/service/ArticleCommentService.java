@@ -21,8 +21,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.signal.domain.auth.repository.AuthRepository;
+import com.signal.domain.comment.dto.response.ArticleCommentPagedResponse;
+import com.signal.domain.comment.dto.response.ArticleCommentResponse;
 import com.signal.domain.comment.dto.response.CommentPagedResponse;
 import com.signal.domain.comment.dto.response.CommentResponse;
+import com.signal.domain.comment.dto.resquest.ArticleCommentCreateRequest;
 import com.signal.domain.comment.dto.resquest.CommentCreateRequest;
 import com.signal.domain.comment.dto.resquest.CommentUpdateRequest;
 import com.signal.domain.comment.model.Comment;
@@ -38,21 +41,21 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Service
 @Slf4j
-public class CommentService {
+public class ArticleCommentService {
 	private final PostRepository postRepository;
 	private final CommentRepository commentRepository;
 	private final AuthRepository authRepository;
 	private final ArticleRepository articleRepository;
 
 	@Transactional
-	public void createComment(CommentCreateRequest request, Long userId) {
-	    Post post = postRepository.findById(request.getPostId())
-	            .orElseThrow(() -> new CustomIllegalArgumentException(ErrorCode.POST_NOT_FOUND));
+	public void createComment(ArticleCommentCreateRequest request, Long userId) {
+	    Article article = articleRepository.findById(request.getArticleId())
+	            .orElseThrow(() -> new CustomIllegalArgumentException(ErrorCode.ARTICLE_NOT_FOUND));
 	    
 	    User user = authRepository.findById(userId)
 	            .orElseThrow(() -> new CustomIllegalArgumentException(ErrorCode.USER_NOT_FOUND));
 
-	    Comment comment = new Comment(post, user, request.getContents());
+	    Comment comment = new Comment(article, user, request.getContents());
 	    commentRepository.save(comment);
 	    log.info("댓글 작성 완료: {}", comment);
 	}
@@ -75,10 +78,11 @@ public class CommentService {
 	}
 	
 	@Transactional
-	public void deleteComment(Long commentId, Long userId,Long postId) {
-		 Post post = postRepository.findById(postId)
-		            .orElseThrow(() -> new CustomIllegalArgumentException(ErrorCode.POST_NOT_FOUND));
-	    // 댓글이 존재하는지 확인하고 댓글 객체를 가져옵니다.
+	public void deleteComment(Long commentId, Long userId,Long article) {
+	    Article articleId=articleRepository.findById(article)
+	    		.orElseThrow(() -> new CustomIllegalArgumentException(ErrorCode.ARTICLE_NOT_FOUND));
+	    		
+		// 댓글이 존재하는지 확인하고 댓글 객체를 가져옵니다.
 	    Comment comment = commentRepository.findById(commentId)
 	        .orElseThrow(() -> new CustomIllegalArgumentException(ErrorCode.COMMENT_NOT_FOUND));
 
@@ -92,13 +96,14 @@ public class CommentService {
 	    log.info("댓글 삭제 완료: 댓글 ID {}", commentId);
 	}
 
+
 	@Transactional(readOnly = true)
-	public CommentPagedResponse getCommentsByIdWithCursor(Long postId, Long cursorId, int size) {
+	public CommentPagedResponse getCommentsByIdWithCursor(Long article, Long cursorId, int size) {
 	    Pageable pageable = PageRequest.of(0, size);
 
 	    List<Comment> comments = (cursorId == null)
-	        ? commentRepository.findTopByPostIdOrderByIdDesc(postId, pageable)
-	        : commentRepository.findByPostIdAndIdLessThanOrderByIdDesc(postId, cursorId, pageable);
+	        ? commentRepository.findTopByArticleIdOrderByIdDesc(article, pageable)
+	        : commentRepository.findByArticleIdAndIdLessThanOrderByIdDesc(article, cursorId, pageable);
 
 	    List<CommentResponse> commentResponses = comments.stream()
 	        .map(CommentResponse::toDto)
@@ -107,40 +112,30 @@ public class CommentService {
 	    Long nextCursorId = !comments.isEmpty() ? comments.get(comments.size() - 1).getId() : null;
 	    boolean hasNext = comments.size() == size;
 
-	    int repliesCount = commentRepository.countByPostId(postId);
+	    int repliesCount = commentRepository.countByPostId(article);
 
 	    return CommentPagedResponse.toDto(commentResponses, repliesCount, nextCursorId, hasNext);
 	}
 	
+	@Transactional(readOnly = true)
+	public ArticleCommentPagedResponse getCommentsByPostIdWithCursor(Long article, Long cursorId, int size) {
+	    Pageable pageable = PageRequest.of(0, size);
 
-	@Transactional
-	public PagedDto<MyCommentResponse> getMyComments(Long userId, int size, int page) {
-		authRepository.findById(userId);
+	    List<Comment> comments = (cursorId == null)
+	        ? commentRepository.findTopByArticleIdOrderByIdDesc(article, pageable)
+	        : commentRepository.findByArticleIdAndIdLessThanOrderByIdDesc(article, cursorId, pageable);
 
-		PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Direction.DESC, "createdAt"));
+	    List<ArticleCommentResponse> commentResponses = comments.stream()
+	        .map(ArticleCommentResponse::toDto)
+	        .collect(Collectors.toList());
 
-		Page<Comment> comments = commentRepository.findCommentsByUserId(userId, pageRequest);
+	    Long nextCursorId = !comments.isEmpty() ? comments.get(comments.size() - 1).getId() : null;
+	    boolean hasNext = comments.size() == size;
 
-		List<CommentSumResponse> commentResponses = comments.stream()
-			.map(
-				comment -> {
-					if (comment.getArticle() != null) {
-						Long articleId = comment.getArticle().getId();
-						Article article = articleRepository.findArticleById(articleId);
-						return CommentSumResponse.toDto(article, comment);
-					} else {
-						Long postId = comment.getPost().getId();
-						Post post = postRepository.findPostById(postId);
-						return CommentSumResponse.toDto(post, comment);
-					}
-				}
-			).collect(Collectors.toList());
+	    int repliesCount = commentRepository.countByPostId(article);
 
-		int totalCount = (int) comments.getTotalElements();
-		int totalPages = (totalCount + size - 1) / size;
-
-		MyCommentResponse myCommentResponse = MyCommentResponse.toDto(totalCount, commentResponses);
-
-		return PagedDto.toDTO(page, size, totalPages, List.of(myCommentResponse));
+	    return ArticleCommentPagedResponse.toDto(commentResponses, repliesCount, nextCursorId, hasNext);
 	}
+
+	
 }
