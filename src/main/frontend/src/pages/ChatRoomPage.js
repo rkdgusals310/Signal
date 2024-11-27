@@ -10,6 +10,15 @@ const ChatRoomPage = () => {
   const userId = Number(sessionStorage.getItem('userId'));
   const userRole = sessionStorage.getItem('role');
 
+  // 기본 상담 메시지를 초기 상태에 추가
+  const defaultWelcomeMessage = {
+    messageId: 'welcome',
+    senderName: consultantName,
+    message: '상담을 원하시는 내용을 입력해주세요. 가능한 빨리 답변 드리도록 하겠습니다.',
+    sentAt: new Date().toISOString(),
+    senderId: null, // 시스템 메시지로 senderId는 null
+  };
+
   const [messages, setMessages] = useState([]);
   const [messageInput, setMessageInput] = useState('');
   const [cursor, setCursor] = useState(null);
@@ -33,6 +42,14 @@ const ChatRoomPage = () => {
     scrollToBottom();
   }, [messages]);
 
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      window.location.reload();
+    }, 10000); // 10초마다 새로고침
+
+    return () => clearInterval(intervalId); // 컴포넌트 언마운트 시 정리
+  }, []);
+
   const scrollToBottom = () => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: 'auto' });
@@ -47,7 +64,9 @@ const ChatRoomPage = () => {
       if (response.ok) {
         const data = await response.json();
         console.log('API Response Messages:', data.messages);
-        setMessages((prev) => [...data.messages, ...prev]);
+
+        // 기본 메시지를 항상 최상단에 유지
+        setMessages((prev) => [defaultWelcomeMessage, ...data.messages, ...prev.filter((m) => m.messageId !== 'welcome')]);
         setCursor(data.nextCursor);
         setHasNext(data.hasNext);
       } else {
@@ -70,7 +89,6 @@ const ChatRoomPage = () => {
     };
     return new Intl.DateTimeFormat('ko-KR', options).format(date);
   };
-  
 
   const handleSendMessage = async () => {
     if (!messageInput.trim()) return;
@@ -87,7 +105,7 @@ const ChatRoomPage = () => {
 
       if (response.ok) {
         const newMessage = await response.json();
-        setMessages((prev) => [newMessage, ...prev]);
+        setMessages((prev) => [defaultWelcomeMessage, newMessage, ...prev.filter((m) => m.messageId !== 'welcome')]);
         setMessageInput('');
         window.location.reload();
       } else {
