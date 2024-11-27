@@ -58,4 +58,6 @@ public class ConsultantController {
     ) {
         return ResponseEntity.ok(consultantService.getConsultantById(consultantId));
     }
+    
+    
 }
