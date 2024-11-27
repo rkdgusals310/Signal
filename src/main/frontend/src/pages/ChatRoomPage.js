@@ -15,7 +15,7 @@ const ChatRoomPage = () => {
     senderName: consultantName,
     message: '상담을 원하시는 내용을 입력해주세요. 가능한 빨리 답변 드리도록 하겠습니다. 상담종료: /종료하기',
     sentAt: new Date().toISOString(),
-    senderId: null, // 시스템 메시지로 senderId는 null
+    senderId: null,
   };
 
   const [messages, setMessages] = useState([]);
@@ -23,36 +23,25 @@ const ChatRoomPage = () => {
   const [cursor, setCursor] = useState(null);
   const [hasNext, setHasNext] = useState(true);
   const [error, setError] = useState(null);
-  const [didMount, setDidMount] = useState(false);
 
   const messagesEndRef = useRef(null);
-  const intervalRef = useRef(null); // 새로고침 interval을 관리
+  const intervalRef = useRef(null);
 
   useEffect(() => {
-    setDidMount(true);
+    fetchMessages();
+
+    intervalRef.current = setInterval(fetchMessages, 5000);
+
+    return () => clearInterval(intervalRef.current);
   }, []);
-
-  useEffect(() => {
-    if (didMount) {
-      fetchMessages();
-    }
-  }, [cursor, didMount]);
 
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
 
-  useEffect(() => {
-    intervalRef.current = setInterval(() => {
-      window.location.reload();
-    }, 10000); // 10초마다 새로고침
-
-    return () => clearInterval(intervalRef.current); // 컴포넌트 언마운트 시 정리
-  }, []);
-
   const scrollToBottom = () => {
     if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'auto' });
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
@@ -63,10 +52,23 @@ const ChatRoomPage = () => {
       );
       if (response.ok) {
         const data = await response.json();
-        console.log('API Response Messages:', data.messages);
-
-        // 기본 메시지를 항상 최상단에 유지
-        setMessages((prev) => [defaultWelcomeMessage, ...data.messages, ...prev.filter((m) => m.messageId !== 'welcome')]);
+  
+        const newMessages = data.messages.filter(
+          (msg) => !messages.some((existing) => existing.messageId === msg.messageId)
+        );
+  
+        setMessages((prev) => {
+          const updatedMessages = [...prev, ...newMessages];
+          const uniqueMessages = Array.from(new Set(updatedMessages.map((msg) => msg.messageId))).map((id) =>
+            updatedMessages.find((msg) => msg.messageId === id)
+          );
+  
+          if (!uniqueMessages.some((msg) => msg.messageId === defaultWelcomeMessage.messageId)) {
+            uniqueMessages.unshift(defaultWelcomeMessage);
+          }
+  
+          return uniqueMessages;
+        });
         setCursor(data.nextCursor);
         setHasNext(data.hasNext);
       } else {
@@ -76,25 +78,13 @@ const ChatRoomPage = () => {
       setError('네트워크 오류가 발생했습니다.');
     }
   };
-
-  const formatDate = (isoString) => {
-    const date = new Date(isoString);
-    const options = {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: true,
-    };
-    return new Intl.DateTimeFormat('ko-KR', options).format(date);
-  };
+  
 
   const handleSendMessage = async () => {
     if (!messageInput.trim()) return;
-
+  
     if (messageInput.trim() === '/종료하기') {
-      clearInterval(intervalRef.current); // 새로고침 멈춤
+      clearInterval(intervalRef.current);
       const endMessages = [
         {
           messageId: 'end-system-1',
@@ -122,12 +112,12 @@ const ChatRoomPage = () => {
           senderId: null,
         },
       ];
-
+  
       setMessages((prev) => [...prev, ...endMessages]);
       setMessageInput('');
       return;
     }
-
+  
     try {
       const response = await fetch('/api/auth/chat/message', {
         method: 'POST',
@@ -138,12 +128,12 @@ const ChatRoomPage = () => {
           message: messageInput,
         }),
       });
-
+  
       if (response.ok) {
         const newMessage = await response.json();
-        setMessages((prev) => [defaultWelcomeMessage, newMessage, ...prev.filter((m) => m.messageId !== 'welcome')]);
+        setMessages((prev) => [...prev, newMessage]);
         setMessageInput('');
-        window.location.reload();
+        scrollToBottom();
       } else {
         alert('메시지를 전송할 수 없습니다.');
       }
@@ -151,6 +141,7 @@ const ChatRoomPage = () => {
       alert('메시지를 전송할 수 없습니다.');
     }
   };
+  
 
   const handleEnterPress = (e) => {
     if (e.key === 'Enter') {
@@ -158,6 +149,20 @@ const ChatRoomPage = () => {
       handleSendMessage();
     }
   };
+
+  const formatDate = (isoString) => {
+    const date = new Date(isoString);
+    const options = {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+    };
+    return new Intl.DateTimeFormat('ko-KR', options).format(date);
+  };
+  
 
   const handleEndChat = async () => {
     try {
@@ -167,7 +172,7 @@ const ChatRoomPage = () => {
 
       if (response.ok) {
         alert('상담이 종료되었습니다.');
-        navigate(`/review/${roomId}`); // 리뷰 작성 페이지로 이동
+        navigate(`/review/${roomId}`);
       } else {
         alert('상담 종료 요청이 실패했습니다.');
       }
@@ -198,7 +203,7 @@ const ChatRoomPage = () => {
           );
         })}
         <div ref={messagesEndRef}></div>
-        {hasNext && <button onClick={() => setCursor(cursor)}>더 불러오기</button>}
+        {hasNext && <button onClick={fetchMessages}>더 불러오기</button>}
       </div>
       <div className="message-input">
         <input
