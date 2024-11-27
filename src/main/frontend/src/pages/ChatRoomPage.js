@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import './ChatRoomPage.css';
 
@@ -7,22 +7,17 @@ const ChatRoomPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const consultantName = location.state?.consultantName || '상담사';
+  const userId = Number(sessionStorage.getItem('userId'));
   const userRole = sessionStorage.getItem('role');
 
-  const welcomeMessage = {
-    messageId: 'welcome',
-    senderName: consultantName,
-    message: '상담을 원하시는 내용을 입력해주세요. 가능한 빨리 답변 드리도록 하겠습니다.',
-    sentAt: new Date().toISOString(),
-    senderType: 'CONSULTANT',
-  };
-
-  const [messages, setMessages] = useState([welcomeMessage]);
+  const [messages, setMessages] = useState([]);
   const [messageInput, setMessageInput] = useState('');
   const [cursor, setCursor] = useState(null);
   const [hasNext, setHasNext] = useState(true);
   const [error, setError] = useState(null);
   const [didMount, setDidMount] = useState(false);
+
+  const messagesEndRef = useRef(null);
 
   useEffect(() => {
     setDidMount(true);
@@ -34,15 +29,25 @@ const ChatRoomPage = () => {
     }
   }, [cursor, didMount]);
 
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  const scrollToBottom = () => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   const fetchMessages = async () => {
     try {
       const response = await fetch(
-        `/api/auth/chat/room/${roomId}/details?size=10&cursor=${cursor || ''}&role=${userRole}`
+        `/api/auth/chat/room/${roomId}/details?size=30&cursor=${cursor || ''}&role=${userRole}`
       );
-
       if (response.ok) {
         const data = await response.json();
-        setMessages((prev) => [welcomeMessage, ...data.messages, ...prev.filter((m) => m.messageId !== 'welcome')]);
+        console.log('API Response Messages:', data.messages);
+        setMessages((prev) => [...data.messages, ...prev]);
         setCursor(data.nextCursor);
         setHasNext(data.hasNext);
       } else {
@@ -53,15 +58,23 @@ const ChatRoomPage = () => {
     }
   };
 
+  const formatDate = (isoString) => {
+    const date = new Date(isoString);
+    const options = {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
+    };
+    return new Intl.DateTimeFormat('ko-KR', options).format(date);
+  };
+  
+
   const handleSendMessage = async () => {
     if (!messageInput.trim()) return;
     try {
-      const userId = sessionStorage.getItem('userId');
-      if (!userId) {
-        alert('로그인이 필요합니다.');
-        return;
-      }
-
       const response = await fetch('/api/auth/chat/message', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -74,8 +87,9 @@ const ChatRoomPage = () => {
 
       if (response.ok) {
         const newMessage = await response.json();
-        setMessages((prev) => [welcomeMessage, ...prev.filter((m) => m.messageId !== 'welcome'), newMessage]);
+        setMessages((prev) => [newMessage, ...prev]);
         setMessageInput('');
+        window.location.reload();
       } else {
         alert('메시지를 전송할 수 없습니다.');
       }
@@ -100,15 +114,22 @@ const ChatRoomPage = () => {
         <h1>{consultantName}와의 상담</h1>
       </div>
       <div className="chat-messages">
-        {messages.map((msg) => (
-          <div
-            key={msg.messageId}
-            className={`chat-message ${msg.senderType === userRole ? 'user-message' : 'consultant-message'}`}
-          >
-            <strong>{msg.senderName}</strong>: {msg.message} <small>{msg.sentAt}</small>
-          </div>
-        ))}
-        {hasNext && <button onClick={() => fetchMessages()}>더 불러오기</button>}
+        {messages.map((msg, index) => {
+          const isUserMessage = Number(msg.senderId) === userId;
+          console.log('Message Object:', msg);
+          console.log('Current userId:', userId);
+          console.log('isUserMessage:', isUserMessage);
+          return (
+            <div
+              key={msg.messageId || `msg-${index}`}
+              className={`chat-message ${isUserMessage ? 'user-message' : 'consultant-message'}`}
+            >
+              <strong>{msg.senderName}</strong>: {msg.message} <small>{formatDate(msg.sentAt)}</small>
+            </div>
+          );
+        })}
+        <div ref={messagesEndRef}></div>
+        {hasNext && <button onClick={() => setCursor(cursor)}>더 불러오기</button>}
       </div>
       <div className="message-input">
         <input
@@ -116,10 +137,11 @@ const ChatRoomPage = () => {
           value={messageInput}
           onChange={(e) => setMessageInput(e.target.value)}
           placeholder="메시지를 입력하세요."
-          onKeyDown={handleEnterPress} // Enter 키 이벤트 추가
+          onKeyDown={handleEnterPress}
         />
         <button onClick={handleSendMessage}>전송</button>
       </div>
+      {error && <p className="error-message">{error}</p>}
     </div>
   );
 };
