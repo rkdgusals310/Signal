@@ -21,6 +21,9 @@ public class ReviewResponse {
 	private String keyword;
 	private String style;
 	private Double averageRating;
+	private int totalReviews;
+	
+	
 	
 	
 }
