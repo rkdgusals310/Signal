@@ -37,6 +37,7 @@
 }
 
 .chat-messages {
+  min-height: 1370px;
   max-height: 1370px;
   overflow-y: auto;
   padding: 10px;
@@ -131,4 +132,33 @@ button {
 button:disabled {
   background-color: #cccccc;
   cursor: not-allowed;
+}
+
+.review-button {
+  background-color: #ffb3df;
+  color: rgb(0, 0, 0);
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 24px;
+  cursor: pointer;
+  margin-top: 10px;
+  font-weight: bolder;
+  width: 390px;
+  height: 80px;
+  margin-left: 50px;
+}
+
+.review-button:hover {
+  background-color: #ff48d4;
+}
+
+.review-button:active {
+  background-color: #003f7f;
+  transform: scale(0.98);
+}
+
+.review-button:focus {
+  outline: none;
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
 }

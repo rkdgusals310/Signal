@@ -10,11 +10,10 @@ const ChatRoomPage = () => {
   const userId = Number(sessionStorage.getItem('userId'));
   const userRole = sessionStorage.getItem('role');
 
-  // 기본 상담 메시지를 초기 상태에 추가
   const defaultWelcomeMessage = {
     messageId: 'welcome',
     senderName: consultantName,
-    message: '상담을 원하시는 내용을 입력해주세요. 가능한 빨리 답변 드리도록 하겠습니다.',
+    message: '상담을 원하시는 내용을 입력해주세요. 가능한 빨리 답변 드리도록 하겠습니다. 상담종료: /종료하기',
     sentAt: new Date().toISOString(),
     senderId: null, // 시스템 메시지로 senderId는 null
   };
@@ -27,6 +26,7 @@ const ChatRoomPage = () => {
   const [didMount, setDidMount] = useState(false);
 
   const messagesEndRef = useRef(null);
+  const intervalRef = useRef(null); // 새로고침 interval을 관리
 
   useEffect(() => {
     setDidMount(true);
@@ -43,11 +43,11 @@ const ChatRoomPage = () => {
   }, [messages]);
 
   useEffect(() => {
-    const intervalId = setInterval(() => {
+    intervalRef.current = setInterval(() => {
       window.location.reload();
     }, 10000); // 10초마다 새로고침
 
-    return () => clearInterval(intervalId); // 컴포넌트 언마운트 시 정리
+    return () => clearInterval(intervalRef.current); // 컴포넌트 언마운트 시 정리
   }, []);
 
   const scrollToBottom = () => {
@@ -92,6 +92,42 @@ const ChatRoomPage = () => {
 
   const handleSendMessage = async () => {
     if (!messageInput.trim()) return;
+
+    if (messageInput.trim() === '/종료하기') {
+      clearInterval(intervalRef.current); // 새로고침 멈춤
+      const endMessages = [
+        {
+          messageId: 'end-system-1',
+          senderName: 'System',
+          message: '일정시간동안 채팅이 이어지지 않아 상담을 종료합니다.',
+          sentAt: new Date().toISOString(),
+          senderId: null,
+        },
+        {
+          messageId: 'end-system-2',
+          senderName: 'System',
+          message: '상담 내용이 마음에 드셨다면 리뷰를 남겨주세요. Signal의 발전에 큰 도움이 됩니다.',
+          sentAt: new Date().toISOString(),
+          senderId: null,
+        },
+        {
+          messageId: 'end-button',
+          senderName: 'System',
+          message: (
+            <button onClick={handleEndChat} className="review-button">
+              리뷰 작성하기
+            </button>
+          ),
+          sentAt: new Date().toISOString(),
+          senderId: null,
+        },
+      ];
+
+      setMessages((prev) => [...prev, ...endMessages]);
+      setMessageInput('');
+      return;
+    }
+
     try {
       const response = await fetch('/api/auth/chat/message', {
         method: 'POST',
@@ -123,6 +159,23 @@ const ChatRoomPage = () => {
     }
   };
 
+  const handleEndChat = async () => {
+    try {
+      const response = await fetch(`/api/auth/chat/room/${roomId}/status`, {
+        method: 'PUT',
+      });
+
+      if (response.ok) {
+        alert('상담이 종료되었습니다.');
+        navigate(`/review/${roomId}`); // 리뷰 작성 페이지로 이동
+      } else {
+        alert('상담 종료 요청이 실패했습니다.');
+      }
+    } catch (err) {
+      alert('상담 종료 요청 중 오류가 발생했습니다.');
+    }
+  };
+
   return (
     <div className="chat-room">
       <div className="chat-header">
@@ -134,15 +187,13 @@ const ChatRoomPage = () => {
       <div className="chat-messages">
         {messages.map((msg, index) => {
           const isUserMessage = Number(msg.senderId) === userId;
-          console.log('Message Object:', msg);
-          console.log('Current userId:', userId);
-          console.log('isUserMessage:', isUserMessage);
           return (
             <div
               key={msg.messageId || `msg-${index}`}
               className={`chat-message ${isUserMessage ? 'user-message' : 'consultant-message'}`}
             >
-              <strong>{msg.senderName}</strong>: {msg.message} <small>{formatDate(msg.sentAt)}</small>
+              <strong>{msg.senderName}</strong>{' '}
+              {typeof msg.message === 'string' ? msg.message : msg.message} <small>{formatDate(msg.sentAt)}</small>
             </div>
           );
         })}
