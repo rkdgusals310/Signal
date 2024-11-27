@@ -89,10 +89,14 @@ const ConsultantProfilePage = () => {
             </div>
             <div className="consultant-summary-item">
               <strong>리뷰 점수</strong>
-              <p>{consultant.totalRating || '정보 없음'}</p>
+              <p>
+                {Array(Math.floor(consultant.totalRating))
+                  .fill('★')
+                  .join('')}
+                {consultant.totalRating % 1 >= 0.5 ? '☆' : ''}
+              </p>
             </div>
           </div>
-          {/* userRole이 CONSULTANT가 아닐 때만 버튼 표시 */}
           {userRole !== 'CONSULTANT' && (
             <button className="chat-button" onClick={handleChatClick}>
               상담 채팅 바로가기
@@ -111,8 +115,142 @@ const ConsultantProfilePage = () => {
         <h3>기타 경력</h3>
         <p>{consultant.experience || '정보 없음'}</p>
       </div>
+
+      {/* Review Slider */}
+      <ReviewSlider reviewList={consultant.reviewList} />
+
+      {/* Article Slider */}
+      <ArticleSlider articleList={consultant.articleList} />
     </div>
   );
 };
+
+// 리뷰 슬라이더 컴포넌트
+const ReviewSlider = ({ reviewList }) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const getVisibleSlides = () => {
+    if (!reviewList.length) return [];
+    let visibleSlides = [];
+    const maxSlides = Math.min(reviewList.length, 3);
+    for (let i = 0; i < maxSlides; i++) {
+      visibleSlides.push(reviewList[(currentIndex + i) % reviewList.length]);
+    }
+    return visibleSlides;
+  };
+
+  const nextSlide = () => {
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % reviewList.length);
+  };
+
+  const prevSlide = () => {
+    setCurrentIndex((prevIndex) =>
+      prevIndex === 0 ? reviewList.length - 1 : prevIndex - 1
+    );
+  };
+
+  return (
+    <div className="slider">
+      {reviewList.length === 0 ? (
+        <p>리뷰가 없습니다.</p>
+      ) : (
+        <div className="slider-container">
+          <button className="slider-button prev" onClick={prevSlide}>
+            &#10094;
+          </button>
+          <div className="slider-section">
+            {getVisibleSlides().map((review) => (
+              <div key={review.reviewId} className="slider-item">
+                <p>
+                  <strong>{review.userName}님 상담 후기</strong>
+                </p>
+                <p>
+                  {Array(Math.floor(review.rating))
+                    .fill('★')
+                    .join('')}
+                  {review.rating % 1 >= 0.5 ? '☆' : ''}
+                </p>
+                <p>{review.content}</p>
+              </div>
+            ))}
+          </div>
+          <button className="slider-button next" onClick={nextSlide}>
+            &#10095;
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// ArticleSlider 컴포넌트
+// ArticleSlider 컴포넌트
+// ArticleSlider 컴포넌트
+const ArticleSlider = ({ articleList }) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const navigate = useNavigate();
+
+  const getVisibleSlides = () => {
+    if (!articleList.length) return [];
+    let visibleSlides = [];
+    const maxSlides = Math.min(articleList.length, 3);
+    for (let i = 0; i < maxSlides; i++) {
+      visibleSlides.push(articleList[(currentIndex + i) % articleList.length]);
+    }
+    return visibleSlides;
+  };
+
+  const nextSlide = () => {
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % articleList.length);
+  };
+
+  const prevSlide = () => {
+    setCurrentIndex((prevIndex) =>
+      prevIndex === 0 ? articleList.length - 1 : prevIndex - 1
+    );
+  };
+
+  const handleArticleClick = (articleId) => {
+    navigate(`/article`);
+  };
+
+  return (
+    <div className="slider">
+      {articleList.length === 0 ? (
+        <p>아티클이 없습니다.</p>
+      ) : (
+        <div className="slider-container">
+          <button className="slider-button prev" onClick={prevSlide}>
+            &#10094;
+          </button>
+          <div className="slider-section">
+            {getVisibleSlides().map((article, index) => (
+              <div key={index} className="slider-item">
+                <img src={article.thumbnail} alt={article.title} className="article-thumbnail" />
+                
+                <div className="article-info">
+                
+  
+                  <p className="article-title">{article.title}</p>
+                  <button
+                    className="article-more-button"
+                    onClick={() => handleArticleClick(article.id)}
+                  >
+                    Article 보러가기
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+          <button className="slider-button next" onClick={nextSlide}>
+            &#10095;
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
+
+
 
 export default ConsultantProfilePage;

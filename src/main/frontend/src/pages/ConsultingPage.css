@@ -103,6 +103,10 @@
   height: 200px;
 }
 
+.consultant-item:hover {
+  background-color: #fcc3c3;
+}
+
 .like-icon {
   position: absolute;
   top: 10px;
