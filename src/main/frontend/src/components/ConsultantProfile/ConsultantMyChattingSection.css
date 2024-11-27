@@ -59,3 +59,23 @@
     background-color: #ccc;
     cursor: not-allowed;
 }
+
+.ongoing-chat-button {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .ongoing-chat-button:hover {
+    background-color: #45a049;
+  }
+  
