@@ -157,8 +157,8 @@ public class ChattingService {
 
         List<ChattingListResponse> chattingListResponses = userChattingRooms.stream()
             .map( userChattingRoom -> {
-//                Review review =
-                return ChattingListResponse.toDto(userChattingRoom, Role.USER);
+                Review review = reviewRepository.findByChattingRoomId(userChattingRoom.getId());
+                return ChattingListResponse.toDto(userChattingRoom, review, Role.USER);
             }).collect(Collectors.toList());
 
         int totalCount = (int) userChattingRooms.getTotalElements();
@@ -178,8 +178,8 @@ public class ChattingService {
 
         List<ChattingListResponse> chattingListResponses = userChattingRooms.stream()
             .map( userChattingRoom -> {
-//                Review review =
-                return ChattingListResponse.toDto(userChattingRoom, Role.CONSULTANT);
+                Review review = reviewRepository.findByChattingRoomId(userChattingRoom.getId());
+                return ChattingListResponse.toDto(userChattingRoom, review, Role.CONSULTANT);
             }).collect(Collectors.toList());
 
         int totalCount = (int) userChattingRooms.getTotalElements();

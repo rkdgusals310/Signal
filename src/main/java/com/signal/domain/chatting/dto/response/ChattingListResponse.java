@@ -20,16 +20,16 @@ public class ChattingListResponse {
     private String other;
     private LocalDate lastActivityAt;
     private ChattingRoomStatus status;
-//    private Long reviewId;
+    private Long reviewId;
 
-    public static ChattingListResponse toDto(ChattingRoom chattingRoom, Role role) {
+    public static ChattingListResponse toDto(ChattingRoom chattingRoom, Review review, Role role) {
         if (role == Role.CONSULTANT) {
             return ChattingListResponse.builder()
                 .id(chattingRoom.getId())
                 .other(chattingRoom.getUser().getNickname())
                 .lastActivityAt(LocalDate.from(chattingRoom.getLastActivityAt()))
                 .status(chattingRoom.getStatus())
-//                .reviewId(review.getId())
+                .reviewId(review.getId())
                 .build()
                 ;
         } else {
@@ -38,7 +38,7 @@ public class ChattingListResponse {
                 .other(chattingRoom.getConsultant().getNickname())
                 .lastActivityAt(LocalDate.from(chattingRoom.getLastActivityAt()))
                 .status(chattingRoom.getStatus())
-//                .reviewId(review.getId())
+                .reviewId(review.getId())
                 .build()
                 ;
         }
