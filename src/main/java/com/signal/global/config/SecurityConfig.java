@@ -36,6 +36,8 @@ public class SecurityConfig {
 
             .authorizeHttpRequests((auth) -> auth
                 .requestMatchers(swagger).permitAll() // Swagger 관련 요청 허용
+				.requestMatchers("/css/**", "/js/**", "/images/**", "/static/**", "/favicon.ico", "/index.html").permitAll() // 정적 리소스 요청 허용
+
 //                .requestMatchers("/api/auth/consultant/**", "/api/consultant/**").hasRole("CONSULTANT")
 //                .requestMatchers("/api/auth/user/**", "/api/user/**", "/api/member/**").hasRole("USER")
                 .requestMatchers("/api/auth/consultant/**", "/api/consultant/**").permitAll()
