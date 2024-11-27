@@ -85,7 +85,7 @@ public interface AuthRepository extends JpaRepository<User, Long> {
     User findStandardUserById(@Param("userId") Long userId);
 
     default boolean existsUserById(Long userId) {
-        if (findStandardUserById(userId) != null) throw new EntityNotFoundException(ErrorCode.CONSULTANT_NOT_FOUND);
+        if (findStandardUserById(userId) != null) throw new EntityNotFoundException(ErrorCode.USER_NOT_FOUND);
         return true;
     }
 }

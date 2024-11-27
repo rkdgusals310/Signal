@@ -149,7 +149,7 @@ public class ChattingService {
 	}
 
     public PagedDto<ChattingResponse> getUserChattingResponse (int page, int size, Long userId) {
-        authRepository.existsUserById(userId);
+        User user = authRepository.findStandardUserById(userId);
 
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Direction.DESC, "lastActivityAt"));
 
@@ -170,7 +170,7 @@ public class ChattingService {
     }
 
     public PagedDto<ChattingResponse> getConsultantChattingResponse (int page, int size, Long consultantId) {
-        authRepository.existsConsultantById(consultantId);
+        User consultant = authRepository.findConsultantById(consultantId);
 
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Direction.DESC, "lastActivityAt"));
 

@@ -88,6 +88,14 @@ public class User extends BaseEntity {
     }
 
     public void update(ConsultantUpdateRequest consultantUpdateRequest) {
+        if(consultantUpdateRequest.getNickname() != null) {
+            this.nickname = consultantUpdateRequest.getNickname();
+        }
+
+        if(consultantUpdateRequest.getImage() != null) {
+            this.image = consultantUpdateRequest.getImage();
+        }
+
         if(consultantUpdateRequest.getKeyword() != null) {
             this.keyword = consultantUpdateRequest.getKeyword();
         }
