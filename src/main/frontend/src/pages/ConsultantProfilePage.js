@@ -10,6 +10,8 @@ const ConsultantProfilePage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const userRole = sessionStorage.getItem('role'); // 세션스토리지에서 role 가져오기
+
   useEffect(() => {
     const fetchConsultantProfile = async () => {
       try {
@@ -90,9 +92,12 @@ const ConsultantProfilePage = () => {
               <p>{consultant.totalRating || '정보 없음'}</p>
             </div>
           </div>
-          <button className="chat-button" onClick={handleChatClick}>
-            상담 채팅 바로가기
-          </button>
+          {/* userRole이 CONSULTANT가 아닐 때만 버튼 표시 */}
+          {userRole !== 'CONSULTANT' && (
+            <button className="chat-button" onClick={handleChatClick}>
+              상담 채팅 바로가기
+            </button>
+          )}
         </div>
       </div>
 

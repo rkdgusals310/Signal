@@ -1,5 +1,6 @@
 .chat-room {
   max-width: 1600px;
+  height: 1600px;
   margin: 0 auto;
   padding: 20px;
   background-color: #FFF9F8;
@@ -9,20 +10,22 @@
 }
 
 .chat-header {
-  justify-content: space-between;
-  margin-bottom: 20px;
-  text-align: center;
-  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin-bottom: 30px;
+  margin-top: 30px;
+  position: relative;
 }
 
 .chatroomback-button {
+  position: absolute;
+  left: 0;
   font-size: 40px;
   background: none;
   border: none;
   color: #333;
   cursor: pointer;
-  margin-right: 1600px;
 }
 
 .chat-room h1 {
@@ -34,7 +37,8 @@
 }
 
 .chat-messages {
-  max-height: 1600px;
+  min-height: 1370px;
+  max-height: 1370px;
   overflow-y: auto;
   padding: 10px;
   border: 1px solid #ddd;
@@ -43,39 +47,55 @@
   margin-bottom: 20px;
   display: flex;
   flex-direction: column;
+  gap: 15px;
 }
 
 .chat-message {
-  margin-bottom: 15px;
-  width: 600px;
+  max-width: 600px;
   padding: 10px;
   border-radius: 10px;
-  margin-left: 50px;
+  margin-bottom: 10px;
+  font-size: 16px;
+  line-height: 1.4;
 }
 
 .consultant-message {
   align-self: flex-start;
   background-color: #ebebeb;
   text-align: left;
+  margin-left: 50px;
+  min-width: 500px;
+  font-size: 24px;
 }
 
 .user-message {
   align-self: flex-end;
-  background-color: #d4f1f4;
+  background-color: #FFEEB0;
   text-align: right;
+  margin-right: 50px;
+  min-width: 500px;
+  font-size: 24px;
 }
 
 .chat-message strong {
   display: block;
   font-weight: bold;
+  margin-bottom: 5px;
+  font-size: 24px;
 }
 
 .chat-message small {
   color: #888;
-  font-size: 12px;
+  font-size: 20px;
   display: block;
   margin-top: 5px;
 }
+
+.message-text {
+  font-size: 24px;
+  color: #333;
+}
+
 
 .message-input {
   display: flex;
@@ -88,21 +108,21 @@
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 8px;
-  font-size: 16px;
+  font-size: 24px;
 }
 
 .message-input button {
   padding: 10px 20px;
-  background-color: #007bff;
+  background-color: #4d4d4d;
   color: white;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 24px;
 }
 
 .message-input button:hover {
-  background-color: #0056b3;
+  background-color: #000000;
 }
 
 button {
@@ -112,4 +132,33 @@ button {
 button:disabled {
   background-color: #cccccc;
   cursor: not-allowed;
+}
+
+.review-button {
+  background-color: #ffb3df;
+  color: rgb(0, 0, 0);
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 24px;
+  cursor: pointer;
+  margin-top: 10px;
+  font-weight: bolder;
+  width: 390px;
+  height: 80px;
+  margin-left: 50px;
+}
+
+.review-button:hover {
+  background-color: #ff48d4;
+}
+
+.review-button:active {
+  background-color: #003f7f;
+  transform: scale(0.98);
+}
+
+.review-button:focus {
+  outline: none;
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
 }
