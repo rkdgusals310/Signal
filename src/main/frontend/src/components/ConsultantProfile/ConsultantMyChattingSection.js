@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './ConsultantMyChattingSection.css';
 
 const ConsultantMyChattingSection = () => {
   const [chattingHistory, setChattingHistory] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchChattingHistory(currentPage);
@@ -12,7 +14,7 @@ const ConsultantMyChattingSection = () => {
 
   const fetchChattingHistory = async (page) => {
     try {
-      const response = await fetch(`/api/common/my-chatting?page=${page}&size=5`, {
+      const response = await fetch(`/api/consultant/my-chatting?page=${page}&size=5`, {
         method: 'GET',
         credentials: 'include',
         headers: {
@@ -21,7 +23,7 @@ const ConsultantMyChattingSection = () => {
       });
       if (response.ok) {
         const data = await response.json();
-        const myChatting = data.content?.myChatting || [];
+        const myChatting = data.contents?.[0]?.myChatting || [];
         setChattingHistory(myChatting);
         setTotalPages(data.totalPages || 1);
       } else {
@@ -40,26 +42,41 @@ const ConsultantMyChattingSection = () => {
     }
   };
 
+  const handleChatClick = (id) => {
+    navigate(`/chat/${id}`);
+  };
+
   return (
     <div className="consultant-my-chatting-section">
       <h3>나의 상담 내역</h3>
       <table>
         <thead>
           <tr>
-            <th>상담사</th>
+            <th>상담 대상</th>
             <th>상태</th>
-            <th>시작일</th>
-            <th>완료일</th>
+            <th>마지막 활동일</th>
+            <th>상태 상세</th>
           </tr>
         </thead>
         <tbody>
           {chattingHistory.length > 0 ? (
             chattingHistory.map((chat) => (
               <tr key={chat.id}>
-                <td>{chat.consultant || '-'}</td>
-                <td>{chat.status === 'ongoing' ? '진행 중' : '완료됨'}</td>
-                <td>{chat.createdAt?.split('T')[0] || '-'}</td>
-                <td>{chat.completedAt ? chat.completedAt.split('T')[0] : '-'}</td>
+                <td>{chat.other || '-'}</td>
+                <td>{chat.status === 'COMPLETED' ? '상담 완료' : '상담 진행 중'}</td>
+                <td>{chat.lastActivityAt || '-'}</td>
+                <td>
+                  {chat.status === 'COMPLETED' ? (
+                    '상담 종료됨'
+                  ) : (
+                    <button
+                      onClick={() => handleChatClick(chat.id)}
+                      className="ongoing-chat-button"
+                    >
+                      상담 진행 중
+                    </button>
+                  )}
+                </td>
               </tr>
             ))
           ) : (

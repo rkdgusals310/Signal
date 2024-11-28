@@ -25,7 +25,8 @@ import org.springframework.data.annotation.LastModifiedDate;
 @NoArgsConstructor
 @SuperBuilder
 public class Comment extends BaseEntity {
-
+	
+	
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -62,6 +63,12 @@ public class Comment extends BaseEntity {
 	}
 	public Comment(Post post, User user, String contents) {
 	    this.post = post;
+	    this.user = user;
+	    this.contents = contents;
+	}
+	
+	public Comment(Article article, User user, String contents) {
+	    this.article = article;
 	    this.user = user;
 	    this.contents = contents;
 	}

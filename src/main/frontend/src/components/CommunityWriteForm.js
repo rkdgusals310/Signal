@@ -8,12 +8,16 @@ const CommunityWriteForm = () => {
   const [content, setContent] = useState('');
   const [invalidSentences, setInvalidSentences] = useState(null);
   const [filtered, setfiltered] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);  // 게시글 작성 완료 상태 추가
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
-  const navigate = useNavigate();  //페이지 이동 훅
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // 새로고침 방지
+    e.preventDefault();
+
+
+    setIsButtonDisabled(true);
 
     const requestBody = {
       title: title,
@@ -37,24 +41,21 @@ const CommunityWriteForm = () => {
 
       console.log("Result:", result);
 
-      // ChatGPT 필터링 결과 처리
       if (result.filtered !== undefined) {
         if (result.filtered) {
           console.log("필터링된 문장:", result.invalidSentences);
           setInvalidSentences(result.invalidSentences);
           setfiltered(true);
-          setIsSubmitted(false); // 필터링 시 성공 메시지 비활성화
-          return; // 필터링되었으므로 페이지 이동 막음
+          setIsSubmitted(false);
         } else {
           console.log('게시글 작성 성공!');
-          setIsSubmitted(true);  // 성공 시 상태 true로 설정
-          setfiltered(false);    // 필터링이 없으므로 false로 설정
+          setIsSubmitted(true);
+          setfiltered(false);
           setInvalidSentences(null);
-          
-          // 게시글 작성 후 바로 이동 대신 성공 메시지를 띄우고 일정 시간 후 페이지 이동
+
           setTimeout(() => {
             navigate(`/community/gomin/${category}`);
-          }, 2000);  // 2초 후 페이지 이동
+          }, 2000);
         }
       } else {
         console.error('isFiltered 값이 응답에 없습니다.');
@@ -62,6 +63,8 @@ const CommunityWriteForm = () => {
       }
     } catch (error) {
       console.error('서버와의 통신 중 오류 발생:', error);
+    } finally {
+      setTimeout(() => setIsButtonDisabled(false), 3000);
     }
   };
 
@@ -95,7 +98,7 @@ const CommunityWriteForm = () => {
   return (
     <form className="write-form" onSubmit={handleSubmit}>
       <div className="form-header">
-        <button className="back-button" onClick={() => window.history.back()}>
+        <button className="writeform-back-button" onClick={() => window.history.back()}>
           &larr;
         </button>
         <select
@@ -124,7 +127,7 @@ const CommunityWriteForm = () => {
       </div>
 
       <textarea
-        className={`content-textarea ${filtered ? 'error-content' : isSubmitted ? 'success-content' : ''}`}  // 성공 시 초록색 테두리
+        className={`content-textarea ${filtered ? 'error-content' : isSubmitted ? 'success-content' : ''}`}
         value={content}
         onChange={(e) => setContent(e.target.value)}
         placeholder="내용"
@@ -136,7 +139,7 @@ const CommunityWriteForm = () => {
           <p>다음 문장을 수정해주세요:</p>
           <div className="invalid-sentences">
             {invalidSentences.map((sentence, index) => (
-              <p key={index}>{sentence}</p>  // 줄바꿈
+              <p key={index}>{sentence}</p>
             ))}
           </div>
         </div>
@@ -149,8 +152,8 @@ const CommunityWriteForm = () => {
       )}
 
       <div className="form-footer">
-        <button type="submit" className="submit-button">
-          작성하기
+        <button type="submit" className="submit-button" disabled={isButtonDisabled}>
+          {isButtonDisabled ? '작성 중...' : '작성하기'}
         </button>
       </div>
     </form>

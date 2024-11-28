@@ -14,9 +14,11 @@ const ConsultingPage = () => {
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
-  const [likeStates, setLikeStates] = useState({}); // 좋아요 상태 관리
+  const [likeStates, setLikeStates] = useState({});
   const size = 5;
   const navigate = useNavigate();
+
+  const userRole = sessionStorage.getItem('role'); // 세션스토리지에서 role 가져오기
 
   useEffect(() => {
     fetchConsultants();
@@ -48,7 +50,6 @@ const ConsultingPage = () => {
 
         setConsultants(consultantData);
 
-        // 좋아요 초기 상태 설정
         const initialLikeStates = consultantData.reduce((acc, consultant) => {
           acc[consultant.id] = consultant.isLiked ? likeBefore : likeAfter;
           return acc;
@@ -201,56 +202,68 @@ const ConsultingPage = () => {
         </div>
 
         <div className="consultant-list">
-          <p>총 {consultants.length}명의 상담사가 검색되었습니다.</p>
-          {loading && <p>로딩 중...</p>}
-          {error && <p>{error}</p>}
-          {consultants.length > 0 ? (
-            consultants.map((consultant) => (
-              <div key={consultant.id} className="consultant-item">
-                <img
-                  src={likeStates[consultant.id]}
-                  alt="like"
-                  className="like-icon"
-                  onClick={() => handleWishClick(consultant.id)}
-                />
-                <img
-                  src={consultant.image || '/img/userDefaultImg.png'}
-                  alt={consultant.name}
-                  className="consultant-image"
-                />
-                <div className="consultant-info">
-                  <h3>{consultant.name}</h3>
-                  <p>전문 분야: {consultant.keyword}</p>
-                  <p>총 평점: {renderStars(consultant.totalRating || 0)}</p>
-                  <p>상담 횟수: {consultant.chattingCount}</p>
-                </div>
-                <button
-                  className="chat-button"
-                  onClick={() =>
-                    handleChatStart(consultant.id, consultant.name)
-                  }
-                >
-                  상담 채팅 바로가기
-                </button>
-              </div>
-            ))
-          ) : (
-            <p>검색 결과가 없습니다.</p>
-          )}
-        </div>        
+  <p>총 {consultants.length}명의 상담사가 검색되었습니다.</p>
+  {loading && <p>로딩 중...</p>}
+  {error && <p>{error}</p>}
+  {consultants.length > 0 ? (
+    consultants.map((consultant) => (
+      <div
+        key={consultant.id}
+        className="consultant-item"
+        onClick={() => navigate(`/consultant/${consultant.id}`)} // 클릭 시 이동
+      >
+        <img
+          src={likeStates[consultant.id]}
+          alt="like"
+          className="like-icon"
+          onClick={(e) => {
+            e.stopPropagation(); // 좋아요 클릭 시 이벤트 전파 중단
+            handleWishClick(consultant.id);
+          }}
+        />
+        <img
+          src={consultant.image || '/img/userDefaultImg.png'}
+          alt={consultant.name}
+          className="consultant-image"
+        />
+        <div className="consultant-info">
+          <h3>{consultant.name}</h3>
+          <p>전문 분야: {consultant.keyword}</p>
+          <p>총 평점: {renderStars(consultant.totalRating || 0)}</p>
+          <p>상담 횟수: {consultant.chattingCount}</p>
+        </div>
+        {/* userRole이 CONSULTANT가 아닐 때만 버튼 표시 */}
+        {userRole !== 'CONSULTANT' && (
+          <button
+            className="chat-button"
+            onClick={(e) => {
+              e.stopPropagation(); // 버튼 클릭 시 이벤트 전파 중단
+              handleChatStart(consultant.id, consultant.name);
+            }}
+          >
+            상담 채팅 바로가기
+          </button>
+        )}
+      </div>
+    ))
+  ) : (
+    <p>검색 결과가 없습니다.</p>
+  )}
+</div>
+
       </div>
       <div className="pagination">
-          {Array.from({ length: totalPages }, (_, idx) => (
-            <button
-              key={idx}
-              onClick={() => handlePageChange(idx)}
-              disabled={idx === currentPage}
-              className={idx === currentPage ? 'active' : ''}
-            >
-              {idx + 1}
-            </button>
-          ))}
-        </div>
+        {Array.from({ length: totalPages }, (_, idx) => (
+          <button
+            key={idx}
+            onClick={() => handlePageChange(idx)}
+            disabled={idx === currentPage}
+            className={idx === currentPage ? 'active' : ''}
+          >
+            {idx + 1}
+          </button>
+        ))}
+      </div>
     </div>
   );
 };

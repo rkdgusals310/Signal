@@ -13,27 +13,23 @@ import com.signal.domain.post.model.Post;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface CommentRepository extends JpaRepository<Comment,Long> {
+public interface ArticleCommentRepository extends JpaRepository<Comment,Long> {
 	
 	//특정 게시물 댓글 조회
-	List<Comment> findByPost_Id(Long postId);
-	Page<Comment> findByPost_Id(Long postId, Pageable pageable);
+	List<Comment> findByPost_Id(Long article);
+	Page<Comment> findByPost_Id(Long article, Pageable pageable);
 	//특정 게시물에 댓글 작성
 	//특정 게시물 댓글 수정
 	//특정 게시물 댓글 삭제
 	
 	
 	 // 커서와 제한된 수의 댓글을 조회하도록 메서드 수정
-    List<Comment> findByPostIdAndIdLessThanOrderByIdDesc(Long postId, Long cursorId, Pageable pageable);
-    List<Comment> findByArticleIdAndIdLessThanOrderByIdDesc(Long article, Long cursorId, Pageable pageable);
+    List<Comment> findByPostIdAndIdLessThanOrderByIdDesc(Long article, Long cursorId, Pageable pageable);
     
     // 첫 번째 페이지를 가져오는 메서드도 필요할 경우 추가
-    List<Comment> findTopByPostIdOrderByIdDesc(Long postId, Pageable pageable);
-    
-    List<Comment> findTopByArticleIdOrderByIdDesc(Long article, Pageable pageable);
+    List<Comment> findTopByPostIdOrderByIdDesc(Long article, Pageable pageable);
 	
-    int countByPostId(Long postId);
-	int countByArticleId(Long article);
+	 int countByPostId(Long postId);
 
 	@Query("SELECT c FROM Comment c WHERE c.user.id = :userId")
 	Page<Comment> findCommentsByUserId(

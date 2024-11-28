@@ -1,6 +1,10 @@
 package com.signal.domain.auth.service;
 
+import com.signal.domain.article.model.Article;
+import com.signal.domain.article.repository.ArticleRepository;
+import com.signal.domain.auth.dto.response.ConsultantDetailArticleResponse;
 import com.signal.domain.auth.dto.response.ConsultantDetailResponse;
+import com.signal.domain.auth.dto.response.ConsultantDetailReviewResponse;
 import com.signal.domain.auth.dto.response.ConsultantListResponse;
 import com.signal.domain.auth.dto.response.ConsultantPreviewResponse;
 import com.signal.domain.auth.dto.response.ConsultantResponse;
@@ -9,6 +13,7 @@ import com.signal.domain.auth.model.enums.AvailableDays;
 import com.signal.domain.auth.model.enums.Gender;
 import com.signal.domain.auth.repository.AuthRepository;
 import com.signal.domain.chatting.repository.ChattingRepository;
+import com.signal.domain.review.model.Review;
 import com.signal.domain.review.repository.ReviewRepository;
 import com.signal.global.dto.PagedDto;
 import com.signal.global.exception.errorCode.ErrorCode;
@@ -32,6 +37,8 @@ public class ConsultantService {
     private final AuthRepository authRepository;
     private final ChattingRepository chattingRepository;
     private final ReviewRepository reviewRepository;
+    private final ArticleRepository articleRepository;
+    
 
     public PagedDto<ConsultantListResponse> getConsultants(
         int size, int page
@@ -84,7 +91,9 @@ public class ConsultantService {
     public ConsultantDetailResponse getConsultantById(Long consultantId) {
         User user = authRepository.findConsultantById(consultantId);
         int reviewsCount = reviewRepository.countReviewsByConsultantId(consultantId);
-
-        return ConsultantDetailResponse.toDto(user, reviewsCount);
+        List<ConsultantDetailReviewResponse> review=reviewRepository.findConsultantById(consultantId);
+        List<ConsultantDetailArticleResponse> article=articleRepository.findConsultantById(consultantId);
+        
+        return ConsultantDetailResponse.toDto(user, reviewsCount,review,article);
     }
 }

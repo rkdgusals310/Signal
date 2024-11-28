@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ConsultantUpdateRequest {
 
+    private String nickname;
+    private String image;
     private String keyword;
     private String profileImage;
     private String profile;

@@ -15,6 +15,8 @@ const Comment = ({ postId }) => {
   const [hasNext, setHasNext] = useState(true);
   const [totalComments, setTotalComments] = useState(0);
 
+  const currentUserId = sessionStorage.getItem('userId');
+
   const fetchComments = async (reset = false) => {
     if (!hasNext && !reset) return;
 
@@ -34,6 +36,7 @@ const Comment = ({ postId }) => {
         setCursorId(data.nextCursorId);
         setHasNext(data.hasNext);
         setTotalComments(data.repliesCount);
+        setError(null);
       } else {
         throw new Error('Error fetching comments');
       }
@@ -75,7 +78,7 @@ const Comment = ({ postId }) => {
 
   const confirmEditComment = async () => {
     if (editingContent.trim() === '') return;
-  
+
     const confirmEdit = window.confirm('댓글을 수정하시겠습니까?');
     if (confirmEdit) {
       try {
@@ -84,7 +87,7 @@ const Comment = ({ postId }) => {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ contents: editingContent }),
         });
-  
+
         if (response.ok) {
           alert('댓글이 수정되었습니다.');
           window.location.reload();
@@ -100,7 +103,6 @@ const Comment = ({ postId }) => {
       }
     }
   };
-  
 
   const handleDeleteComment = async (commentId) => {
     const confirm = window.confirm('댓글을 삭제하시겠습니까?');
@@ -142,43 +144,50 @@ const Comment = ({ postId }) => {
         <span className="comment-count">{totalComments}개</span>
       </div>
       <div className="comment-list">
-        {comments.map((comment) => (
-          <div key={comment.id} className="comment-item">
-            <img
-              src={comment.gender === 'MALE' ? maleIcon : femaleIcon}
-              alt={comment.gender}
-              className="comment-gender-icon"
-            />
-            {editingCommentId === comment.id ? (
-              <div className="editing-comment">
-                <input
-                  type="text"
-                  value={editingContent}
-                  onChange={(e) => setEditingContent(e.target.value)}
-                />
-                <button onClick={confirmEditComment}>수정 확인</button>
-              </div>
-            ) : (
-              <span className="comment-content">{comment.contents}</span>
-            )}
-            <div className="comment-actions">
+        {comments.length > 0 ? (
+          comments.map((comment) => (
+            <div key={comment.id} className="comment-item">
               <img
-                src={updateIcon}
-                alt="Edit"
-                className="comment-action-icon"
-                onClick={() => handleEditComment(comment.id, comment.contents)}
+                src={comment.gender === 'MALE' ? maleIcon : femaleIcon}
+                alt={comment.gender}
+                className="comment-gender-icon"
               />
-              <img
-                src={deleteIcon}
-                alt="Delete"
-                className="comment-action-icon"
-                onClick={() => handleDeleteComment(comment.id)}
-              />
+              {editingCommentId === comment.id ? (
+                <div className="editing-comment">
+                  <input
+                    type="text"
+                    value={editingContent}
+                    onChange={(e) => setEditingContent(e.target.value)}
+                  />
+                  <button onClick={confirmEditComment}>수정 확인</button>
+                </div>
+              ) : (
+                <span className="comment-content">{comment.contents}</span>
+              )}
+
+              {comment.userId === Number(currentUserId) && (
+                <div className="comment-actions">
+                  <img
+                    src={updateIcon}
+                    alt="Edit"
+                    className="comment-action-icon"
+                    onClick={() => handleEditComment(comment.id, comment.contents)}
+                  />
+                  <img
+                    src={deleteIcon}
+                    alt="Delete"
+                    className="comment-action-icon"
+                    onClick={() => handleDeleteComment(comment.id)}
+                  />
+                </div>
+              )}
             </div>
-          </div>
-        ))}
+          ))
+        ) : (
+          <p className="no-comments-message">작성된 댓글이 없습니다.</p>
+        )}
       </div>
-      {hasNext && (
+      {hasNext && comments.length > 0 && (
         <button onClick={handleLoadMore} className="load-more">
           댓글 더 보기
         </button>

@@ -14,6 +14,8 @@ const SingleArticlePage = () => {
   const [uploading, setUploading] = useState(false);
   const navigate = useNavigate();
 
+  const userRole = sessionStorage.getItem('role');
+
   useEffect(() => {
     fetchArticleDetails();
   }, [articleId]);
@@ -195,7 +197,7 @@ const SingleArticlePage = () => {
               <ArticleComment articleId={articleId} />
             </div>
           )}
-          {!editing && (
+          {!editing && userRole !== 'USER' && (
             <div className="single-article-button-group">
               <button onClick={() => setEditing(true)} className="single-article-edit-button">
                 아티클 수정

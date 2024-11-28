@@ -108,7 +108,7 @@ const ConsultantProfileSection = () => {
   const handleSaveDetails = async () => {
     const confirmEdit = window.confirm('회원 정보를 변경하시겠습니까?');
     if (!confirmEdit) return;
-  
+
     try {
       const response = await fetch('/api/auth/consultant/edit/my-information', {
         method: 'PUT',
@@ -125,7 +125,7 @@ const ConsultantProfileSection = () => {
           nickname: newNickname,
         }),
       });
-  
+
       if (response.ok) {
         alert('회원 정보가 변경되었습니다.');
         setStep(1);
@@ -142,14 +142,16 @@ const ConsultantProfileSection = () => {
       console.error('프로필 업데이트 중 오류 발생:', error);
     }
   };
-  
 
   return (
     <div className="consultant-profile-section">
       {step === 1 && !editing ? (
         <>
           <div className="profile-image">
-            <img src={profile.image || '/img/userDefaultImg.png'} alt="Profile" />
+            <img
+              src={profile.image || `${process.env.PUBLIC_URL}/img/userDefaultImg.png`}
+              alt="Profile"
+            />
           </div>
           <div className="profile-info">
             <p>ID: {profile.userId}</p>
@@ -206,7 +208,7 @@ const ConsultantProfileSection = () => {
               value={details.profile}
               onChange={(e) => setDetails((prev) => ({ ...prev, profile: e.target.value }))}
             />
-          </div>            
+          </div>
           <div className="edit-section">
             <label>공인 자격 및 경력</label>
             <textarea

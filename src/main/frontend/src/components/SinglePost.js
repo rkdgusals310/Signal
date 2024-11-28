@@ -15,6 +15,7 @@ const SinglePost = () => {
   const [loading, setLoading] = useState(true);
   const [liked, setLiked] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [didMount, setDidMount] = useState(false);
   const navigate = useNavigate();
 
   const currentUserId = sessionStorage.getItem('userId');
@@ -24,7 +25,7 @@ const SinglePost = () => {
       const response = await fetch(`/api/common/post/${postId}`, {
         method: 'GET',
         headers: {
-          'accept': '*/*',
+          accept: '*/*',
         },
       });
 
@@ -44,7 +45,7 @@ const SinglePost = () => {
 
   const handleLikeToggle = async () => {
     try {
-      const response = await fetch(`/api/user/post/${postId}/like`, {
+      const response = await fetch(`/api/common/post/${postId}/like`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -100,8 +101,14 @@ const SinglePost = () => {
   };
 
   useEffect(() => {
-    fetchPost();
-  }, [postId]);
+    setDidMount(true);
+  }, []);
+
+  useEffect(() => {
+    if (didMount) {
+      fetchPost();
+    }
+  }, [didMount]);
 
   if (loading) return <p>Loading...</p>;
   if (!post) return <p>Post not found</p>;
@@ -109,7 +116,9 @@ const SinglePost = () => {
   return (
     <div className="single-post-container">
       <div className="single-post-header">
-        <button className="single-post-back-button" onClick={() => navigate(-1)}>{'<'}</button>
+        <button className="single-post-back-button" onClick={() => navigate(-1)}>
+          {'<'}
+        </button>
         <img
           src={liked ? likeBefore : likeAfter}
           alt="Like"
@@ -118,7 +127,7 @@ const SinglePost = () => {
         />
         <div className="single-post-title">{post.title}</div>
 
-        {post.authorId === Number(currentUserId) && (
+        {post.userId === Number(currentUserId) && (
           <div className="single-post-actions">
             <img src={updateIcon} alt="Edit" className="single-post-action-icon" onClick={handleEdit} />
             <img src={deleteIcon} alt="Delete" className="single-post-action-icon" onClick={openDeleteModal} />
@@ -145,8 +154,12 @@ const SinglePost = () => {
         <div className="single-post-modal-overlay">
           <div className="single-post-modal-content">
             <p>게시글을 삭제하겠습니까?</p>
-            <button className="single-post-confirm-button" onClick={handleDelete}>예</button>
-            <button className="single-post-cancel-button" onClick={closeDeleteModal}>아니오</button>
+            <button className="single-post-confirm-button" onClick={handleDelete}>
+              예
+            </button>
+            <button className="single-post-cancel-button" onClick={closeDeleteModal}>
+              아니오
+            </button>
           </div>
         </div>
       )}

@@ -108,7 +108,7 @@ const GominDetailPage = () => {
           <thead>
             <tr>
               <th>제목</th>
-              <th>작성일시</th>
+              <th>작성일</th>
               <th>조회수</th>
               <th>좋아요</th>
             </tr>
@@ -118,7 +118,7 @@ const GominDetailPage = () => {
             {hotPost && (
               <tr className="hot-post" onClick={() => handlePostClick(hotPost.id)}>
                 <td>{hotPost.title}</td>
-                <td>{hotPost.createdAt}</td>
+                <td>{hotPost.createdAt.split('T')[0]}</td>
                 <td>{hotPost.viewCount}</td>
                 <td>{hotPost.likesCount}</td>
               </tr>
@@ -132,7 +132,7 @@ const GominDetailPage = () => {
               posts.map((post) => (
                 <tr key={post.id} onClick={() => handlePostClick(post.id)}>
                   <td>{post.title}</td>
-                  <td>{post.createdAt}</td>
+                  <td>{post.createdAt.split('T')[0]}</td>
                   <td>{post.viewCount}</td>
                   <td>{post.likesCount}</td>
                 </tr>

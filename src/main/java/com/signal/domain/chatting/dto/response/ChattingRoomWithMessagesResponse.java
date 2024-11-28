@@ -25,6 +25,7 @@ public class ChattingRoomWithMessagesResponse {
     private Long nextCursor;
     private boolean hasNext; // 추가된 필드
     private LocalDateTime lastActivityAt;
+    private Long userId;
 
     public ChattingRoomWithMessagesResponse(ChattingRoom room, List<ChattingMessages> messages, Role role, Long nextCursor) {
         this.roomId = room.getId();
@@ -44,6 +45,7 @@ public class ChattingRoomWithMessagesResponse {
                                  .toList();
         this.nextCursor = nextCursor;
         this.hasNext = hasNext;
+        this.userId = userId;
        
     }
 

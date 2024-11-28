@@ -2,6 +2,7 @@ package com.signal.domain.comment.controller;
 
 import java.util.Optional;
 
+
 import com.signal.domain.comment.dto.response.MyCommentResponse;
 import com.signal.global.dto.PagedDto;
 import com.signal.global.sercurity.CustomUserDetails;
@@ -21,13 +22,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.signal.domain.article.dto.response.SearchResponse;
+import com.signal.domain.comment.dto.response.ArticleCommentPagedResponse;
+import com.signal.domain.comment.dto.response.ArticleCommentResponse;
 import com.signal.domain.comment.dto.response.CommentPagedResponse;
 import com.signal.domain.comment.dto.response.CommentResponse;
 import com.signal.domain.comment.dto.response.CursorPagedDto;
+import com.signal.domain.comment.dto.resquest.ArticleCommentCreateRequest;
 import com.signal.domain.comment.dto.resquest.CommentCreateRequest;
 import com.signal.domain.comment.dto.resquest.CommentUpdateRequest;
 import com.signal.domain.comment.model.Comment;
-import com.signal.domain.comment.service.CommentService;
+import com.signal.domain.comment.service.ArticleCommentService;
 import com.signal.global.sercurity.CustomUserDetails;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -36,26 +40,26 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
-public class CommentController {
+public class ArticleCommentController {
 
-	private final CommentService commentService;
+	private final ArticleCommentService commentService;
 
 	@Operation(summary = "댓글 생성")
-	@PostMapping("/common/post/{postId}/comment")
+	@PostMapping("/common/article/{article}/comment")
 	public ResponseEntity<Void> createComment(
-			@PathVariable Long postId,
+			@PathVariable Long article,
 			@AuthenticationPrincipal CustomUserDetails userDetails, 
-			@RequestBody CommentCreateRequest request) {
+			@RequestBody ArticleCommentCreateRequest request) {
 		Long userId = userDetails.getUserId();
 		commentService.createComment(request, userId);
 		return ResponseEntity.ok().build();
 	}
 
 	@Operation(summary = "댓글 수정")
-	@PutMapping("/common/post/{postId}/comment/{commentId}")
+	@PutMapping("/common/article/{article}/comment/{commentId}")
 	public ResponseEntity<Void> updateComment(
 			@AuthenticationPrincipal CustomUserDetails userDetails,
-			@PathVariable Long postId, @PathVariable Long commentId, 
+			@PathVariable Long article, @PathVariable Long commentId, 
 			@RequestBody CommentUpdateRequest request) {
 		Long userId = userDetails.getUserId();
 		commentService.updateComment(commentId, request, userId);
@@ -64,31 +68,31 @@ public class CommentController {
 	}
 
 	@Operation(summary="댓글 삭제")
-	@DeleteMapping("/common/post/{postId}/comment/{commentId}")
+	@DeleteMapping("/common/article/{article}/comment/{commentId}")
 	public ResponseEntity<Void> deleteComment(
 			@AuthenticationPrincipal CustomUserDetails userDetails,
-			@PathVariable Long postId,
+			@PathVariable Long article,
 			@PathVariable Long commentId
 			){
 			Long userId = userDetails.getUserId();
-			commentService.deleteComment(commentId,userId,postId);
+			commentService.deleteComment(commentId,userId,article);
 			return ResponseEntity.ok().build();
 		
 	}
 
 	@Operation(summary="댓글 조회")
-	@GetMapping("/common/post/{postId}/comment")
-	public ResponseEntity<CursorPagedDto<CommentResponse>> getCommentByPostId(
-	        @PathVariable Long postId,
+	@GetMapping("/common/article/{article}/comment")
+	public ResponseEntity<CursorPagedDto<ArticleCommentResponse>> getCommentByPostId(
+	        @PathVariable Long article,
 	        @RequestParam(required = false) Long cursorId,
 	        @RequestParam(defaultValue = "10") int size,
 	        @AuthenticationPrincipal CustomUserDetails customUserDetails
 	        
 	) {
-	    CommentPagedResponse response = commentService.getCommentsByIdWithCursor(postId, cursorId, size);
+		ArticleCommentPagedResponse response = commentService.getCommentsByPostIdWithCursor(article, cursorId, size);
 	    Long userId = customUserDetails.getUserId();
 	    
-	    CursorPagedDto<CommentResponse> cursorPagedResponse = new CursorPagedDto<>(
+	    CursorPagedDto<ArticleCommentResponse> cursorPagedResponse = new CursorPagedDto<>(
 	        response.getComments(),
 	        response.getRepliesCount(),
 	        response.getNextCursorId(),
@@ -100,19 +104,5 @@ public class CommentController {
 	    return ResponseEntity.ok(cursorPagedResponse);
 	}
 
-
-	
-	@Operation(summary = "내가 작성한 댓글 조회")
-	@GetMapping("common/my-comment")
-	public ResponseEntity<PagedDto<MyCommentResponse>> getMyComments (
-		@RequestParam(required = false, value = "size", defaultValue = "10") int size,
-		@RequestParam(required = false, value = "page", defaultValue = "0") int page,
-		@AuthenticationPrincipal CustomUserDetails customUserDetails
-	) {
-		Long userId = customUserDetails.getUserId();
-		PagedDto<MyCommentResponse> comments = commentService.getMyComments(userId, size, page);
-
-		return ResponseEntity.ok().body(comments);
-	}
     
 }

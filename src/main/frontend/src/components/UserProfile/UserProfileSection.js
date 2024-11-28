@@ -137,7 +137,10 @@ const UserProfileSection = () => {
       ) : (
         <>
           <div className="profile-image">
-            <img src={profile.image || '/img/userDefaultImg.png'} alt="Profile" />
+            <img
+              src={profile.image || `${process.env.PUBLIC_URL}/img/userDefaultImg.png`}
+              alt="Profile"
+            />
           </div>
           <div className="profile-info">
             <p>ID: {profile.userId}</p>

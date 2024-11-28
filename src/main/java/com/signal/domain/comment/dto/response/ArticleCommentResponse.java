@@ -18,19 +18,19 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CommentResponse {
+public class ArticleCommentResponse {
 	private Long id;
-	private Long postId;
+	private Long article;
 	private Gender gender;
 	private String contents;
 	private LocalDateTime createdAt;
 	private Long userId;
 
 	
-	public static CommentResponse toDto(Comment comment) {
-		return CommentResponse.builder()
+	public static ArticleCommentResponse toDto(Comment comment) {
+		return ArticleCommentResponse.builder()
 				.id(comment.getId())
-				.postId(comment.getPost().getId())
+				.article(comment.getArticle().getId())
 				.gender(comment.getUser().getGender())
 				.contents(comment.getContents())
 				.createdAt(comment.getCreatedAt())
