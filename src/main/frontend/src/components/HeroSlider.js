@@ -4,12 +4,12 @@ import './HeroSlider.css';
 const HeroSlider = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const slides = [
-    '/img/homeCategory1.png',
-    '/img/homeCategory2.png',
-    '/img/homeCategory3.png',
-    '/img/homeCategory4.png',
-    '/img/homeCategory5.png',
-    '/img/homeCategory6.png'
+    'img/homeCategory1.png',
+    'img/homeCategory2.png',
+    'img/homeCategory3.png',
+    'img/homeCategory4.png',
+    'img/homeCategory5.png',
+    'img/homeCategory6.png'
   ];
 
   const nextSlide = () => {
