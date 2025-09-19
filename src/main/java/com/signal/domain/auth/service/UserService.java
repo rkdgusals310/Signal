@@ -1,6 +1,7 @@
 package com.signal.domain.auth.service;
 
 import com.signal.domain.auth.dto.request.ConsultantSignUpRequest;
+
 import com.signal.domain.auth.dto.request.ConsultantUpdateRequest;
 import com.signal.domain.auth.dto.request.EmailRequest;
 import com.signal.domain.auth.dto.request.UserPasswordResetRequest;
