@@ -27,6 +27,10 @@ const ConsultantSignupPage = () => {
 
   const [emailVerified, setEmailVerified] = useState(false);
   const [emailCodeSent, setEmailCodeSent] = useState(false);
+
+  // 추가: 비밀번호 일치 여부 상태
+  const [passwordMatch, setPasswordMatch] = useState(null);
+
   const navigate = useNavigate();
 
   const handleInputChange = (e) => {
@@ -35,6 +39,39 @@ const ConsultantSignupPage = () => {
       ...consultantForm,
       [name]: value,
     });
+
+    // 비밀번호 / 비밀번호 재확인 입력 시 일치 여부 체크
+    if (name === 'consultantPassword' || name === 'consultantConfirmPassword') {
+      if (name === 'consultantPassword') {
+        if (
+          consultantForm.consultantConfirmPassword &&
+          value !== consultantForm.consultantConfirmPassword
+        ) {
+          setPasswordMatch(false);
+        } else if (
+          consultantForm.consultantConfirmPassword &&
+          value === consultantForm.consultantConfirmPassword
+        ) {
+          setPasswordMatch(true);
+        } else {
+          setPasswordMatch(null);
+        }
+      } else if (name === 'consultantConfirmPassword') {
+        if (
+          consultantForm.consultantPassword &&
+          value !== consultantForm.consultantPassword
+        ) {
+          setPasswordMatch(false);
+        } else if (
+          consultantForm.consultantPassword &&
+          value === consultantForm.consultantPassword
+        ) {
+          setPasswordMatch(true);
+        } else {
+          setPasswordMatch(null);
+        }
+      }
+    }
   };
 
   // Cloudinary
@@ -47,10 +84,13 @@ const ConsultantSignupPage = () => {
     formData.append('cloud_name', 'dcz3lwdqk');
 
     try {
-      const response = await fetch('https://api.cloudinary.com/v1_1/dcz3lwdqk/image/upload', {
-        method: 'POST',
-        body: formData,
-      });
+      const response = await fetch(
+        'https://api.cloudinary.com/v1_1/dcz3lwdqk/image/upload',
+        {
+          method: 'POST',
+          body: formData,
+        }
+      );
 
       if (response.ok) {
         const data = await response.json();
@@ -136,12 +176,12 @@ const ConsultantSignupPage = () => {
     e.preventDefault();
 
     if (consultantForm.consultantPassword !== consultantForm.consultantConfirmPassword) {
-      alert("비밀번호가 일치하지 않습니다.");
+      alert('비밀번호가 일치하지 않습니다.');
       return;
     }
 
     if (!emailVerified) {
-      alert("이메일 인증을 완료해주세요.");
+      alert('이메일 인증을 완료해주세요.');
       return;
     }
 
@@ -150,9 +190,13 @@ const ConsultantSignupPage = () => {
 
   const submitSignUp = async (e) => {
     e.preventDefault();
-    
-    const birthday = `${consultantForm.consultantBirthYear}-${consultantForm.consultantBirthMonth.padStart(2, '0')}-${consultantForm.consultantBirthDay.padStart(2, '0')}`;
-    const gender = consultantForm.consultantGender === 'male' ? 'MALE' : 'FEMALE';
+
+    const birthday = `${consultantForm.consultantBirthYear}-${consultantForm.consultantBirthMonth.padStart(
+      2,
+      '0'
+    )}-${consultantForm.consultantBirthDay.padStart(2, '0')}`;
+    const gender =
+      consultantForm.consultantGender === 'male' ? 'MALE' : 'FEMALE';
 
     const dataToSend = {
       userId: consultantForm.consultantId,
@@ -194,8 +238,11 @@ const ConsultantSignupPage = () => {
   return (
     <div className="consultant-signup-container">
       <h2>전문가 회원가입</h2>
-      <form className="consultant-signup-form" onSubmit={currentStep === 1 ? handleNextStep : submitSignUp}>
-      {currentStep === 1 ? (
+      <form
+        className="consultant-signup-form"
+        onSubmit={currentStep === 1 ? handleNextStep : submitSignUp}
+      >
+        {currentStep === 1 ? (
           <>
             <label htmlFor="consultantId">아이디</label>
             <input
@@ -206,6 +253,7 @@ const ConsultantSignupPage = () => {
               value={consultantForm.consultantId}
               onChange={handleInputChange}
             />
+
             <label htmlFor="consultantPassword">비밀번호</label>
             <input
               type="password"
@@ -215,6 +263,7 @@ const ConsultantSignupPage = () => {
               value={consultantForm.consultantPassword}
               onChange={handleInputChange}
             />
+
             <label htmlFor="consultantConfirmPassword">비밀번호 확인</label>
             <input
               type="password"
@@ -224,6 +273,33 @@ const ConsultantSignupPage = () => {
               value={consultantForm.consultantConfirmPassword}
               onChange={handleInputChange}
             />
+
+            {/* 비밀번호 일치 여부 메시지 */}
+            {passwordMatch === false && (
+              <p
+                style={{
+                  color: 'red',
+                  fontSize: '24px',
+                  marginTop: '-40px',
+                  marginBottom: '30px',
+                }}
+              >
+                비밀번호가 일치하지 않습니다.
+              </p>
+            )}
+            {passwordMatch === true && (
+              <p
+                style={{
+                  color: 'green',
+                  fontSize: '24px',
+                  marginTop: '-40px',
+                  marginBottom: '30px',
+                }}
+              >
+                비밀번호가 일치합니다.
+              </p>
+            )}
+
             <label htmlFor="consultantNickname">닉네임</label>
             <input
               type="text"
@@ -233,9 +309,14 @@ const ConsultantSignupPage = () => {
               value={consultantForm.consultantNickname}
               onChange={handleInputChange}
             />
+
             <label>생년월일</label>
             <div className="birthdate-section">
-              <select name="consultantBirthYear" value={consultantForm.consultantBirthYear} onChange={handleInputChange}>
+              <select
+                name="consultantBirthYear"
+                value={consultantForm.consultantBirthYear}
+                onChange={handleInputChange}
+              >
                 <option value="">연도</option>
                 {[...Array(100)].map((_, i) => (
                   <option key={i} value={new Date().getFullYear() - i}>
@@ -243,7 +324,11 @@ const ConsultantSignupPage = () => {
                   </option>
                 ))}
               </select>
-              <select name="consultantBirthMonth" value={consultantForm.consultantBirthMonth} onChange={handleInputChange}>
+              <select
+                name="consultantBirthMonth"
+                value={consultantForm.consultantBirthMonth}
+                onChange={handleInputChange}
+              >
                 <option value="">월</option>
                 {[...Array(12)].map((_, i) => (
                   <option key={i + 1} value={i + 1}>
@@ -251,7 +336,11 @@ const ConsultantSignupPage = () => {
                   </option>
                 ))}
               </select>
-              <select name="consultantBirthDay" value={consultantForm.consultantBirthDay} onChange={handleInputChange}>
+              <select
+                name="consultantBirthDay"
+                value={consultantForm.consultantBirthDay}
+                onChange={handleInputChange}
+              >
                 <option value="">일</option>
                 {[...Array(31)].map((_, i) => (
                   <option key={i + 1} value={i + 1}>
@@ -260,14 +349,20 @@ const ConsultantSignupPage = () => {
                 ))}
               </select>
             </div>
+
             <label>성별</label>
             <div className="gender-section">
-              <select name="consultantGender" value={consultantForm.consultantGender} onChange={handleInputChange}>
+              <select
+                name="consultantGender"
+                value={consultantForm.consultantGender}
+                onChange={handleInputChange}
+              >
                 <option value="">성별</option>
                 <option value="male">남성</option>
                 <option value="female">여성</option>
               </select>
             </div>
+
             <label>본인 확인 이메일</label>
             <div className="email-verify-wrapper">
               <input
@@ -286,6 +381,7 @@ const ConsultantSignupPage = () => {
                 {emailCodeSent ? '전송됨' : '인증'}
               </button>
             </div>
+
             <label>이메일 인증 번호</label>
             <div className="email-code-wrapper">
               <input
@@ -305,6 +401,7 @@ const ConsultantSignupPage = () => {
                 {emailVerified ? '인증 완료' : '인증 확인'}
               </button>
             </div>
+
             <button type="submit" className="consultant-signup-button">
               다음
             </button>
@@ -313,7 +410,11 @@ const ConsultantSignupPage = () => {
           <>
             <div className="profile-image-wrapper">
               {consultantForm.consultantImage ? (
-                <img src={consultantForm.consultantImage} alt="프로필 미리보기" className="profile-image-preview" />
+                <img
+                  src={consultantForm.consultantImage}
+                  alt="프로필 미리보기"
+                  className="profile-image-preview"
+                />
               ) : (
                 <div className="default-image-icon">이미지 없음</div>
               )}
@@ -328,6 +429,7 @@ const ConsultantSignupPage = () => {
                 onChange={handleImageChange}
               />
             </div>
+
             <label htmlFor="consultantProfile">상담사 소개</label>
             <textarea
               name="consultantProfile"
@@ -396,6 +498,17 @@ const ConsultantSignupPage = () => {
                   onChange={handleInputChange}
                 />
                 주말
+              </label>
+              {/* 항상 가능 추가 */}
+              <label>
+                <input
+                  type="radio"
+                  name="consultantAvailableDays"
+                  value="ALL"
+                  checked={consultantForm.consultantAvailableDays === 'ALL'}
+                  onChange={handleInputChange}
+                />
+                항상 가능
               </label>
             </div>
 
