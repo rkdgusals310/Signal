@@ -1,22 +1,23 @@
+// src/pages/CommunityWriteForm.js
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import './CommunityWriteForm.css';
 
 const CommunityWriteForm = () => {
-  const [category, setCategory] = useState('30');
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // 수정: state에서 category 받아오기
+  const [category, setCategory] = useState(location.state?.category || '30');
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [invalidSentences, setInvalidSentences] = useState(null);
-  const [filtered, setfiltered] = useState(false);
+  const [filtered, setFiltered] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
-  const navigate = useNavigate();
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-
     setIsButtonDisabled(true);
 
     const requestBody = {
@@ -30,27 +31,24 @@ const CommunityWriteForm = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'accept': '*/*',
+          accept: '*/*',
         },
         body: JSON.stringify(requestBody),
         credentials: 'include',
       });
 
-      console.log("Response status:", response.status);
+      console.log('Response status:', response.status);
       const result = await response.json();
-
-      console.log("Result:", result);
+      console.log('Result:', result);
 
       if (result.filtered !== undefined) {
         if (result.filtered) {
-          console.log("필터링된 문장:", result.invalidSentences);
           setInvalidSentences(result.invalidSentences);
-          setfiltered(true);
+          setFiltered(true);
           setIsSubmitted(false);
         } else {
-          console.log('게시글 작성 성공!');
           setIsSubmitted(true);
-          setfiltered(false);
+          setFiltered(false);
           setInvalidSentences(null);
 
           setTimeout(() => {
