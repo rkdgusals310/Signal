@@ -1,3 +1,4 @@
+// SinglePost.js
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Comment from './Comment';
@@ -16,6 +17,7 @@ const SinglePost = () => {
   const [liked, setLiked] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [didMount, setDidMount] = useState(false);
+  const [isLikeDisabled, setIsLikeDisabled] = useState(false); // 하트 버튼 비활성화 상태 추가
   const navigate = useNavigate();
 
   const currentUserId = sessionStorage.getItem('userId');
@@ -44,6 +46,11 @@ const SinglePost = () => {
   };
 
   const handleLikeToggle = async () => {
+    if (isLikeDisabled) return; // 이미 눌렀으면 무시
+
+    setIsLikeDisabled(true); // 5초 동안 막기
+    setTimeout(() => setIsLikeDisabled(false), 5000);
+
     try {
       const response = await fetch(`/api/common/post/${postId}/like`, {
         method: 'POST',
@@ -122,15 +129,29 @@ const SinglePost = () => {
         <img
           src={liked ? likeBefore : likeAfter}
           alt="Like"
-          className="single-post-like-icon"
+          className={`single-post-like-icon ${isLikeDisabled ? 'disabled' : ''}`} // 비활성화 시 스타일
           onClick={handleLikeToggle}
+          style={{
+            pointerEvents: isLikeDisabled ? 'none' : 'auto',
+            opacity: isLikeDisabled ? 0.5 : 1,
+          }}
         />
         <div className="single-post-title">{post.title}</div>
 
         {post.userId === Number(currentUserId) && (
           <div className="single-post-actions">
-            <img src={updateIcon} alt="Edit" className="single-post-action-icon" onClick={handleEdit} />
-            <img src={deleteIcon} alt="Delete" className="single-post-action-icon" onClick={openDeleteModal} />
+            <img
+              src={updateIcon}
+              alt="Edit"
+              className="single-post-action-icon"
+              onClick={handleEdit}
+            />
+            <img
+              src={deleteIcon}
+              alt="Delete"
+              className="single-post-action-icon"
+              onClick={openDeleteModal}
+            />
           </div>
         )}
       </div>
