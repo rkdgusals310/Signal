@@ -17,6 +17,7 @@ const Login = () => {
     setError(null);
 
     try {
+      // 1. 로그인 요청
       const response = await fetch('/loginProc', {
         method: 'POST',
         headers: {
@@ -26,46 +27,31 @@ const Login = () => {
         credentials: 'include',
       });
 
-      if (response.ok) {
-        sessionStorage.setItem('isLoggedIn', 'true');
-
-        // Step 1: Check consultant information
-        const consultantInfoResponse = await fetch('/api/auth/consultant/my-information', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          credentials: 'include',
-        });
-
-        if (consultantInfoResponse.ok) {
-          const consultantInfo = await consultantInfoResponse.json();
-          sessionStorage.setItem('userId', consultantInfo.id);
-          sessionStorage.setItem('role', 'CONSULTANT'); // Assign CONSULTANT role
-          console.log('Logged in as CONSULTANT, Consultant ID:', consultantInfo.id);
-        } else {
-          // If consultant check fails, assign USER role by default
-          const userInfoResponse = await fetch('/api/auth/user/my-information', {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            credentials: 'include',
-          });
-
-          if (userInfoResponse.ok) {
-            const userInfo = await userInfoResponse.json();
-            sessionStorage.setItem('userId', userInfo.id);
-          }
-
-          sessionStorage.setItem('role', 'USER');
-          console.log('Logged in as USER');
-        }
-
-        navigate('/');
-      } else {
+      if (!response.ok) {
         setError('로그인에 실패했습니다. 아이디와 비밀번호를 확인해주세요.');
+        return;
       }
+      sessionStorage.setItem('isLoggedIn', 'true');
+
+      const meResponse = await fetch('/api/auth/me', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+      });
+
+      if (meResponse.ok) {
+        const userInfo = await meResponse.json();
+        sessionStorage.setItem('userId', userInfo.id);
+        sessionStorage.setItem('role', userInfo.role);
+        console.log('로그인 성공:', userInfo);
+      } else {
+        console.warn('로그인 성공했지만 사용자 정보를 가져오지 못했습니다.');
+      }
+
+      navigate('/');
+
     } catch (error) {
       console.error('로그인 요청 오류:', error);
       setError('서버 오류가 발생했습니다. 다시 시도해주세요.');
