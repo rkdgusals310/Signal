@@ -49,7 +49,7 @@ const ConsultantMyCommentsSection = () => {
           <tr>
             <th>내용</th>
             <th>게시글</th>
-            <th>작성일</th>
+            <th>카테고리</th>
           </tr>
         </thead>
         <tbody>
@@ -61,7 +61,7 @@ const ConsultantMyCommentsSection = () => {
               >
                 <td>{comment.content}</td>
                 <td>{comment.title}</td>
-                <td>{comment.createdAt?.split('T')[0]}</td>
+                <td>{comment.type}</td>
               </tr>
             ))
           ) : (

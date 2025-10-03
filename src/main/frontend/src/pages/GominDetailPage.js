@@ -1,3 +1,4 @@
+// src/pages/GominDetailPage.js
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import CommunityNavigation from '../components/CommunityNavigation';
@@ -18,8 +19,9 @@ const GominDetailPage = () => {
     navigate(`/post/${postId}`);
   };
 
+  // 수정: navigate 시 category 전달
   const handleWritePost = () => {
-    navigate('/community/write');
+    navigate('/community/write', { state: { category } });
   };
 
   const mapCategoryToBackendFormat = (category) => {
@@ -59,7 +61,7 @@ const GominDetailPage = () => {
         {
           method: 'GET',
           headers: {
-            'accept': '*/*',
+            accept: '*/*',
           },
         }
       );

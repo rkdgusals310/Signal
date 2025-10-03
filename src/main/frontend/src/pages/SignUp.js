@@ -19,6 +19,9 @@ const SignUp = () => {
   const [isEmailVerified, setIsEmailVerified] = useState(false); // 이메일 인증 여부
   const [emailSent, setEmailSent] = useState(false); // 이메일 전송 여부
 
+  // 추가: 비밀번호 일치 여부 상태
+  const [passwordMatch, setPasswordMatch] = useState(null);
+
   // useNavigate 훅 사용
   const navigate = useNavigate();
 
@@ -33,6 +36,27 @@ const SignUp = () => {
       ...formData,
       [name]: value,
     });
+
+    // 비밀번호 / 비밀번호 재확인 입력 시 일치 여부 체크
+    if (name === 'password' || name === 'confirmPassword') {
+      if (name === 'password') {
+        if (formData.confirmPassword && value !== formData.confirmPassword) {
+          setPasswordMatch(false);
+        } else if (formData.confirmPassword && value === formData.confirmPassword) {
+          setPasswordMatch(true);
+        } else {
+          setPasswordMatch(null);
+        }
+      } else if (name === 'confirmPassword') {
+        if (formData.password && value !== formData.password) {
+          setPasswordMatch(false);
+        } else if (formData.password && value === formData.password) {
+          setPasswordMatch(true);
+        } else {
+          setPasswordMatch(null);
+        }
+      }
+    }
   };
 
   // 회원가입 요청
@@ -182,6 +206,18 @@ const SignUp = () => {
           value={formData.confirmPassword}
           onChange={handleChange}
         />
+
+        {/* 비밀번호 인증 여부 추가 */}
+        {passwordMatch === false && (
+          <p style={{ color: 'red', fontSize: '24px', marginTop: '-40px', marginBottom: '30px' }}>
+            비밀번호가 일치하지 않습니다.
+          </p>
+        )}
+        {passwordMatch === true && (
+          <p style={{ color: 'green', fontSize: '24px', marginTop: '-40px', marginBottom: '30px' }}>
+            비밀번호가 일치합니다.
+          </p>
+        )}
 
         <label htmlFor="nickname">닉네임</label>
         <input
