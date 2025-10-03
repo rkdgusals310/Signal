@@ -31,7 +31,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 @SuperBuilder
 public class User extends BaseEntity {
 
-    @Column(nullable = false)
+    @Column(nullable = false,unique = true) // 중복문제 방지 
     private String userId;
 
     @Column(nullable = false)
@@ -47,7 +47,7 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    @Column(nullable = false)
+    @Column(nullable = false,unique = true)
     private String email;
 
     private String image;

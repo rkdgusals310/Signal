@@ -19,6 +19,7 @@ public class UserDetailResponse {
     private String email;
     private String nickname;
     private Gender gender;
+    private String role;
 
     public static UserDetailResponse toDto(User user) {
         return UserDetailResponse.builder()
@@ -28,6 +29,7 @@ public class UserDetailResponse {
             .email(user.getEmail())
             .nickname(user.getNickname())
             .gender(user.getGender())
+            .role(user.getRole().name())
             .build()
             ;
     }

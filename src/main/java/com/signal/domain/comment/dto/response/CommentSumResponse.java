@@ -1,5 +1,7 @@
 package com.signal.domain.comment.dto.response;
 
+import java.time.LocalDateTime;
+
 import com.signal.domain.article.model.Article;
 import com.signal.domain.comment.model.Comment;
 import com.signal.domain.likes.dto.LikeResponse;
@@ -18,6 +20,7 @@ public class CommentSumResponse {
     private Long id;
     private String title;
     private String content;
+    private LocalDateTime createdAt;
     private Type type;
 
     public static CommentSumResponse toDto(Article article, Comment comment) {
@@ -25,6 +28,7 @@ public class CommentSumResponse {
             .id(article.getId())
             .title(article.getTitle())
             .content(comment.getContents())
+            .createdAt(comment.getCreatedAt())
             .type(Type.ARTICLE)
             .build()
             ;
@@ -35,6 +39,7 @@ public class CommentSumResponse {
             .id(post.getId())
             .title(post.getTitle())
             .content(comment.getContents())
+            .createdAt(comment.getCreatedAt())
             .type(Type.POST)
             .build()
             ;

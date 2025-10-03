@@ -123,6 +123,15 @@ public class UserController {
         request.getSession().invalidate();
         SecurityContextHolder.clearContext();
     }
+    
+    @GetMapping("/me")
+    public ResponseEntity<UserDetailResponse> getCurrentUser(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails
+    ) {
+        return ResponseEntity.ok(customUserDetails.getUserDetails());
+    }
+
+    
 //    
 //    @GetMapping("/")
 //    public String rootRedirect() {

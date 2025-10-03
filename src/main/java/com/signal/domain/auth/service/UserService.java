@@ -13,6 +13,8 @@ import com.signal.domain.auth.model.enums.Role;
 import com.signal.domain.auth.repository.AuthRepository;
 import com.signal.global.exception.errorCode.ErrorCode;
 import com.signal.global.exception.handler.EntityNotFoundException;
+import com.signal.global.exception.handler.InvalidValueException;
+
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +36,15 @@ public class UserService {
         authRepository.existsUserByEmail(userSignUpRequest.getEmail());
 
         emailService.isEmailVerified(userSignUpRequest.getEmail());
+        
+        
+        
+        if(authRepository.existsByUserId(userSignUpRequest.getUserId())) {
+        	throw new InvalidValueException(ErrorCode.DUPLICATE_USER_ID);
+        }
+        if(authRepository.existsByNickname(userSignUpRequest.getNickname())) {
+        	throw new InvalidValueException(ErrorCode.DUPLICATE_NICKNAME);
+        }
 
         User user = User.builder()
             .userId(userSignUpRequest.getUserId())
@@ -53,8 +64,17 @@ public class UserService {
     }
 
     public String consultantSignup(ConsultantSignUpRequest consultantSignUpRequest) {
-        authRepository.existsUserByEmail(consultantSignUpRequest.getEmail());
-
+        //  이메일 중복 로직 
+    	authRepository.existsUserByEmail(consultantSignUpRequest.getEmail());
+        
+    	if(authRepository.existsByUserId(consultantSignUpRequest.getUserId())) {
+        	throw new InvalidValueException(ErrorCode.DUPLICATE_USER_ID);
+        }
+        if(authRepository.existsByNickname(consultantSignUpRequest.getNickname())) {
+        	throw new InvalidValueException(ErrorCode.DUPLICATE_NICKNAME);
+        }
+        
+        
         emailService.isEmailVerified(consultantSignUpRequest.getEmail());
 
         User user = User.builder()
@@ -123,4 +143,8 @@ public class UserService {
 
         return "User Password Reset Successfully";
     }
+    
+    
+    
+    
 }
